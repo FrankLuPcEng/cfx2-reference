@@ -1,0 +1,56 @@
+{
+  "BROKER": {
+    "label": "AMQP Broker"
+  },
+  "ENDPOINT": {
+    "label": "CFX Machine\nEndpoint"
+  },
+  "MES": {
+    "label": "MES / Line\nSystem"
+  },
+  "UPSTREAM": {
+    "label": "Upstream\nMachine"
+  },
+  "PROCESS": {
+    "label": "Process\nEndpoint"
+  },
+  "TRACEABILITY": {
+    "label": "MES /\nTraceability"
+  },
+  "DOWNSTREAM": {
+    "label": "Downstream\nMachine"
+  },
+  "SETUP": {
+    "label": "Setup /\nMaterial Sys"
+  },
+  "OPERATOR": {
+    "label": "Operator /\nTechnician"
+  },
+  "PRINTER_M": {
+    "label": "Stencil\nPrinter"
+  },
+  "SPI_M": {
+    "label": "SPI Machine"
+  },
+  "MOUNTER_M": {
+    "label": "SMT Mounter"
+  },
+  "AOI_M": {
+    "label": "AOI Machine"
+  },
+  "REFLOW_M": {
+    "label": "Reflow Oven"
+  },
+  "SOLDER_M": {
+    "label": "Soldering\nEndpoint"
+  },
+  "TESTER_M": {
+    "label": "Test\nEquipment"
+  },
+  "LABELER_M": {
+    "label": "Labeler /\nLaser Marker"
+  },
+  "COATING_M": {
+    "label": "Coating /\nCleaning"
+  }
+}

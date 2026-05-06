@@ -1,0 +1,1073 @@
+[
+  {
+    "group": "連線管理",
+    "color": "#5e35b1",
+    "items": [
+      {
+        "id": "conn",
+        "label": "Endpoint 上線與能力宣告",
+        "desc": "Endpoint 上線後與 MES 進行能力宣告與存活確認。",
+        "badgeText": "連線",
+        "badgeColor": "#5e35b1",
+        "participants": [
+          "BROKER",
+          "ENDPOINT",
+          "MES"
+        ],
+        "frames": [],
+        "steps": [
+          {
+            "from": "ENDPOINT",
+            "to": "BROKER",
+            "msg": "connect AMQP",
+            "type": "event",
+            "note": "TCP/TLS 連線（非 CFX 訊息）",
+            "raw": true
+          },
+          {
+            "from": "ENDPOINT",
+            "to": "MES",
+            "msg": "CFX.EndpointConnected",
+            "type": "event",
+            "note": "廣播：機台上線"
+          },
+          {
+            "from": "MES",
+            "to": "ENDPOINT",
+            "msg": "CFX.AreYouThereRequest",
+            "type": "request",
+            "note": ""
+          },
+          {
+            "from": "ENDPOINT",
+            "to": "MES",
+            "msg": "CFX.AreYouThereResponse",
+            "type": "response",
+            "note": ""
+          },
+          {
+            "from": "MES",
+            "to": "ENDPOINT",
+            "msg": "CFX.GetEndpointInformationRequest",
+            "type": "request",
+            "note": ""
+          },
+          {
+            "from": "ENDPOINT",
+            "to": "MES",
+            "msg": "CFX.GetEndpointInformationResponse",
+            "type": "response",
+            "note": "SupportedTopics / SupportedMessages / layout"
+          },
+          {
+            "from": "MES",
+            "to": "ENDPOINT",
+            "msg": "CFX.WhoIsThereRequest",
+            "type": "request",
+            "note": "廣播：詢問全網在線機台"
+          },
+          {
+            "from": "ENDPOINT",
+            "to": "MES",
+            "msg": "CFX.WhoIsThereResponse",
+            "type": "response",
+            "note": ""
+          }
+        ]
+      },
+      {
+        "id": "shutdown",
+        "label": "Endpoint 下線通知",
+        "desc": "Endpoint 關機前先廣播下線通知，再中斷 AMQP 連線。",
+        "badgeText": "下線",
+        "badgeColor": "#5e35b1",
+        "participants": [
+          "BROKER",
+          "ENDPOINT",
+          "MES"
+        ],
+        "frames": [],
+        "steps": [
+          {
+            "from": "ENDPOINT",
+            "to": "MES",
+            "msg": "CFX.EndpointShuttingDown",
+            "type": "event",
+            "note": "廣播：機台即將下線"
+          },
+          {
+            "from": "ENDPOINT",
+            "to": "BROKER",
+            "msg": "disconnect AMQP",
+            "type": "event",
+            "note": "TCP 斷線（非 CFX 訊息）",
+            "raw": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "group": "生產 WIP",
+    "color": "#1565c0",
+    "items": [
+      {
+        "id": "wip",
+        "label": "一般生產 WIP 流程",
+        "desc": "一般製程站點從進站、作業、完工到出站的 WIP 事件流。",
+        "badgeText": "WIP",
+        "badgeColor": "#1565c0",
+        "participants": [
+          "UPSTREAM",
+          "PROCESS",
+          "TRACEABILITY",
+          "DOWNSTREAM"
+        ],
+        "frames": [
+          {
+            "label": "opt",
+            "cond": "stage pause/resume supported",
+            "startStep": 3,
+            "endStep": 4
+          }
+        ],
+        "steps": [
+          {
+            "from": "PROCESS",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.UnitsArrived",
+            "type": "event",
+            "note": "PCB 到達本站"
+          },
+          {
+            "from": "PROCESS",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "PROCESS",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkStageStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "PROCESS",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkStagePaused",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "PROCESS",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkStageResumed",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "PROCESS",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.ActivitiesExecuted",
+            "type": "event",
+            "note": "貼片/印刷明細"
+          },
+          {
+            "from": "PROCESS",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkStageCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "PROCESS",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkCompleted",
+            "type": "event",
+            "note": "含消耗物料清單"
+          },
+          {
+            "from": "PROCESS",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.UnitsDeparted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "PROCESS",
+            "to": "DOWNSTREAM",
+            "msg": "handoff (Hermes / Line Control)",
+            "type": "event",
+            "note": "移交下游（非 CFX 訊息）",
+            "raw": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "group": "Recipe 管理",
+    "color": "#6a1b9a",
+    "items": [
+      {
+        "id": "recipe",
+        "label": "Recipe 查詢與遠端切換",
+        "desc": "MES 查詢目前配方，並依能力決定是否遠端切換或管理 Recipe。",
+        "badgeText": "Recipe",
+        "badgeColor": "#6a1b9a",
+        "participants": [
+          "MES",
+          "PROCESS"
+        ],
+        "frames": [
+          {
+            "label": "opt",
+            "cond": "Remote Recipe Selection enabled",
+            "startStep": 2,
+            "endStep": 4
+          },
+          {
+            "label": "opt",
+            "cond": "Remote Recipe Management enabled",
+            "startStep": 5,
+            "endStep": 8
+          }
+        ],
+        "steps": [
+          {
+            "from": "MES",
+            "to": "PROCESS",
+            "msg": "CFX.Production.GetActiveRecipeRequest",
+            "type": "request",
+            "note": "查詢目前作用中配方"
+          },
+          {
+            "from": "PROCESS",
+            "to": "MES",
+            "msg": "CFX.Production.GetActiveRecipeResponse",
+            "type": "response",
+            "note": ""
+          },
+          {
+            "from": "MES",
+            "to": "PROCESS",
+            "msg": "CFX.Production.ActivateRecipeRequest",
+            "type": "request",
+            "note": "遠端切換 Recipe"
+          },
+          {
+            "from": "PROCESS",
+            "to": "MES",
+            "msg": "CFX.Production.ActivateRecipeResponse",
+            "type": "response",
+            "note": ""
+          },
+          {
+            "from": "PROCESS",
+            "to": "MES",
+            "msg": "CFX.Production.RecipeActivated",
+            "type": "event",
+            "note": "確認 Recipe 已切換"
+          },
+          {
+            "from": "MES",
+            "to": "PROCESS",
+            "msg": "CFX.Production.UpdateRecipeRequest",
+            "type": "request",
+            "note": "上傳/更新 Recipe 資料"
+          },
+          {
+            "from": "PROCESS",
+            "to": "MES",
+            "msg": "CFX.Production.UpdateRecipeResponse",
+            "type": "response",
+            "note": ""
+          },
+          {
+            "from": "MES",
+            "to": "PROCESS",
+            "msg": "CFX.Production.GetRecipeRequest",
+            "type": "request",
+            "note": "下載 Recipe 資料"
+          },
+          {
+            "from": "PROCESS",
+            "to": "MES",
+            "msg": "CFX.Production.GetRecipeResponse",
+            "type": "response",
+            "note": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "group": "故障與狀態",
+    "color": "#b71c1c",
+    "items": [
+      {
+        "id": "fault",
+        "label": "故障與狀態回報",
+        "desc": "機台狀態、故障發生、遠端處理與現場排除的回報流程。",
+        "badgeText": "Fault",
+        "badgeColor": "#b71c1c",
+        "participants": [
+          "ENDPOINT",
+          "MES",
+          "OPERATOR"
+        ],
+        "frames": [],
+        "steps": [
+          {
+            "from": "ENDPOINT",
+            "to": "MES",
+            "msg": "CFX.ResourcePerformance.StationOnline",
+            "type": "event",
+            "note": "機台上線/恢復"
+          },
+          {
+            "from": "ENDPOINT",
+            "to": "MES",
+            "msg": "CFX.ResourcePerformance.StationStateChanged",
+            "type": "event",
+            "note": "狀態：Production → Fault"
+          },
+          {
+            "from": "ENDPOINT",
+            "to": "MES",
+            "msg": "CFX.ResourcePerformance.FaultOccurred",
+            "type": "event",
+            "note": "回報故障碼與嚴重程度"
+          },
+          {
+            "from": "MES",
+            "to": "ENDPOINT",
+            "msg": "CFX.ResourcePerformance.HandleFaultRequest",
+            "type": "request",
+            "note": "要求機台遠端處理"
+          },
+          {
+            "from": "ENDPOINT",
+            "to": "MES",
+            "msg": "CFX.ResourcePerformance.HandleFaultResponse",
+            "type": "response",
+            "note": ""
+          },
+          {
+            "from": "OPERATOR",
+            "to": "ENDPOINT",
+            "msg": "acknowledge / clear locally",
+            "type": "event",
+            "note": "操作員本機確認/排除（非 CFX 訊息）",
+            "raw": true
+          },
+          {
+            "from": "ENDPOINT",
+            "to": "MES",
+            "msg": "CFX.ResourcePerformance.FaultAcknowledged",
+            "type": "event",
+            "note": "已確認"
+          },
+          {
+            "from": "ENDPOINT",
+            "to": "MES",
+            "msg": "CFX.ResourcePerformance.FaultCleared",
+            "type": "event",
+            "note": "故障已排除"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "group": "Stencil Printer",
+    "color": "#00695c",
+    "items": [
+      {
+        "id": "printer",
+        "label": "Stencil Printer 印刷流程",
+        "desc": "錫膏印刷站的進站、印刷、清板與完工事件流。",
+        "badgeText": "Printer",
+        "badgeColor": "#00695c",
+        "participants": [
+          "PRINTER_M",
+          "MES"
+        ],
+        "frames": [
+          {
+            "label": "opt",
+            "cond": "stencil clean occurs",
+            "startStep": 3,
+            "endStep": 3
+          }
+        ],
+        "steps": [
+          {
+            "from": "PRINTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsArrived",
+            "type": "event",
+            "note": "PCB 進站"
+          },
+          {
+            "from": "PRINTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "PRINTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "PRINTER_M",
+            "to": "MES",
+            "msg": "CFX.ResourcePerformance.SolderPastePrinting.StencilCleaned",
+            "type": "event",
+            "note": "鋼板清洗完成"
+          },
+          {
+            "from": "PRINTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.ActivitiesExecuted",
+            "type": "event",
+            "note": "印刷參數（壓力/速度/偏移）"
+          },
+          {
+            "from": "PRINTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "PRINTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "PRINTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsDeparted",
+            "type": "event",
+            "note": ""
+          }
+        ]
+      },
+      {
+        "id": "spi",
+        "label": "SPI 量測流程",
+        "desc": "SPI 站在印刷後對錫膏體積與偏移進行量測並回報結果。",
+        "badgeText": "SPI",
+        "badgeColor": "#00695c",
+        "participants": [
+          "SPI_M",
+          "MES"
+        ],
+        "frames": [],
+        "steps": [
+          {
+            "from": "SPI_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsArrived",
+            "type": "event",
+            "note": "PCB 進站"
+          },
+          {
+            "from": "SPI_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "SPI_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "SPI_M",
+            "to": "MES",
+            "msg": "CFX.Production.TestAndInspection.UnitsInspected",
+            "type": "event",
+            "note": "SolderPasteMeasurement（錫膏體積/偏移）"
+          },
+          {
+            "from": "SPI_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "SPI_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "SPI_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsDeparted",
+            "type": "event",
+            "note": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "group": "SMT Mounter",
+    "color": "#e65100",
+    "items": [
+      {
+        "id": "pp",
+        "label": "SMT Mounter 貼片流程",
+        "desc": "貼片機在配方查詢、上料驗證後，執行元件安裝與完整追溯回報。",
+        "badgeText": "P&P",
+        "badgeColor": "#e65100",
+        "participants": [
+          "MOUNTER_M",
+          "TRACEABILITY",
+          "SETUP"
+        ],
+        "frames": [],
+        "steps": [
+          {
+            "from": "TRACEABILITY",
+            "to": "MOUNTER_M",
+            "msg": "CFX.Production.GetActiveRecipeRequest",
+            "type": "request",
+            "note": "查詢目前配方"
+          },
+          {
+            "from": "MOUNTER_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.GetActiveRecipeResponse",
+            "type": "response",
+            "note": ""
+          },
+          {
+            "from": "SETUP",
+            "to": "MOUNTER_M",
+            "msg": "CFX.Materials.Storage.ValidateStationSetupRequest",
+            "type": "request",
+            "note": "驗證上料是否符合 Setup"
+          },
+          {
+            "from": "MOUNTER_M",
+            "to": "SETUP",
+            "msg": "CFX.Materials.Storage.ValidateStationSetupResponse",
+            "type": "response",
+            "note": ""
+          },
+          {
+            "from": "MOUNTER_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.UnitsArrived",
+            "type": "event",
+            "note": "PCB 進站"
+          },
+          {
+            "from": "MOUNTER_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "MOUNTER_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkStageStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "MOUNTER_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.Assembly.MaterialsInstalled",
+            "type": "event",
+            "note": "Reel→PCB 精確物料追溯"
+          },
+          {
+            "from": "MOUNTER_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.ActivitiesExecuted",
+            "type": "event",
+            "note": "每個元件貼片座標/偏差"
+          },
+          {
+            "from": "MOUNTER_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkStageCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "MOUNTER_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "MOUNTER_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.UnitsDeparted",
+            "type": "event",
+            "note": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "group": "AOI / AXI",
+    "color": "#2e7d32",
+    "items": [
+      {
+        "id": "aoi",
+        "label": "AOI 檢測流程",
+        "desc": "AOI / AXI 完成檢測後回報缺陷、量測與出站資訊。",
+        "badgeText": "AOI",
+        "badgeColor": "#2e7d32",
+        "participants": [
+          "AOI_M",
+          "TRACEABILITY"
+        ],
+        "frames": [
+          {
+            "label": "opt",
+            "cond": "component offset measurement enabled",
+            "startStep": 4,
+            "endStep": 4
+          }
+        ],
+        "steps": [
+          {
+            "from": "AOI_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.UnitsArrived",
+            "type": "event",
+            "note": "PCB 進站"
+          },
+          {
+            "from": "AOI_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "AOI_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkStageStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "AOI_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.TestAndInspection.UnitsInspected",
+            "type": "event",
+            "note": "ComponentOfInterest + ReferenceDesignator（元件偏移/缺件）"
+          },
+          {
+            "from": "AOI_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.TestAndInspection.UnitsInspected",
+            "type": "event",
+            "note": "OffsetMeasurement 動態子結構"
+          },
+          {
+            "from": "AOI_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkStageCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "AOI_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.WorkCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "AOI_M",
+            "to": "TRACEABILITY",
+            "msg": "CFX.Production.UnitsDeparted",
+            "type": "event",
+            "note": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "group": "Reflow / Soldering",
+    "color": "#f57c00",
+    "items": [
+      {
+        "id": "reflow",
+        "label": "Reflow 回焊流程",
+        "desc": "回焊爐完成加工後以動態製程資料回報回焊或 Profile 結果。",
+        "badgeText": "Reflow",
+        "badgeColor": "#f57c00",
+        "participants": [
+          "REFLOW_M",
+          "MES"
+        ],
+        "frames": [
+          {
+            "label": "alt",
+            "cond": "Reflow Oven vs Reflow Profiling",
+            "startStep": 3,
+            "endStep": 3
+          }
+        ],
+        "steps": [
+          {
+            "from": "REFLOW_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsArrived",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "REFLOW_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "REFLOW_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "REFLOW_M",
+            "to": "MES",
+            "msg": "CFX.Production.Processing.UnitsProcessed",
+            "type": "event",
+            "note": "ReflowProcessData / ReflowProfilingProcessData"
+          },
+          {
+            "from": "REFLOW_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "REFLOW_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "REFLOW_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsDeparted",
+            "type": "event",
+            "note": ""
+          }
+        ]
+      },
+      {
+        "id": "solder",
+        "label": "Soldering 焊接流程",
+        "desc": "選擇焊、波峰焊或手焊設備完成焊接後回報製程結果。",
+        "badgeText": "Solder",
+        "badgeColor": "#f57c00",
+        "participants": [
+          "SOLDER_M",
+          "MES"
+        ],
+        "frames": [
+          {
+            "label": "alt",
+            "cond": "Selective / Wave / Hand Soldering",
+            "startStep": 3,
+            "endStep": 3
+          }
+        ],
+        "steps": [
+          {
+            "from": "SOLDER_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsArrived",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "SOLDER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "SOLDER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "SOLDER_M",
+            "to": "MES",
+            "msg": "CFX.Production.Processing.UnitsProcessed",
+            "type": "event",
+            "note": "SelectiveSolderProcessData / WaveProcessData / HandSolderingProcessData"
+          },
+          {
+            "from": "SOLDER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "SOLDER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "SOLDER_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsDeparted",
+            "type": "event",
+            "note": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "group": "測試 / 打碼 / 塗佈",
+    "color": "#37474f",
+    "items": [
+      {
+        "id": "test",
+        "label": "Test Equipment 測試流程",
+        "desc": "測試設備完成電氣或功能測試後回報結果與量測值。",
+        "badgeText": "Test",
+        "badgeColor": "#37474f",
+        "participants": [
+          "TESTER_M",
+          "MES"
+        ],
+        "frames": [],
+        "steps": [
+          {
+            "from": "TESTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsArrived",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "TESTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "TESTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "TESTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.TestAndInspection.UnitsTested",
+            "type": "event",
+            "note": "Symptoms / Measurements"
+          },
+          {
+            "from": "TESTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "TESTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "TESTER_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsDeparted",
+            "type": "event",
+            "note": ""
+          }
+        ]
+      },
+      {
+        "id": "labeler",
+        "label": "Labeler / Laser Marker 打碼流程",
+        "desc": "貼標或雷射打碼設備先初始化序號，再回報打碼製程。",
+        "badgeText": "Label",
+        "badgeColor": "#37474f",
+        "participants": [
+          "LABELER_M",
+          "MES"
+        ],
+        "frames": [],
+        "steps": [
+          {
+            "from": "LABELER_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsInitialized",
+            "type": "event",
+            "note": "賦予序號（Unit 初始化）"
+          },
+          {
+            "from": "LABELER_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsArrived",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "LABELER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "LABELER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "LABELER_M",
+            "to": "MES",
+            "msg": "CFX.Production.Processing.UnitsProcessed",
+            "type": "event",
+            "note": "LaserMarkingProcessData"
+          },
+          {
+            "from": "LABELER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "LABELER_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "LABELER_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsDeparted",
+            "type": "event",
+            "note": ""
+          }
+        ]
+      },
+      {
+        "id": "coating",
+        "label": "Conformal Coating / Cleaning 塗佈清洗流程",
+        "desc": "塗佈或清洗設備完成加工後回報對應的動態製程資料。",
+        "badgeText": "Coat",
+        "badgeColor": "#37474f",
+        "participants": [
+          "COATING_M",
+          "MES"
+        ],
+        "frames": [
+          {
+            "label": "alt",
+            "cond": "Conformal Coating vs Cleaning",
+            "startStep": 3,
+            "endStep": 3
+          }
+        ],
+        "steps": [
+          {
+            "from": "COATING_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsArrived",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "COATING_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "COATING_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageStarted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "COATING_M",
+            "to": "MES",
+            "msg": "CFX.Production.Processing.UnitsProcessed",
+            "type": "event",
+            "note": "CoatingProcessData / CleaningProcessData"
+          },
+          {
+            "from": "COATING_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkStageCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "COATING_M",
+            "to": "MES",
+            "msg": "CFX.Production.WorkCompleted",
+            "type": "event",
+            "note": ""
+          },
+          {
+            "from": "COATING_M",
+            "to": "MES",
+            "msg": "CFX.Production.UnitsDeparted",
+            "type": "event",
+            "note": ""
+          }
+        ]
+      }
+    ]
+  }
+]

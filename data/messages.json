@@ -1,0 +1,1235 @@
+{
+  "CFX.EndpointConnected": {
+    "dir": "event",
+    "module": "CFX.Core",
+    "desc": "機台成功連線 AMQP Broker 後，廣播通知所有訂閱者（含 MES）機台已上線。",
+    "schema": "{\n  \"MessageBody\": {\n    \"CFXHandle\": \"SMTLine1.PickAndPlace001\",\n    \"ConnectedAt\": \"2025-05-01T07:58:00Z\"\n  }\n}",
+    "fields": [
+      {
+        "name": "CFXHandle",
+        "type": "string",
+        "req": true,
+        "desc": "機台唯一識別碼，格式：{Line}.{Machine}"
+      },
+      {
+        "name": "ConnectedAt",
+        "type": "DateTime",
+        "req": true,
+        "desc": "連線成功時間（ISO 8601 UTC）"
+      }
+    ],
+    "notes": "此訊息 publish 至 broadcast topic，所有已訂閱的系統皆會收到。"
+  },
+  "CFX.AreYouThereRequest": {
+    "dir": "request",
+    "module": "CFX.Core",
+    "desc": "MES 詢問特定 CFXHandle 的機台是否在線，用於健康檢查。",
+    "schema": "{\n  \"MessageBody\": {\n    \"RequestID\": \"uuid-1234-...\",\n    \"CFXHandle\": \"SMTLine1.PickAndPlace001\"\n  }\n}",
+    "fields": [
+      {
+        "name": "RequestID",
+        "type": "UUID",
+        "req": true,
+        "desc": "本次請求唯一 UUID"
+      },
+      {
+        "name": "CFXHandle",
+        "type": "string",
+        "req": true,
+        "desc": "欲詢問的目標機台 Handle"
+      }
+    ]
+  },
+  "CFX.AreYouThereResponse": {
+    "dir": "response",
+    "module": "CFX.Core",
+    "desc": "機台回應確認自己在線。",
+    "schema": "{\n  \"MessageBody\": {\n    \"RequestID\": \"uuid-1234-...\",\n    \"CFXHandle\": \"SMTLine1.PickAndPlace001\",\n    \"Result\": { \"Result\": \"Success\", \"ResultCode\": 0 }\n  }\n}",
+    "fields": [
+      {
+        "name": "RequestID",
+        "type": "UUID",
+        "req": true,
+        "desc": "對應請求 UUID"
+      },
+      {
+        "name": "CFXHandle",
+        "type": "string",
+        "req": true,
+        "desc": "回應機台 Handle"
+      },
+      {
+        "name": "Result.Result",
+        "type": "enum",
+        "req": true,
+        "desc": "Success | Failed"
+      }
+    ]
+  },
+  "CFX.GetEndpointInformationRequest": {
+    "dir": "request",
+    "module": "CFX.Core",
+    "desc": "詢問機台完整端點資訊，包含硬體規格、支援 Topic/Message 清單與版面配置。",
+    "schema": "{\n  \"MessageBody\": {\n    \"RequestID\": \"uuid-5678-...\"\n  }\n}",
+    "fields": [
+      {
+        "name": "RequestID",
+        "type": "UUID",
+        "req": true,
+        "desc": "本次請求唯一識別碼"
+      }
+    ]
+  },
+  "CFX.GetEndpointInformationResponse": {
+    "dir": "response",
+    "module": "CFX.Core",
+    "desc": "回傳機台端點完整資訊：型號、韌體版本、SupportedTopics、SupportedMessages、Lane/Stage 版面。",
+    "schema": "{\n  \"MessageBody\": {\n    \"RequestID\": \"uuid-5678-...\",\n    \"CFXHandle\": \"SMTLine1.PickAndPlace001\",\n    \"EndpointInformation\": {\n      \"UniqueIdentifier\": \"SN-2025-0042\",\n      \"Name\": \"FUJI NXT III\",\n      \"Vendor\": \"FUJI\",\n      \"ModelNumber\": \"NXT-III\",\n      \"FirmwareVersion\": \"5.1.2\",\n      \"NumberOfLanes\": 1,\n      \"NumberOfStages\": 2,\n      \"SupportedTopics\": [\n        \"CFX.Production.WorkStarted\",\n        \"CFX.Production.WorkCompleted\",\n        \"CFX.Production.ActivitiesExecuted\"\n      ],\n      \"SupportedMessages\": [\n        \"CFX.Production.Application.SMTPlacement.ActivitiesExecuted\"\n      ]\n    }\n  }\n}",
+    "fields": [
+      {
+        "name": "UniqueIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "機台硬體序號"
+      },
+      {
+        "name": "Name",
+        "type": "string",
+        "req": true,
+        "desc": "機台名稱"
+      },
+      {
+        "name": "Vendor",
+        "type": "string",
+        "req": false,
+        "desc": "製造商"
+      },
+      {
+        "name": "ModelNumber",
+        "type": "string",
+        "req": false,
+        "desc": "型號"
+      },
+      {
+        "name": "FirmwareVersion",
+        "type": "string",
+        "req": false,
+        "desc": "韌體版本"
+      },
+      {
+        "name": "NumberOfLanes",
+        "type": "int",
+        "req": false,
+        "desc": "產線道數"
+      },
+      {
+        "name": "NumberOfStages",
+        "type": "int",
+        "req": false,
+        "desc": "製程階段數"
+      },
+      {
+        "name": "SupportedTopics",
+        "type": "string[]",
+        "req": true,
+        "desc": "支援 publish 的 CFX Topic 清單"
+      },
+      {
+        "name": "SupportedMessages",
+        "type": "string[]",
+        "req": false,
+        "desc": "應用層特定訊息（如貼片資料）"
+      }
+    ],
+    "notes": "SupportedTopics 是 MES 判斷機台能力的主要依據，建議回傳完整清單。"
+  },
+  "CFX.WhoIsThereRequest": {
+    "dir": "request",
+    "module": "CFX.Core",
+    "desc": "廣播詢問目前在線所有 CFX Endpoint，用於網路發現（Discovery）。",
+    "schema": "{\n  \"MessageBody\": {\n    \"RequestID\": \"uuid-9999-...\",\n    \"CFXHandleFilter\": \"*\"\n  }\n}",
+    "fields": [
+      {
+        "name": "RequestID",
+        "type": "UUID",
+        "req": true,
+        "desc": "請求識別碼"
+      },
+      {
+        "name": "CFXHandleFilter",
+        "type": "string",
+        "req": false,
+        "desc": "Handle 篩選，支援 * 萬用字元"
+      }
+    ]
+  },
+  "CFX.WhoIsThereResponse": {
+    "dir": "response",
+    "module": "CFX.Core",
+    "desc": "各機台收到 WhoIsThereRequest 後回應自身基本資訊。",
+    "schema": "{\n  \"MessageBody\": {\n    \"RequestID\": \"uuid-9999-...\",\n    \"CFXHandle\": \"SMTLine1.PickAndPlace001\",\n    \"EndpointInformation\": { \"UniqueIdentifier\": \"SN-2025-0042\" }\n  }\n}",
+    "fields": [
+      {
+        "name": "RequestID",
+        "type": "UUID",
+        "req": true,
+        "desc": "對應請求 UUID"
+      },
+      {
+        "name": "CFXHandle",
+        "type": "string",
+        "req": true,
+        "desc": "回應機台 Handle"
+      },
+      {
+        "name": "UniqueIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "機台硬體序號"
+      }
+    ]
+  },
+  "CFX.Production.UnitsArrived": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "Unit（PCB）進入本站時發布，觸發 WIP 追蹤與作業指示查詢。",
+    "schema": "{\n  \"MessageBody\": {\n    \"WorkOrderIdentifier\": { \"WorkOrderID\": \"WO-2025-1001\" },\n    \"Units\": [\n      { \"UnitIdentifier\": \"PCB-SN-000042\", \"Lane\": 1, \"Stage\": 1 }\n    ]\n  }\n}",
+    "fields": [
+      {
+        "name": "WorkOrderID",
+        "type": "string",
+        "req": true,
+        "desc": "工單編號"
+      },
+      {
+        "name": "UnitIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "PCB 唯一序號"
+      },
+      {
+        "name": "Lane",
+        "type": "int",
+        "req": false,
+        "desc": "進入道次"
+      },
+      {
+        "name": "Stage",
+        "type": "int",
+        "req": false,
+        "desc": "進入製程階段"
+      }
+    ],
+    "notes": "MES 收到此事件後應更新 WIP 位置，可同步查詢作業指示。"
+  },
+  "CFX.Production.WorkStarted": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "機台開始對 Unit 進行實際作業，記錄開始時間。",
+    "schema": "{\n  \"MessageBody\": {\n    \"WorkOrderIdentifier\": { \"WorkOrderID\": \"WO-2025-1001\" },\n    \"Units\": [ { \"UnitIdentifier\": \"PCB-SN-000042\" } ],\n    \"StartedAt\": \"2025-05-01T08:10:05Z\"\n  }\n}",
+    "fields": [
+      {
+        "name": "WorkOrderID",
+        "type": "string",
+        "req": true,
+        "desc": "工單編號"
+      },
+      {
+        "name": "UnitIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "PCB 序號"
+      },
+      {
+        "name": "StartedAt",
+        "type": "DateTime",
+        "req": true,
+        "desc": "作業開始時間"
+      }
+    ]
+  },
+  "CFX.Production.WorkStageStarted": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "多段製程中，單一 Stage 開始時發布。",
+    "schema": "{\n  \"MessageBody\": {\n    \"WorkOrderIdentifier\": { \"WorkOrderID\": \"WO-2025-1001\" },\n    \"Stage\": 1,\n    \"Units\": [ { \"UnitIdentifier\": \"PCB-SN-000042\" } ],\n    \"StartedAt\": \"2025-05-01T08:10:10Z\"\n  }\n}",
+    "fields": [
+      {
+        "name": "Stage",
+        "type": "int",
+        "req": true,
+        "desc": "開始的製程階段（從 1 起）"
+      },
+      {
+        "name": "UnitIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "PCB 序號"
+      },
+      {
+        "name": "StartedAt",
+        "type": "DateTime",
+        "req": true,
+        "desc": "Stage 開始時間"
+      }
+    ]
+  },
+  "CFX.Production.WorkStagePaused": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "Stage 中途暫停（等待補料、操作員介入），記錄暫停原因。",
+    "schema": "{\n  \"MessageBody\": {\n    \"WorkOrderIdentifier\": { \"WorkOrderID\": \"WO-2025-1001\" },\n    \"Stage\": 1,\n    \"Cause\": \"OPERATOR_INTERVENTION\",\n    \"PausedAt\": \"2025-05-01T08:12:00Z\"\n  }\n}",
+    "fields": [
+      {
+        "name": "Stage",
+        "type": "int",
+        "req": true,
+        "desc": "暫停的 Stage 編號"
+      },
+      {
+        "name": "Cause",
+        "type": "string",
+        "req": false,
+        "desc": "暫停原因代碼"
+      },
+      {
+        "name": "PausedAt",
+        "type": "DateTime",
+        "req": true,
+        "desc": "暫停時間"
+      }
+    ]
+  },
+  "CFX.Production.WorkStageResumed": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "暫停的 Stage 恢復繼續作業。",
+    "schema": "{\n  \"MessageBody\": {\n    \"WorkOrderIdentifier\": { \"WorkOrderID\": \"WO-2025-1001\" },\n    \"Stage\": 1,\n    \"ResumedAt\": \"2025-05-01T08:14:30Z\"\n  }\n}",
+    "fields": [
+      {
+        "name": "Stage",
+        "type": "int",
+        "req": true,
+        "desc": "恢復的 Stage 編號"
+      },
+      {
+        "name": "ResumedAt",
+        "type": "DateTime",
+        "req": true,
+        "desc": "恢復時間"
+      }
+    ]
+  },
+  "CFX.Production.ActivitiesExecuted": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "記錄製程中執行的各項活動明細（貼片座標、印刷參數、量測值），為追溯性核心資料。",
+    "schema": "{\n  \"MessageBody\": {\n    \"WorkOrderIdentifier\": { \"WorkOrderID\": \"WO-2025-1001\" },\n    \"CommonProcessData\": {\n      \"MachineID\": \"SMTLine1.PickAndPlace001\",\n      \"ProcessedAt\": \"2025-05-01T08:15:22Z\",\n      \"Lane\": 1, \"Stage\": 1\n    },\n    \"Activities\": [\n      {\n        \"ActivityType\": \"SMTPlacement\",\n        \"UnitIdentifier\": \"PCB-SN-000042\",\n        \"ReferenceDesignator\": \"U3\",\n        \"ManufacturerPartNumber\": \"STM32F4xx\",\n        \"PlacementResult\": \"Placed\",\n        \"NominalX\": 45.2, \"NominalY\": 22.8,\n        \"PlacedX\": 45.21, \"PlacedY\": 22.79, \"PlacedAngle\": 270.0\n      }\n    ]\n  }\n}",
+    "fields": [
+      {
+        "name": "MachineID",
+        "type": "string",
+        "req": true,
+        "desc": "機台 CFX Handle"
+      },
+      {
+        "name": "ProcessedAt",
+        "type": "DateTime",
+        "req": true,
+        "desc": "作業時間"
+      },
+      {
+        "name": "ActivityType",
+        "type": "string",
+        "req": true,
+        "desc": "SMTPlacement | SolderPasteInspection | Inspection 等"
+      },
+      {
+        "name": "UnitIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "PCB 序號"
+      },
+      {
+        "name": "ReferenceDesignator",
+        "type": "string",
+        "req": false,
+        "desc": "元件位號（如 U3、R12）"
+      },
+      {
+        "name": "ManufacturerPartNumber",
+        "type": "string",
+        "req": false,
+        "desc": "元件廠商料號"
+      },
+      {
+        "name": "PlacementResult",
+        "type": "enum",
+        "req": false,
+        "desc": "Placed | MissingPart | PickupError | OmitError"
+      },
+      {
+        "name": "NominalX/Y",
+        "type": "double",
+        "req": false,
+        "desc": "設計座標（mm）"
+      },
+      {
+        "name": "PlacedX/Y/Angle",
+        "type": "double",
+        "req": false,
+        "desc": "實際貼附座標與角度（mm, deg）"
+      }
+    ],
+    "notes": "貼片機可帶入每個元件的位置偏差，供 SPI/AOI 做相關性分析。"
+  },
+  "CFX.Production.WorkStageCompleted": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "多段製程中，單一 Stage 完成。",
+    "schema": "{\n  \"MessageBody\": {\n    \"WorkOrderIdentifier\": { \"WorkOrderID\": \"WO-2025-1001\" },\n    \"Stage\": 1,\n    \"Units\": [ { \"UnitIdentifier\": \"PCB-SN-000042\", \"UnitResult\": \"Passed\" } ],\n    \"CompletedAt\": \"2025-05-01T08:16:00Z\"\n  }\n}",
+    "fields": [
+      {
+        "name": "Stage",
+        "type": "int",
+        "req": true,
+        "desc": "完成的 Stage 編號"
+      },
+      {
+        "name": "UnitResult",
+        "type": "enum",
+        "req": true,
+        "desc": "Passed | Failed | Blocked"
+      },
+      {
+        "name": "CompletedAt",
+        "type": "DateTime",
+        "req": true,
+        "desc": "Stage 完成時間"
+      }
+    ]
+  },
+  "CFX.Production.WorkCompleted": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "Unit 完成本站所有作業，包含全部 Stage 結果與消耗物料清單（追溯性核心）。",
+    "schema": "{\n  \"MessageBody\": {\n    \"WorkOrderIdentifier\": { \"WorkOrderID\": \"WO-2025-1001\" },\n    \"Units\": [\n      {\n        \"UnitIdentifier\": \"PCB-SN-000042\",\n        \"UnitResult\": \"Passed\",\n        \"UnitRoute\": [{ \"Stage\": 1, \"StageResult\": \"Passed\" }]\n      }\n    ],\n    \"ConsumedMaterials\": [\n      {\n        \"UniqueIdentifier\": \"REEL-SN-7890\",\n        \"InternalPartNumber\": \"CAP-0402-100NF\",\n        \"Quantity\": 48.0, \"QuantityUnit\": \"EA\"\n      }\n    ],\n    \"CompletedAt\": \"2025-05-01T08:16:30Z\"\n  }\n}",
+    "fields": [
+      {
+        "name": "UnitIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "PCB 序號"
+      },
+      {
+        "name": "UnitResult",
+        "type": "enum",
+        "req": true,
+        "desc": "Passed | Failed | Blocked | Unprocessed"
+      },
+      {
+        "name": "ConsumedMaterials",
+        "type": "array",
+        "req": false,
+        "desc": "本站消耗物料清單（料卷序號、料號、數量）"
+      },
+      {
+        "name": "CompletedAt",
+        "type": "DateTime",
+        "req": true,
+        "desc": "作業完成時間"
+      }
+    ],
+    "notes": "ConsumedMaterials 是物料追溯關鍵，記錄哪個 Reel 的料貼到哪片 PCB 上。"
+  },
+  "CFX.Production.UnitsDeparted": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "Unit 離開本站，關閉本站 WIP，觸發下游機台 UnitsArrived。",
+    "schema": "{\n  \"MessageBody\": {\n    \"WorkOrderIdentifier\": { \"WorkOrderID\": \"WO-2025-1001\" },\n    \"Units\": [ { \"UnitIdentifier\": \"PCB-SN-000042\" } ],\n    \"DepartedAt\": \"2025-05-01T08:17:00Z\",\n    \"NextEndpointID\": \"SMTLine1.ReflowOven001\"\n  }\n}",
+    "fields": [
+      {
+        "name": "UnitIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "PCB 序號"
+      },
+      {
+        "name": "DepartedAt",
+        "type": "DateTime",
+        "req": true,
+        "desc": "離站時間"
+      },
+      {
+        "name": "NextEndpointID",
+        "type": "string",
+        "req": false,
+        "desc": "下一站的 CFX Handle"
+      }
+    ],
+    "notes": "若有 Hermes 協定，此訊息與 Hermes ServiceDescription 握手會並行發生。"
+  },
+  "CFX.Production.RecipeActivated": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "機台切換至新配方時發布（換線完成信號）。",
+    "schema": "{\n  \"MessageBody\": {\n    \"RecipeID\": \"RECIPE_PCB_B_V1\",\n    \"RecipeName\": \"PCB Type B Rev1\",\n    \"WorkOrderID\": \"WO-2025-1002\",\n    \"ActivatedAt\": \"2025-05-01T11:00:00Z\"\n  }\n}",
+    "fields": [
+      {
+        "name": "RecipeID",
+        "type": "string",
+        "req": true,
+        "desc": "配方唯一識別碼"
+      },
+      {
+        "name": "RecipeName",
+        "type": "string",
+        "req": false,
+        "desc": "配方名稱"
+      },
+      {
+        "name": "WorkOrderID",
+        "type": "string",
+        "req": false,
+        "desc": "關聯工單"
+      },
+      {
+        "name": "ActivatedAt",
+        "type": "DateTime",
+        "req": true,
+        "desc": "配方啟用時間"
+      }
+    ]
+  },
+  "CFX.ResourcePerformance.StationStateChanged": {
+    "dir": "event",
+    "module": "CFX.ResourcePerformance",
+    "desc": "機台狀態改變時發布（依 SEMI E10 標準），供 MES 計算 OEE。",
+    "schema": "{\n  \"MessageBody\": {\n    \"OldStationState\": \"Production\",\n    \"NewStationState\": \"Fault\",\n    \"Fault\": {\n      \"FaultOccurrenceID\": \"FAULT-001\",\n      \"Cause\": \"FEEDER_EMPTY\",\n      \"Severity\": \"Error\",\n      \"Description\": \"Feeder 01 material exhausted\",\n      \"OccurrenceDateTime\": \"2025-05-01T09:12:00Z\"\n    }\n  }\n}",
+    "fields": [
+      {
+        "name": "OldStationState",
+        "type": "enum",
+        "req": true,
+        "desc": "前一個狀態"
+      },
+      {
+        "name": "NewStationState",
+        "type": "enum",
+        "req": true,
+        "desc": "Production | Idle | Fault | Starved | Blocked | Changeover"
+      },
+      {
+        "name": "FaultOccurrenceID",
+        "type": "string",
+        "req": false,
+        "desc": "故障事件唯一識別碼"
+      },
+      {
+        "name": "Cause",
+        "type": "string",
+        "req": false,
+        "desc": "故障原因代碼"
+      },
+      {
+        "name": "Severity",
+        "type": "enum",
+        "req": false,
+        "desc": "Error | Warning | Information"
+      }
+    ],
+    "notes": "StationState 分類依 SEMI E10：Productive、Standby、Engineering、Scheduled/Unscheduled Downtime。"
+  },
+  "CFX.EndpointShuttingDown": {
+    "dir": "event",
+    "module": "CFX.Core",
+    "desc": "機台即將關機並斷開 CFX 網路時廣播，通知所有訂閱者端點即將下線。",
+    "schema": "{\n  \"CFXHandle\": \"SMTLine1.PickAndPlace001\"\n}",
+    "fields": [
+      {
+        "name": "CFXHandle",
+        "type": "string",
+        "req": true,
+        "desc": "機台唯一識別碼"
+      }
+    ]
+  },
+  "CFX.Production.UnitsInitialized": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "貼標機 / 雷射打碼機初始化 Unit（賦予序號），在 UnitsArrived 前發布。",
+    "schema": "{\n  \"WorkOrderIdentifier\": {\n    \"WorkOrderId\": \"WO45648798\",\n    \"Batch\": \"BATCH45648798-1\"\n  },\n  \"UnitCount\": 2,\n  \"Units\": [\n    {\n      \"UnitIdentifier\": \"PCB-SN-0042\"\n    },\n    {\n      \"UnitIdentifier\": \"PCB-SN-0043\"\n    }\n  ]\n}",
+    "fields": [
+      {
+        "name": "WorkOrderId",
+        "type": "string",
+        "req": true,
+        "desc": "工單編號"
+      },
+      {
+        "name": "UnitCount",
+        "type": "int",
+        "req": true,
+        "desc": "初始化 Unit 數量"
+      },
+      {
+        "name": "Units",
+        "type": "array",
+        "req": true,
+        "desc": "Unit 識別碼清單"
+      }
+    ]
+  },
+  "CFX.Production.RecipeModified": {
+    "dir": "event",
+    "module": "CFX.Production",
+    "desc": "機台上的 Recipe 被修改時發布（本地或遠端修改）。",
+    "schema": "{\n  \"RecipeName\": \"RECIPE3234\",\n  \"Revision\": \"D\",\n  \"ModifiedBy\": {\n    \"OperatorIdentifier\": \"BADGE001\",\n    \"ActorType\": \"Human\"\n  }\n}",
+    "fields": [
+      {
+        "name": "RecipeName",
+        "type": "string",
+        "req": true,
+        "desc": "配方名稱"
+      },
+      {
+        "name": "Revision",
+        "type": "string",
+        "req": true,
+        "desc": "配方版本"
+      },
+      {
+        "name": "ModifiedBy.OperatorIdentifier",
+        "type": "string",
+        "req": false,
+        "desc": "修改者識別碼"
+      }
+    ]
+  },
+  "CFX.Production.GetActiveRecipeRequest": {
+    "dir": "request",
+    "module": "CFX.Production",
+    "desc": "MES 向機台查詢目前作用中的 Recipe 名稱與版本。",
+    "schema": "{\n  \"Lane\": 1,\n  \"Stage\": null\n}",
+    "fields": [
+      {
+        "name": "Lane",
+        "type": "int",
+        "req": false,
+        "desc": "查詢道次"
+      },
+      {
+        "name": "Stage",
+        "type": "object",
+        "req": false,
+        "desc": "查詢階段"
+      }
+    ]
+  },
+  "CFX.Production.GetActiveRecipeResponse": {
+    "dir": "response",
+    "module": "CFX.Production",
+    "desc": "機台回應目前啟用的 Recipe 名稱與版本。",
+    "schema": "{\n  \"Result\": {\n    \"Result\": \"Success\",\n    \"ResultCode\": 0\n  },\n  \"ActiveRecipeName\": \"RECIPE5566\",\n  \"ActiveRecipeRevision\": \"C\"\n}",
+    "fields": [
+      {
+        "name": "Result.Result",
+        "type": "enum",
+        "req": true,
+        "desc": "Success | Failed"
+      },
+      {
+        "name": "ActiveRecipeName",
+        "type": "string",
+        "req": true,
+        "desc": "目前啟用配方名稱"
+      },
+      {
+        "name": "ActiveRecipeRevision",
+        "type": "string",
+        "req": false,
+        "desc": "版本"
+      }
+    ]
+  },
+  "CFX.Production.ActivateRecipeRequest": {
+    "dir": "request",
+    "module": "CFX.Production",
+    "desc": "MES 要求機台切換至指定 Recipe（遠端換線）。",
+    "schema": "{\n  \"RecipeName\": \"RECIPE1234\",\n  \"Revision\": \"C\",\n  \"Lane\": 1\n}",
+    "fields": [
+      {
+        "name": "RecipeName",
+        "type": "string",
+        "req": true,
+        "desc": "目標配方名稱"
+      },
+      {
+        "name": "Revision",
+        "type": "string",
+        "req": false,
+        "desc": "目標版本"
+      },
+      {
+        "name": "Lane",
+        "type": "int",
+        "req": false,
+        "desc": "目標道次"
+      }
+    ]
+  },
+  "CFX.Production.ActivateRecipeResponse": {
+    "dir": "response",
+    "module": "CFX.Production",
+    "desc": "機台回應配方切換結果。",
+    "schema": "{\n  \"Result\": {\n    \"Result\": \"Success\",\n    \"ResultCode\": 0,\n    \"Message\": \"OK\"\n  }\n}",
+    "fields": [
+      {
+        "name": "Result.Result",
+        "type": "enum",
+        "req": true,
+        "desc": "Success | Failed"
+      }
+    ]
+  },
+  "CFX.Production.UpdateRecipeRequest": {
+    "dir": "request",
+    "module": "CFX.Production",
+    "desc": "MES 向機台上傳（新增或覆寫）Recipe 資料。",
+    "schema": "{\n  \"Overwrite\": true,\n  \"Recipe\": {\n    \"Name\": \"RECIPE234324\",\n    \"Revision\": \"C\",\n    \"ExpectedCycleTime\": 0.0\n  }\n}",
+    "fields": [
+      {
+        "name": "Overwrite",
+        "type": "bool",
+        "req": true,
+        "desc": "true=覆寫現有配方"
+      },
+      {
+        "name": "Recipe.Name",
+        "type": "string",
+        "req": true,
+        "desc": "配方名稱"
+      },
+      {
+        "name": "Recipe.Revision",
+        "type": "string",
+        "req": false,
+        "desc": "配方版本"
+      }
+    ]
+  },
+  "CFX.Production.UpdateRecipeResponse": {
+    "dir": "response",
+    "module": "CFX.Production",
+    "desc": "機台回應 Recipe 上傳結果。",
+    "schema": "{\n  \"Result\": {\n    \"Result\": \"Success\",\n    \"ResultCode\": 0,\n    \"Message\": \"OK\"\n  }\n}",
+    "fields": [
+      {
+        "name": "Result.Result",
+        "type": "enum",
+        "req": true,
+        "desc": "Success | Failed"
+      }
+    ]
+  },
+  "CFX.Production.GetRecipeRequest": {
+    "dir": "request",
+    "module": "CFX.Production",
+    "desc": "MES 向機台下載指定 Recipe 資料。",
+    "schema": "{\n  \"RecipeName\": \"RECIPE3234\",\n  \"Revision\": null\n}",
+    "fields": [
+      {
+        "name": "RecipeName",
+        "type": "string",
+        "req": true,
+        "desc": "配方名稱"
+      },
+      {
+        "name": "Revision",
+        "type": "string",
+        "req": false,
+        "desc": "null=最新版本"
+      }
+    ]
+  },
+  "CFX.Production.GetRecipeResponse": {
+    "dir": "response",
+    "module": "CFX.Production",
+    "desc": "機台回傳指定 Recipe 的完整資料。",
+    "schema": "{\n  \"Result\": {\n    \"Result\": \"Success\",\n    \"ResultCode\": 0\n  },\n  \"Recipe\": {\n    \"Name\": \"RECIPE4455\",\n    \"Revision\": \"C\"\n  }\n}",
+    "fields": [
+      {
+        "name": "Result.Result",
+        "type": "enum",
+        "req": true,
+        "desc": "Success | Failed"
+      },
+      {
+        "name": "Recipe.Name",
+        "type": "string",
+        "req": true,
+        "desc": "配方名稱"
+      },
+      {
+        "name": "Recipe.Revision",
+        "type": "string",
+        "req": false,
+        "desc": "配方版本"
+      }
+    ]
+  },
+  "CFX.Production.Assembly.MaterialsInstalled": {
+    "dir": "event",
+    "module": "CFX.Production.Assembly",
+    "desc": "貼片機（SMT Mounter）每片 PCB 作業完成後發布，記錄各元件的料卷對 PCB 精確追溯。",
+    "schema": "{\n  \"TransactionId\": \"ce1cf002-50fe-4cd4\",\n  \"InstalledMaterials\": [\n    {\n      \"UnitIdentifier\": \"PCB-SN-0042\",\n      \"UnitPositionNumber\": 1,\n      \"QuantityInstalled\": 3,\n      \"Material\": {\n        \"UniqueIdentifier\": \"REEL-7890\",\n        \"PartNumber\": \"CAP-0402\"\n      }\n    }\n  ]\n}",
+    "fields": [
+      {
+        "name": "TransactionId",
+        "type": "UUID",
+        "req": true,
+        "desc": "交易識別碼"
+      },
+      {
+        "name": "UnitIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "PCB 序號"
+      },
+      {
+        "name": "UnitPositionNumber",
+        "type": "int",
+        "req": true,
+        "desc": "PCB 上第幾個元件位"
+      },
+      {
+        "name": "QuantityInstalled",
+        "type": "double",
+        "req": true,
+        "desc": "安裝數量"
+      },
+      {
+        "name": "Material.UniqueIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "料卷序號"
+      }
+    ],
+    "notes": "這是 SMT Mounter 的核心追溯訊息；每個 ReferenceDesignator 對應一筆記錄，確保 Reel→PCB 完整追溯鏈。"
+  },
+  "CFX.Production.TestAndInspection.UnitsInspected": {
+    "dir": "event",
+    "module": "CFX.Production.TestAndInspection",
+    "desc": "AOI / SPI / AXI 完成板面檢測後發布，回報量測值與缺陷清單。（正確命名空間：CFX.Production.TestAndInspection）",
+    "schema": "{\n  \"TransactionId\": \"14d48338-09b7-4d20\",\n  \"InspectionMethod\": \"AOI\",\n  \"SamplingInformation\": {\n    \"SamplingMethod\": \"NoSampling\"\n  },\n  \"Units\": [\n    {\n      \"UnitIdentifier\": \"PCB-SN-0042\",\n      \"UnitResult\": \"Failed\",\n      \"Defects\": [\n        {\n          \"ReferenceDesignator\": \"R12\",\n          \"DefectCode\": \"SOLDER_BRIDGE\"\n        }\n      ]\n    }\n  ]\n}",
+    "fields": [
+      {
+        "name": "TransactionId",
+        "type": "UUID",
+        "req": true,
+        "desc": "交易識別碼"
+      },
+      {
+        "name": "InspectionMethod",
+        "type": "enum",
+        "req": true,
+        "desc": "AOI | SPI | AXI | Manual"
+      },
+      {
+        "name": "SamplingMethod",
+        "type": "enum",
+        "req": false,
+        "desc": "抽樣方式"
+      },
+      {
+        "name": "UnitResult",
+        "type": "enum",
+        "req": true,
+        "desc": "Passed | Failed | Skipped"
+      },
+      {
+        "name": "ReferenceDesignator",
+        "type": "string",
+        "req": false,
+        "desc": "缺陷元件位號"
+      },
+      {
+        "name": "DefectCode",
+        "type": "string",
+        "req": true,
+        "desc": "缺陷代碼"
+      }
+    ],
+    "notes": "SPI 使用 SolderPasteMeasurement 動態子結構回報錫膏體積/偏移；AOI 使用 ComponentOfInterest + ReferenceDesignator 回報橋接、少件等缺陷。"
+  },
+  "CFX.Production.TestAndInspection.UnitsTested": {
+    "dir": "event",
+    "module": "CFX.Production.TestAndInspection",
+    "desc": "電測設備（ICT/FCT/AOI）完成功能/電氣測試後發布，回報測試結果與量測值。",
+    "schema": "{\n  \"TransactionId\": \"c16bb3f4-8088\",\n  \"TestMethod\": \"Automated\",\n  \"Units\": [\n    {\n      \"UnitIdentifier\": \"PCB-SN-0042\",\n      \"OverallResult\": \"Passed\",\n      \"Symptoms\": [],\n      \"Measurements\": [\n        {\n          \"MeasurementName\": \"VCC\",\n          \"MeasuredValue\": 3.32,\n          \"ExpectedValue\": 3.3,\n          \"Unit\": \"V\"\n        }\n      ]\n    }\n  ]\n}",
+    "fields": [
+      {
+        "name": "TransactionId",
+        "type": "UUID",
+        "req": true,
+        "desc": "交易識別碼"
+      },
+      {
+        "name": "TestMethod",
+        "type": "enum",
+        "req": true,
+        "desc": "Automated | Manual"
+      },
+      {
+        "name": "UnitIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "單板序號"
+      },
+      {
+        "name": "OverallResult",
+        "type": "enum",
+        "req": true,
+        "desc": "Passed | Failed"
+      },
+      {
+        "name": "Measurements[].MeasurementName",
+        "type": "string",
+        "req": true,
+        "desc": "量測項目名稱"
+      },
+      {
+        "name": "Measurements[].MeasuredValue",
+        "type": "double",
+        "req": true,
+        "desc": "實測值"
+      },
+      {
+        "name": "Symptoms",
+        "type": "array",
+        "req": false,
+        "desc": "失效症狀清單"
+      }
+    ]
+  },
+  "CFX.Production.Processing.UnitsProcessed": {
+    "dir": "event",
+    "module": "CFX.Production.Processing",
+    "desc": "一般製程加工（回焊、焊接、塗佈、清洗、打碼）完成後發布，使用動態子結構（CommonProcessData）記錄製程參數。",
+    "schema": "{\n  \"TransactionId\": \"a881ac27-9649\",\n  \"OverallResult\": \"Succeeded\",\n  \"CommonProcessData\": {\n    \"$type\": \"CFX.Structures.SolderReflow.ReflowProcessData, CFX\",\n    \"ConveyorSpeed\": 60\n  },\n  \"UnitProcessResults\": [\n    {\n      \"UnitIdentifier\": \"PCB-SN-0042\",\n      \"UnitResult\": \"Succeeded\"\n    }\n  ]\n}",
+    "fields": [
+      {
+        "name": "TransactionId",
+        "type": "UUID",
+        "req": true,
+        "desc": "交易識別碼"
+      },
+      {
+        "name": "OverallResult",
+        "type": "enum",
+        "req": true,
+        "desc": "Succeeded | Failed"
+      },
+      {
+        "name": "CommonProcessData.$type",
+        "type": "string",
+        "req": true,
+        "desc": "動態子結構型別名稱—決定製程類型"
+      },
+      {
+        "name": "UnitIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "單板序號"
+      },
+      {
+        "name": "UnitResult",
+        "type": "enum",
+        "req": true,
+        "desc": "Succeeded | Failed"
+      }
+    ],
+    "notes": "CommonProcessData.$type 的值決定具體製程：ReflowProcessData（回焊）、SelectiveSolderProcessData（選擇焊）、WaveProcessData（波峰焊）、HandSolderingProcessData（手焊）、CoatingProcessData（塗佈）、CleaningProcessData（清洗）、LaserMarkingProcessData（雷射打碼）。"
+  },
+  "CFX.ResourcePerformance.StationOnline": {
+    "dir": "event",
+    "module": "CFX.ResourcePerformance",
+    "desc": "機台恢復上線時發布，附帶本次離線持續時間。",
+    "schema": "{\n  \"OfflineDuration\": \"00:23:00\"\n}",
+    "fields": [
+      {
+        "name": "OfflineDuration",
+        "type": "TimeSpan",
+        "req": false,
+        "desc": "本次離線時長（HH:mm:ss）"
+      }
+    ]
+  },
+  "CFX.ResourcePerformance.StationOffline": {
+    "dir": "event",
+    "module": "CFX.ResourcePerformance",
+    "desc": "機台進入離線狀態時發布（例如維護、換料、待機）。",
+    "schema": "{\n}",
+    "fields": []
+  },
+  "CFX.ResourcePerformance.FaultOccurred": {
+    "dir": "event",
+    "module": "CFX.ResourcePerformance",
+    "desc": "機台發生故障時發布，包含故障碼、嚴重程度與發生時間。",
+    "schema": "{\n  \"Fault\": {\n    \"Cause\": \"MechanicalFailure\",\n    \"Severity\": \"Error\",\n    \"FaultCode\": \"ERROR-3943480\",\n    \"FaultOccurrenceId\": \"ea170e0a-43fb\",\n    \"OccurredAt\": \"2025-05-01T09:12:00Z\"\n  }\n}",
+    "fields": [
+      {
+        "name": "Fault.FaultCode",
+        "type": "string",
+        "req": true,
+        "desc": "故障代碼"
+      },
+      {
+        "name": "Fault.Cause",
+        "type": "string",
+        "req": true,
+        "desc": "故障原因"
+      },
+      {
+        "name": "Fault.Severity",
+        "type": "enum",
+        "req": true,
+        "desc": "Error | Warning | Information"
+      },
+      {
+        "name": "Fault.FaultOccurrenceId",
+        "type": "UUID",
+        "req": true,
+        "desc": "故障唯一識別碼"
+      },
+      {
+        "name": "Fault.OccurredAt",
+        "type": "DateTime",
+        "req": true,
+        "desc": "故障發生時間"
+      }
+    ]
+  },
+  "CFX.ResourcePerformance.FaultAcknowledged": {
+    "dir": "event",
+    "module": "CFX.ResourcePerformance",
+    "desc": "操作員確認故障後發布，關聯到對應的故障識別碼。",
+    "schema": "{\n  \"FaultOccurrenceId\": \"ea170e0a-43fb\",\n  \"Operator\": {\n    \"OperatorIdentifier\": \"BADGE4486\",\n    \"ActorType\": \"Human\"\n  }\n}",
+    "fields": [
+      {
+        "name": "FaultOccurrenceId",
+        "type": "UUID",
+        "req": true,
+        "desc": "對應的故障識別碼"
+      },
+      {
+        "name": "Operator.OperatorIdentifier",
+        "type": "string",
+        "req": false,
+        "desc": "確認操作員"
+      },
+      {
+        "name": "Operator.ActorType",
+        "type": "enum",
+        "req": false,
+        "desc": "Human | Robot"
+      }
+    ]
+  },
+  "CFX.ResourcePerformance.FaultCleared": {
+    "dir": "event",
+    "module": "CFX.ResourcePerformance",
+    "desc": "故障被排除並清除後發布。",
+    "schema": "{\n  \"FaultOccurrenceId\": \"ea170e0a-43fb\",\n  \"Operator\": {\n    \"OperatorIdentifier\": \"BADGE4486\",\n    \"ActorType\": \"Human\"\n  }\n}",
+    "fields": [
+      {
+        "name": "FaultOccurrenceId",
+        "type": "UUID",
+        "req": true,
+        "desc": "對應的故障識別碼"
+      },
+      {
+        "name": "Operator.OperatorIdentifier",
+        "type": "string",
+        "req": false,
+        "desc": "排除故障操作員"
+      }
+    ]
+  },
+  "CFX.ResourcePerformance.HandleFaultRequest": {
+    "dir": "request",
+    "module": "CFX.ResourcePerformance",
+    "desc": "MES 要求機台遠端處理指定故障（例如重置、跳過、繼續生產）。",
+    "schema": "{\n  \"FaultOccurrenceId\": \"ea170e0a-43fb\",\n  \"HandleRemote\": true\n}",
+    "fields": [
+      {
+        "name": "FaultOccurrenceId",
+        "type": "UUID",
+        "req": true,
+        "desc": "目標故障識別碼"
+      },
+      {
+        "name": "HandleRemote",
+        "type": "bool",
+        "req": true,
+        "desc": "true=遠端處理"
+      }
+    ]
+  },
+  "CFX.ResourcePerformance.HandleFaultResponse": {
+    "dir": "response",
+    "module": "CFX.ResourcePerformance",
+    "desc": "機台回應故障處理結果。",
+    "schema": "{\n  \"Result\": {\n    \"Result\": \"Success\",\n    \"ResultCode\": 0,\n    \"Message\": \"OK\"\n  }\n}",
+    "fields": [
+      {
+        "name": "Result.Result",
+        "type": "enum",
+        "req": true,
+        "desc": "Success | Failed"
+      }
+    ]
+  },
+  "CFX.ResourcePerformance.SolderPastePrinting.StencilCleaned": {
+    "dir": "event",
+    "module": "CFX.ResourcePerformance.SolderPastePrinting",
+    "desc": "鋼板清洗完成時發布，記錄鋼板識別碼、清洗模式與本次/累積印刷次數。",
+    "schema": "{\n  \"Stencil\": {\n    \"UniqueIdentifier\": \"UID23432434\",\n    \"Name\": \"STENCIL234343\"\n  },\n  \"StencilCleanMode\": \"V\",\n  \"TimeSinceLastClean\": \"00:33:00\",\n  \"CyclesSinceLastClean\": 35\n}",
+    "fields": [
+      {
+        "name": "Stencil.UniqueIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "鋼板序號"
+      },
+      {
+        "name": "Stencil.Name",
+        "type": "string",
+        "req": false,
+        "desc": "鋼板名稱"
+      },
+      {
+        "name": "StencilCleanMode",
+        "type": "string",
+        "req": true,
+        "desc": "V=Vacuum / W=Wet / D=Dry"
+      },
+      {
+        "name": "TimeSinceLastClean",
+        "type": "TimeSpan",
+        "req": false,
+        "desc": "上次清洗距今"
+      },
+      {
+        "name": "CyclesSinceLastClean",
+        "type": "int",
+        "req": false,
+        "desc": "上次清洗後印刷次數"
+      }
+    ]
+  },
+  "CFX.Materials.Storage.MaterialsLoaded": {
+    "dir": "event",
+    "module": "CFX.Materials.Storage",
+    "desc": "物料（元件料卷、錫膏）上料至機台時發布，記錄料卷序號、位置與數量。（正確命名空間：CFX.Materials.Storage）",
+    "schema": "{\n  \"Materials\": [\n    {\n      \"LocationIdentifier\": \"5555646453\",\n      \"LocationName\": \"SLOT45\",\n      \"MaterialPackage\": {\n        \"UniqueIdentifier\": \"MAT4566556456\",\n        \"InternalPartNumber\": \"IPN47788\",\n        \"Quantity\": 887\n      }\n    }\n  ]\n}",
+    "fields": [
+      {
+        "name": "LocationIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "Feeder/槽位識別碼"
+      },
+      {
+        "name": "LocationName",
+        "type": "string",
+        "req": false,
+        "desc": "槽位名稱"
+      },
+      {
+        "name": "MaterialPackage.UniqueIdentifier",
+        "type": "string",
+        "req": true,
+        "desc": "料卷/載具序號"
+      },
+      {
+        "name": "MaterialPackage.InternalPartNumber",
+        "type": "string",
+        "req": false,
+        "desc": "工廠內部料號"
+      },
+      {
+        "name": "MaterialPackage.Quantity",
+        "type": "double",
+        "req": false,
+        "desc": "載入數量"
+      }
+    ]
+  },
+  "CFX.Materials.Storage.MaterialsUnloaded": {
+    "dir": "event",
+    "module": "CFX.Materials.Storage",
+    "desc": "物料從機台卸除時發布，記錄剩餘數量，用於 MES 庫存回倉。（正確命名空間：CFX.Materials.Storage）",
+    "schema": "{\n  \"MaterialPackageIdentifiers\": [\n    \"MAT4566556456\",\n    \"MAT4566554543\"\n  ]\n}",
+    "fields": [
+      {
+        "name": "MaterialPackageIdentifiers",
+        "type": "string[]",
+        "req": true,
+        "desc": "卸除的料卷唯一識別碼清單"
+      }
+    ]
+  },
+  "CFX.Materials.Storage.ValidateStationSetupRequest": {
+    "dir": "request",
+    "module": "CFX.Materials.Storage",
+    "desc": "外部系統（Setup System）要求機台驗證目前上料是否符合 Setup 需求。",
+    "schema": "{\n  \"SetupRequirements\": {\n    \"SetupName\": \"COMMONSETUP1\",\n    \"MaterialSetupRequirements\": [\n      {\n        \"Position\": \"B1.F.45\",\n        \"PartNumber\": \"IPN47788\"\n      }\n    ]\n  }\n}",
+    "fields": [
+      {
+        "name": "SetupRequirements.SetupName",
+        "type": "string",
+        "req": false,
+        "desc": "Setup 名稱"
+      },
+      {
+        "name": "SetupRequirements.MaterialSetupRequirements",
+        "type": "array",
+        "req": true,
+        "desc": "各位置物料需求清單"
+      },
+      {
+        "name": "Position",
+        "type": "string",
+        "req": true,
+        "desc": "槽位編號"
+      },
+      {
+        "name": "PartNumber",
+        "type": "string",
+        "req": true,
+        "desc": "需求料號"
+      }
+    ]
+  },
+  "CFX.Materials.Storage.ValidateStationSetupResponse": {
+    "dir": "response",
+    "module": "CFX.Materials.Storage",
+    "desc": "機台回應 Setup 驗證結果（Passed = 上料正確符合需求）。",
+    "schema": "{\n  \"Result\": {\n    \"Result\": \"Success\",\n    \"ResultCode\": 0,\n    \"Message\": \"SETUP OK\"\n  }\n}",
+    "fields": [
+      {
+        "name": "Result.Result",
+        "type": "enum",
+        "req": true,
+        "desc": "Success | Failed"
+      },
+      {
+        "name": "Result.Message",
+        "type": "string",
+        "req": false,
+        "desc": "詳細說明"
+      }
+    ]
+  }
+}
