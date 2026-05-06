@@ -65,8 +65,41 @@ function setMode(mode, btn) {
   const search = document.getElementById('search');
   search.value = '';
   search.placeholder = mode === 'flows' ? '搜尋流程…' : '搜尋訊息…';
-  if (mode === 'flows') renderSidebar();
-  else renderMsgList();
+  const main = document.getElementById('main');
+  const dp   = document.getElementById('detail-panel');
+  const fbar = document.getElementById('fbar');
+  if (mode === 'messages') {
+    curMsg = null;
+    main.classList.add('msg-mode');
+    dp.classList.remove('hidden');
+    document.getElementById('ftitle').textContent = '訊息瀏覽器';
+    document.getElementById('fdesc').textContent  = '← 從左側選擇 CFX 訊息查看規格與 JSON 範例';
+    document.getElementById('fbadge').style.display = 'none';
+    fbar.style.display = 'none';
+    showMsgPlaceholder();
+    renderMsgList();
+  } else {
+    curMsg = null;
+    main.classList.remove('msg-mode');
+    dp.classList.add('hidden');
+    if (curFlow) {
+      document.getElementById('ftitle').textContent = curFlow.label;
+      document.getElementById('fdesc').textContent  = curFlow.desc;
+      const b = document.getElementById('fbadge');
+      b.textContent = curFlow.badgeText;
+      b.style.display = 'inline';
+      b.style.color = curFlow.badgeColor;
+      b.style.borderColor = curFlow.badgeColor + '55';
+      b.style.background  = curFlow.badgeColor + '18';
+      fbar.style.display = 'flex';
+      renderSeq(curFlow);
+    } else {
+      document.getElementById('ftitle').textContent = '選擇左側流程';
+      document.getElementById('fdesc').textContent  = '← 選擇 SMT 流程以查看 CFX 2.0 訊息循序圖';
+      fbar.style.display = 'none';
+    }
+    renderSidebar();
+  }
 }
 
 const MOD_LABELS = {
@@ -99,6 +132,10 @@ const MOD_LABELS = {
   'CFX.Maintenance':                                       'Maintenance',
   'CFX.Sensor.Identification':                             'Sensor · Identification',
 };
+
+function showMsgPlaceholder() {
+  document.getElementById('di').innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;color:var(--text3);text-align:center"><div style="font-size:36px;margin-bottom:12px;opacity:0.3">✉</div><p style="font-size:13px;line-height:1.9">從左側選擇 CFX 訊息<br>查看規格與 JSON 範例</p></div>';
+}
 
 function renderMsgList(term = '') {
   const el = document.getElementById('flow-list');
@@ -310,13 +347,17 @@ function selectMsg(msgName) {
   if (!m) return;
   if (curMsg === msgName) {
     curMsg = null;
-    document.getElementById('detail-panel').classList.add('hidden');
-    if (curFlow) renderSeq(curFlow);
-    if (curMode === 'messages') renderMsgList(document.getElementById('search').value);
+    if (curMode === 'messages') {
+      showMsgPlaceholder();
+      renderMsgList(document.getElementById('search').value);
+    } else {
+      document.getElementById('detail-panel').classList.add('hidden');
+      if (curFlow) renderSeq(curFlow);
+    }
     return;
   }
   curMsg = msgName;
-  if (curFlow) renderSeq(curFlow);
+  if (curMode === 'flows' && curFlow) renderSeq(curFlow);
   if (curMode === 'messages') renderMsgList(document.getElementById('search').value);
 
   const dc = m.dir === 'response' ? '#555e70' : m.dir === 'event' ? '#1a7a40' : '#1565c0';
