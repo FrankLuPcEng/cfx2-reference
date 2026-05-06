@@ -165,3 +165,70 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 .scenario-step-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px;}
 .machine-chip{display:inline-block;font-size:9px;padding:1px 6px;border-radius:10px;border:1px solid var(--border);color:var(--text3);margin:2px 2px 0 0;}
 .scenario-chips{padding:4px 24px 2px 57px;display:flex;flex-wrap:wrap;gap:2px;}
+
+/* ── Guide mode button (5th, full-width row) ───────── */
+.mtbtn-guide{flex:1 0 100%;margin-top:2px;font-size:10.5px;}
+
+/* ── Guide sidebar TOC ──────────────────────────────── */
+.guide-toc-item{display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;border-left:3px solid transparent;font-size:12px;color:var(--text2);transition:all 0.1s;}
+.guide-toc-item:hover{background:var(--bg3);color:var(--text);}
+.guide-toc-item.active{background:var(--bg4);border-left-color:var(--accent);color:var(--accent2);font-weight:600;}
+.guide-toc-icon{font-size:14px;line-height:1;flex-shrink:0;}
+
+/* ── Guide main content ─────────────────────────────── */
+.guide-content{max-width:760px;padding-bottom:40px;}
+.guide-section{margin-bottom:36px;}
+.guide-section h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.guide-section h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);margin:18px 0 8px;}
+.guide-section p{font-size:12.5px;color:var(--text2);line-height:1.75;margin-bottom:8px;}
+.guide-section ul,.guide-section ol{padding-left:20px;display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+.guide-section li{font-size:12px;color:var(--text2);line-height:1.6;}
+.guide-divider{border:none;border-top:1px solid var(--border);margin:8px 0 28px;}
+
+/* Architecture diagram */
+.arch-diagram{display:flex;align-items:center;justify-content:center;gap:0;margin:16px 0;padding:16px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;flex-wrap:wrap;gap:4px;}
+.arch-box{background:var(--bg2);border:2px solid var(--border2);border-radius:6px;padding:10px 14px;text-align:center;min-width:110px;}
+.arch-box.highlight{border-color:var(--accent);background:var(--accent)18;}
+.arch-box-title{font-size:12px;font-weight:700;color:var(--text);}
+.arch-box-sub{font-size:10px;color:var(--text3);margin-top:2px;}
+.arch-arrow{display:flex;flex-direction:column;align-items:center;gap:2px;padding:0 4px;}
+.arch-arrow-line{font-size:18px;color:var(--accent);line-height:1;}
+.arch-arrow-label{font-size:9px;color:var(--text3);white-space:nowrap;text-align:center;}
+
+/* Pseudo-code block */
+.guide-code{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px 14px;font-family:var(--mono);font-size:11.5px;color:var(--accent);line-height:1.7;white-space:pre;overflow-x:auto;margin:8px 0 4px;}
+.guide-code-note{font-size:10px;color:var(--text3);margin-bottom:12px;font-style:italic;}
+
+/* CFXHandle breakdown */
+.handle-breakdown{display:flex;gap:0;margin:12px 0;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.handle-part{flex:1;padding:8px 10px;text-align:center;border-right:1px solid var(--border);}
+.handle-part:last-child{border-right:none;}
+.handle-part-val{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent2);}
+.handle-part-label{font-size:9px;color:var(--text3);margin-top:3px;}
+
+/* Step list for getting-started */
+.guide-steps{display:flex;flex-direction:column;gap:12px;margin:8px 0;}
+.guide-step{display:flex;gap:12px;align-items:flex-start;}
+.guide-step-num{width:24px;height:24px;border-radius:50%;background:var(--accent2);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.guide-step-body{flex:1;min-width:0;}
+.guide-step-title{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.guide-step-desc{font-size:11.5px;color:var(--text2);line-height:1.6;}
+
+/* Pattern cards */
+.guide-pattern{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:12px;}
+.guide-pattern-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;}
+
+/* ── Flow backlinks (in message detail panel) ──────── */
+.flow-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
+.flow-chip{font-size:10px;padding:2px 9px;border-radius:12px;border:1px solid var(--border);color:var(--text2);background:none;cursor:pointer;transition:all 0.1s;}
+.flow-chip:hover{background:var(--bg3);filter:brightness(1.1);}
+
+/* ── AMQP topic row (in message detail panel) ─────── */
+.amqp-topic-row{display:flex;align-items:center;gap:7px;padding:6px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;margin:10px 0 4px;flex-wrap:wrap;}
+.amqp-topic-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--text3);flex-shrink:0;}
+.amqp-topic-val{font-family:var(--mono);font-size:11px;color:var(--accent2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.amqp-topic-val em{color:var(--text3);font-style:italic;}
+.amqp-topic-note{font-size:11px;color:var(--text3);font-style:italic;}
+.amqp-copy-btn{font-size:9px;padding:2px 7px;border-radius:3px;border:1px solid var(--border2);background:none;color:var(--text3);cursor:pointer;flex-shrink:0;transition:all 0.1s;}
+.amqp-copy-btn:hover{background:var(--accent2);border-color:var(--accent2);color:#fff;}
+.amqp-copy-btn.copied{background:var(--green);border-color:var(--green);color:#fff;}
