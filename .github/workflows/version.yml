@@ -21,14 +21,9 @@ jobs:
           COMMIT=$(git rev-parse --short=7 HEAD)
           DATE=$(date -u +"%Y-%m-%d")
           BUILD=$(date -u +"%s")
-          cat > data/version.json <<EOF
-          {
-            "version": "$VERSION",
-            "commit": "$COMMIT",
-            "date": "$DATE",
-            "build": $BUILD
-          }
-          EOF
+          printf '{\n  "version": "%s",\n  "commit": "%s",\n  "date": "%s",\n  "build": %s\n}\n' \
+            "$VERSION" "$COMMIT" "$DATE" "$BUILD" > data/version.json
+          cat data/version.json
 
       - name: Commit version.json
         run: |
