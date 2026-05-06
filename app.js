@@ -1,17 +1,18 @@
-let P = {}, MSGS = {}, FLOWS = [];
-let curFlow = null, curMsg = null, msgFilter = 'all', curMode = 'flows', curMachine = null;
+let P = {}, MSGS = {}, FLOWS = [], SCENARIOS = [];
+let curFlow = null, curMsg = null, msgFilter = 'all', curMode = 'flows', curMachine = null, curScenario = null;
 
 async function init() {
   try {
-    const [pRes, mRes, fRes] = await Promise.all([
+    const [pRes, mRes, fRes, sRes] = await Promise.all([
       fetch('data/participants.json'),
       fetch('data/messages.json'),
       fetch('data/flows.json'),
+      fetch('data/scenarios.json'),
     ]);
-    if (!pRes.ok || !mRes.ok || !fRes.ok) {
-      throw new Error(`HTTP error — participants:${pRes.status} messages:${mRes.status} flows:${fRes.status}`);
+    if (!pRes.ok || !mRes.ok || !fRes.ok || !sRes.ok) {
+      throw new Error(`HTTP error — participants:${pRes.status} messages:${mRes.status} flows:${fRes.status} scenarios:${sRes.status}`);
     }
-    [P, MSGS, FLOWS] = await Promise.all([pRes.json(), mRes.json(), fRes.json()]);
+    [P, MSGS, FLOWS, SCENARIOS] = await Promise.all([pRes.json(), mRes.json(), fRes.json(), sRes.json()]);
   } catch (err) {
     showError(err.message);
     return;
@@ -97,6 +98,18 @@ function setMode(mode, btn) {
     document.getElementById('empty-state').style.display = 'flex';
     document.getElementById('seqc').innerHTML = '';
     renderMachineList();
+
+  } else if (mode === 'scenarios') {
+    curMsg = null;
+    curScenario = null;
+    sw.style.display = 'none';
+    fbar.style.display = 'none';
+    document.getElementById('fbadge').style.display = 'none';
+    document.getElementById('ftitle').textContent = '情境視角';
+    document.getElementById('fdesc').textContent  = '← 選擇製程情境查看跨流程的 CFX 訊息全貌';
+    document.getElementById('empty-state').style.display = 'flex';
+    document.getElementById('seqc').innerHTML = '';
+    renderScenarioList();
 
   } else {
     // flows
