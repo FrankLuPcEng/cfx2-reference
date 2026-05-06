@@ -1,5 +1,42 @@
 let P = {}, MSGS = {}, FLOWS = [], SCENARIOS = [];
 let curFlow = null, curMsg = null, msgFilter = 'all', curMode = 'flows', curMachine = null, curScenario = null, curView = 'diagram';
+let _restoringHash = false;
+
+function updateHash() {
+  if (_restoringHash) return;
+  const parts = [curMode];
+  if (curMode === 'flows' && curFlow) {
+    parts.push(encodeURIComponent(curFlow.id ?? curFlow.label));
+    if (curMsg) parts.push(encodeURIComponent(curMsg));
+  } else if (curMode === 'messages' && curMsg) {
+    parts.push(encodeURIComponent(curMsg));
+  }
+  const hash = '#' + parts.join('/');
+  if (location.hash !== hash) history.pushState(null, '', hash);
+}
+
+function restoreFromHash() {
+  const raw = location.hash.slice(1);
+  if (!raw) return;
+  const [mode, p1, p2] = raw.split('/').map(decodeURIComponent);
+  const btn = document.querySelector(`.nav-item[data-mode="${mode}"]`);
+  if (!btn) return;
+  _restoringHash = true;
+  try {
+    setMode(mode, btn);
+    if (mode === 'flows' && p1 && FLOWS.length) {
+      const flow = FLOWS.flatMap(g => g.items).find(f => (f.id ?? f.label) === p1);
+      if (flow) {
+        selectFlow(flow);
+        if (p2) selectMsg(p2);
+      }
+    } else if (mode === 'messages' && p1) {
+      selectMsg(p1);
+    }
+  } finally {
+    _restoringHash = false;
+  }
+}
 
 async function init() {
   initTheme();
@@ -23,6 +60,8 @@ async function init() {
   }
   setupListeners();
   renderSidebar();
+  window.addEventListener('popstate', restoreFromHash);
+  restoreFromHash();
 }
 
 function showError(msg) {
@@ -76,6 +115,7 @@ function setupListeners() {
       navigator.clipboard.writeText(text).then(() => {
         copyBtn.textContent = '已複製！';
         copyBtn.classList.add('copied');
+        announce('已複製到剪貼簿');
         setTimeout(() => {
           copyBtn.textContent = '複製';
           copyBtn.classList.remove('copied');
@@ -93,6 +133,14 @@ function initTheme() {
   const dark = saved === 'dark' || prefersDark;
   document.documentElement.dataset.theme = dark ? 'dark' : 'light';
   document.getElementById('theme-toggle').textContent = dark ? '☾' : '☀';
+  updateThemeColorMeta(dark);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem('cfx-theme')) {
+      document.documentElement.dataset.theme = e.matches ? 'dark' : 'light';
+      document.getElementById('theme-toggle').textContent = e.matches ? '☾' : '☀';
+      updateThemeColorMeta(e.matches);
+    }
+  });
 }
 
 function toggleTheme() {
@@ -100,6 +148,34 @@ function toggleTheme() {
   document.documentElement.dataset.theme = isDark ? 'light' : 'dark';
   localStorage.setItem('cfx-theme', isDark ? 'light' : 'dark');
   document.getElementById('theme-toggle').textContent = isDark ? '☀' : '☾';
+  updateThemeColorMeta(!isDark);
+}
+
+function updateThemeColorMeta(isDark) {
+  const meta = document.getElementById('theme-color-meta');
+  if (meta) meta.content = isDark ? '#1f2335' : '#2d4f9e';
+}
+
+function announce(msg) {
+  const el = document.getElementById('a11y-announce');
+  if (!el) return;
+  el.textContent = '';
+  requestAnimationFrame(() => { el.textContent = msg; });
+}
+
+function makeSeqKeyboard() {
+  const seqc = document.getElementById('seqc');
+  seqc.querySelectorAll('[data-msg]').forEach(g => {
+    g.setAttribute('tabindex', '0');
+    g.setAttribute('role', 'button');
+    g.setAttribute('aria-label', g.dataset.msg);
+    g.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectMsg(g.dataset.msg);
+      }
+    });
+  });
 }
 
 function initSidebar() {
@@ -269,6 +345,7 @@ function setMode(mode, btn) {
     }
     renderSidebar();
   }
+  updateHash();
 }
 
 const MOD_LABELS = {
@@ -650,6 +727,7 @@ function selectFlow(flow) {
   updateBreadcrumb(flow);
   showViewBar('diagram');
   renderSeq(flow);
+  updateHash();
 }
 
 function renderSeq(flow) {
@@ -686,10 +764,10 @@ function renderSeq(flow) {
   let s = `<svg xmlns="http://www.w3.org/2000/svg" width="${TOTAL_W}" height="${SVG_H}" style="font-family:system-ui,-apple-system,sans-serif">
   <defs>
     <marker id="ah" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="8" orient="auto">
-      <polygon points="0,0 10,3.5 0,7" fill="#454f6b"/>
+      <polygon points="0,0 10,3.5 0,7" style="fill:var(--text2)"/>
     </marker>
     <filter id="msg-glow" x="-40%" y="-80%" width="180%" height="260%">
-      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#4f6db8" flood-opacity="0.65"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="4" style="flood-color:var(--accent)" flood-opacity="0.65"/>
     </filter>
   </defs>`;
 
@@ -698,15 +776,15 @@ function renderSeq(flow) {
     const info = P[p];
     const x = cx(i) - BOX_W / 2;
     const lines = info.label.split('\n');
-    s += `<rect x="${x}" y="${TOP_PAD}" width="${BOX_W}" height="${BOX_H}" fill="white" stroke="#a0aabe" stroke-width="1.5"/>`;
+    s += `<rect x="${x}" y="${TOP_PAD}" width="${BOX_W}" height="${BOX_H}" style="fill:var(--bg2);stroke:var(--border2)" stroke-width="1.5"/>`;
     lines.forEach((ln, li) => {
-      s += `<text x="${cx(i)}" y="${TOP_PAD + BOX_H / 2 + (li - (lines.length - 1) / 2) * 14}" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#1a2035">${ln}</text>`;
+      s += `<text x="${cx(i)}" y="${TOP_PAD + BOX_H / 2 + (li - (lines.length - 1) / 2) * 14}" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" style="fill:var(--text)">${ln}</text>`;
     });
   });
 
   // Lifelines
   parts.forEach((p, i) => {
-    s += `<line x1="${cx(i)}" y1="${TOP_PAD + BOX_H}" x2="${cx(i)}" y2="${BOT_Y}" stroke="#4f6db8" stroke-width="1" opacity="0.3"/>`;
+    s += `<line x1="${cx(i)}" y1="${TOP_PAD + BOX_H}" x2="${cx(i)}" y2="${BOT_Y}" style="stroke:var(--accent)" stroke-width="1" opacity="0.3"/>`;
   });
 
   // Frames (opt/alt)
@@ -715,10 +793,10 @@ function renderSeq(flow) {
       const sy = FIRST_Y + fr.startStep * ROW_H - ROW_H / 2 - 6;
       const ey = FIRST_Y + fr.endStep * ROW_H + ROW_H / 2 + 6;
       const fh = ey - sy;
-      s += `<rect x="${PAD}" y="${sy}" width="${TOTAL_W - PAD * 2}" height="${fh}" fill="none" stroke="#a0aabe" stroke-width="1.5" stroke-dasharray="6,3"/>`;
-      s += `<rect x="${PAD}" y="${sy}" width="28" height="14" fill="#2d4f9e"/>`;
-      s += `<text x="${PAD + 14}" y="${sy + 7}" text-anchor="middle" dominant-baseline="central" font-size="9" font-weight="700" fill="white">${fr.label}</text>`;
-      s += `<text x="${PAD + 36}" y="${sy + 7}" dominant-baseline="central" font-size="9" fill="#454f6b" font-style="italic">[${fr.cond}]</text>`;
+      s += `<rect x="${PAD}" y="${sy}" width="${TOTAL_W - PAD * 2}" height="${fh}" fill="none" style="stroke:var(--border2)" stroke-width="1.5" stroke-dasharray="6,3"/>`;
+      s += `<rect x="${PAD}" y="${sy}" width="28" height="14" style="fill:var(--accent2)"/>`;
+      s += `<text x="${PAD + 14}" y="${sy + 7}" text-anchor="middle" dominant-baseline="central" font-size="9" font-weight="700" style="fill:#fff">${fr.label}</text>`;
+      s += `<text x="${PAD + 36}" y="${sy + 7}" dominant-baseline="central" font-size="9" style="fill:var(--text2)" font-style="italic">[${fr.cond}]</text>`;
     });
   }
 
@@ -731,19 +809,19 @@ function renderSeq(flow) {
     const x1 = cx(fi), x2 = cx(ti);
     const goRight = x2 >= x1;
     const dash = step.type === 'response' ? 'stroke-dasharray="6,3"' : step.raw ? 'stroke-dasharray="4,4"' : '';
-    const col = step.raw ? '#a0aabe' : '#454f6b';
+    const col = step.raw ? 'var(--border2)' : 'var(--text2)';
     const midX = (x1 + x2) / 2;
     const hasNote = !!step.note;
 
     if (hasNote) {
-      s += `<text x="${midX}" y="${y - 20}" text-anchor="middle" font-size="9" fill="#8898b0" font-style="italic">${step.note}</text>`;
+      s += `<text x="${midX}" y="${y - 20}" text-anchor="middle" font-size="9" style="fill:var(--text3)" font-style="italic">${step.note}</text>`;
     }
 
     const ax1 = goRight ? x1 + 2 : x1 - 2;
     const ax2 = goRight ? x2 - 7 : x2 + 7;
-    s += `<line x1="${ax1}" y1="${y}" x2="${ax2}" y2="${y}" stroke="${col}" stroke-width="1.2" ${dash} marker-end="url(#ah)"/>`;
+    s += `<line x1="${ax1}" y1="${y}" x2="${ax2}" y2="${y}" style="stroke:${col}" stroke-width="1.2" ${dash} marker-end="url(#ah)"/>`;
     if (!goRight) {
-      s += `<polygon points="${x2 + 1},${y - 4} ${x2 + 9},${y} ${x2 + 1},${y + 4}" fill="${col}"/>`;
+      s += `<polygon points="${x2 + 1},${y - 4} ${x2 + 9},${y} ${x2 + 1},${y + 4}" style="fill:${col}"/>`;
     }
 
     // Clickable message label — label width based on text, clamped to SVG bounds
@@ -760,8 +838,8 @@ function renderSeq(flow) {
     const dataMsgAttr = spec ? ` data-msg="${step.msg.replace(/"/g, '&quot;')}"` : '';
     const glowAttr = isAct ? ' filter="url(#msg-glow)"' : '';
     s += `<g style="cursor:${spec ? 'pointer' : 'default'}"${dataMsgAttr}${glowAttr}>
-      <rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="3" fill="${isAct ? '#4f6db8' : 'white'}" stroke="${isAct ? '#2d4f9e' : spec ? '#b0b8cc' : '#c8cedc'}" stroke-width="${isAct ? 2 : 1}"/>
-      <text x="${lx + lw / 2}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${fsize}" font-weight="${isAct ? '700' : '600'}" fill="${isAct ? '#ffffff' : step.raw ? '#8898b0' : spec ? '#1a2035' : '#8898b0'}">${step.msg}</text>
+      <rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="3" style="fill:${isAct ? 'var(--accent)' : 'var(--bg2)'};stroke:${isAct ? 'var(--accent2)' : spec ? 'var(--border2)' : 'var(--border)'}" stroke-width="${isAct ? 2 : 1}"/>
+      <text x="${lx + lw / 2}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${fsize}" font-weight="${isAct ? '700' : '600'}" style="fill:${isAct ? '#fff' : step.raw ? 'var(--text3)' : spec ? 'var(--text)' : 'var(--text3)'}">${step.msg}</text>
     </g>`;
   });
 
@@ -770,9 +848,9 @@ function renderSeq(flow) {
     const info = P[p];
     const x = cx(i) - BOX_W / 2;
     const lines = info.label.split('\n');
-    s += `<rect x="${x}" y="${BOT_Y}" width="${BOX_W}" height="${BOX_H}" fill="white" stroke="#a0aabe" stroke-width="1.5"/>`;
+    s += `<rect x="${x}" y="${BOT_Y}" width="${BOX_W}" height="${BOX_H}" style="fill:var(--bg2);stroke:var(--border2)" stroke-width="1.5"/>`;
     lines.forEach((ln, li) => {
-      s += `<text x="${cx(i)}" y="${BOT_Y + BOX_H / 2 + (li - (lines.length - 1) / 2) * 14}" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#1a2035">${ln}</text>`;
+      s += `<text x="${cx(i)}" y="${BOT_Y + BOX_H / 2 + (li - (lines.length - 1) / 2) * 14}" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" style="fill:var(--text)">${ln}</text>`;
     });
   });
 
@@ -789,6 +867,7 @@ function renderSeq(flow) {
       <div class="part-chips">${partChips}</div>
     </div>
     <div style="overflow-x:auto">${s}</div>`;
+  makeSeqKeyboard();
 }
 
 function selectMsg(msgName) {
@@ -807,6 +886,7 @@ function selectMsg(msgName) {
         else renderListView(curFlow);
       }
     }
+    updateHash();
     return;
   }
   curMsg = msgName;
@@ -831,7 +911,7 @@ function selectMsg(msgName) {
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
       <div><div class="dt">${msgName}</div><div class="ds">${m.module}</div>
         <span class="badge" style="color:${dc};border-color:${dc}44;background:${dc}15">${dl}</span></div>
-      <button class="xbtn">✕</button>
+      <button class="xbtn" aria-label="關閉詳細面板">✕</button>
     </div>
     <div id="amqp-topic-row"></div>
     <p style="font-size:12px;color:var(--text2);line-height:1.75">${m.desc}</p>
@@ -846,6 +926,7 @@ function selectMsg(msgName) {
   appendAmqpTopic(msgName, m);
   appendFlowBacklinks(msgName);
   document.getElementById('detail-panel').classList.remove('hidden');
+  updateHash();
 }
 
 function esc(s) {

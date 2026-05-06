@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" id="theme-color-meta" content="#2d4f9e">
 <title>CFX 2.0 Message Reference</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,6 +11,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<a href="#main" class="skip-link">跳至主內容</a>
 <div id="sidebar">
   <header>
     <div style="display:flex;align-items:center;justify-content:space-between">
@@ -18,14 +20,14 @@
     </div>
   </header>
   <nav id="mode-nav" aria-label="視角選擇">
-    <button class="nav-item active" data-mode="flows"><span class="nav-item-icon">⬡</span>流程</button>
-    <button class="nav-item" data-mode="messages"><span class="nav-item-icon">≡</span>訊息</button>
-    <button class="nav-item" data-mode="machines"><span class="nav-item-icon">⚙</span>機台</button>
-    <button class="nav-item" data-mode="scenarios"><span class="nav-item-icon">▶</span>情境</button>
+    <button class="nav-item active" data-mode="flows"><span class="nav-item-icon" aria-hidden="true">⬡</span>流程</button>
+    <button class="nav-item" data-mode="messages"><span class="nav-item-icon" aria-hidden="true">≡</span>訊息</button>
+    <button class="nav-item" data-mode="machines"><span class="nav-item-icon" aria-hidden="true">⚙</span>機台</button>
+    <button class="nav-item" data-mode="scenarios"><span class="nav-item-icon" aria-hidden="true">▶</span>情境</button>
     <div class="nav-sep"></div>
-    <button class="nav-item" data-mode="guide"><span class="nav-item-icon">🛠</span>開發指南</button>
+    <button class="nav-item" data-mode="guide"><span class="nav-item-icon" aria-hidden="true">🛠</span>開發指南</button>
   </nav>
-  <div id="search-wrap"><input id="search" placeholder="搜尋流程…"></div>
+  <div id="search-wrap"><input id="search" placeholder="搜尋流程…" aria-label="搜尋" autocomplete="off" name="search"></div>
   <div id="flow-list"></div>
   <footer id="sb-footer">
     <button id="about-btn" title="資料來源與免責聲明">ℹ 關於此工具</button>
@@ -88,7 +90,7 @@
   </div>
   <div id="content">
     <div id="seq-panel">
-      <div id="empty-state"><div class="ico">⬡</div><p style="font-size:13px;line-height:1.9">選擇左側的 SMT 流程<br>查看 CFX 2.0 訊息交握循序圖</p></div>
+      <div id="empty-state"><div class="ico" aria-hidden="true">⬡</div><p style="font-size:13px;line-height:1.9">選擇左側的 SMT 流程<br>查看 CFX 2.0 訊息交握循序圖</p></div>
       <div id="seqc"></div>
     </div>
     <div id="list-panel" style="display:none"><div id="listc"></div></div>
@@ -96,5 +98,6 @@
   </div>
 </div>
 <script type="module" src="app.js"></script>
+<div id="a11y-announce" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 </body>
 </html>
