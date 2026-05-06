@@ -580,10 +580,24 @@ function renderSeq(flow) {
   const nP = parts.length;
   const steps = flow.steps; // always show ALL steps in diagram — preserves narrative
 
-  const BOX_W = 120, BOX_H = 44, PAD = 10;
-  const COL_W = Math.max(BOX_W + 30, Math.floor((Math.min(nP * 160, 900)) / nP));
+  const BOX_W = 140, BOX_H = 44, PAD = 20;
+
+  // Dynamic COL_W: wide enough that adjacent-column messages fit comfortably,
+  // but capped at 300px — labels for very long names extend beyond lifelines (UML convention)
+  let minColW = BOX_W + 40;
+  steps.forEach(step => {
+    const fi = parts.indexOf(step.from);
+    const ti = parts.indexOf(step.to);
+    if (fi < 0 || ti < 0) return;
+    const colSpan = Math.abs(fi - ti);
+    if (colSpan === 0) return;
+    const estLabelW = step.msg.length * 6.8 + 20;
+    const neededColW = Math.ceil(estLabelW / colSpan);
+    minColW = Math.max(minColW, neededColW);
+  });
+  const COL_W = Math.min(minColW, 300); // cap; very long labels extend via lx clamping
   const TOTAL_W = COL_W * nP + PAD * 2;
-  const ROW_H = 50;
+  const ROW_H = 56;
   const TOP_PAD = 10;
   const FIRST_Y = BOX_H + TOP_PAD + 24;
   const CANVAS_H = steps.length * ROW_H + 40;
@@ -655,20 +669,22 @@ function renderSeq(flow) {
       s += `<polygon points="${x2 + 1},${y - 4} ${x2 + 9},${y} ${x2 + 1},${y + 4}" fill="${col}"/>`;
     }
 
-    // Clickable message label — use data-msg for event delegation
+    // Clickable message label — label width based on text, clamped to SVG bounds
     const spec = MSGS[step.msg];
     const isAct = curMsg === step.msg;
-    const maxLW = Math.min(Math.abs(x2 - x1) - 6, 300);
-    const lh = 16;
-    const lw = Math.min(step.msg.length * 6.5 + 16, maxLW);
-    const lx = midX - lw / 2;
-    const ly = y - lh / 2;
+    const lh = 18;
+    // Natural width from text; font-size tiered by message length
     const fsize = step.msg.length > 50 ? 8.5 : step.msg.length > 38 ? 9.5 : 10.5;
+    const charPx = fsize * 0.6; // approximate proportional char width
+    const naturalW = Math.ceil(step.msg.length * charPx + 20);
+    const lw = Math.min(naturalW, TOTAL_W - PAD * 2 - 4);
+    const lx = Math.max(PAD + 2, Math.min(midX - lw / 2, TOTAL_W - PAD - lw - 2));
+    const ly = y - lh / 2;
     const dataMsgAttr = spec ? ` data-msg="${step.msg.replace(/"/g, '&quot;')}"` : '';
     const glowAttr = isAct ? ' filter="url(#msg-glow)"' : '';
     s += `<g style="cursor:${spec ? 'pointer' : 'default'}"${dataMsgAttr}${glowAttr}>
-      <rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="2" fill="${isAct ? '#4f6db8' : 'white'}" stroke="${isAct ? '#2d4f9e' : spec ? '#b0b8cc' : '#c8cedc'}" stroke-width="${isAct ? 2 : 1}"/>
-      <text x="${midX}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${fsize}" font-weight="${isAct ? '700' : '600'}" fill="${isAct ? '#ffffff' : step.raw ? '#8898b0' : spec ? '#1a2035' : '#8898b0'}">${step.msg}</text>
+      <rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="3" fill="${isAct ? '#4f6db8' : 'white'}" stroke="${isAct ? '#2d4f9e' : spec ? '#b0b8cc' : '#c8cedc'}" stroke-width="${isAct ? 2 : 1}"/>
+      <text x="${lx + lw / 2}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${fsize}" font-weight="${isAct ? '700' : '600'}" fill="${isAct ? '#ffffff' : step.raw ? '#8898b0' : spec ? '#1a2035' : '#8898b0'}">${step.msg}</text>
     </g>`;
   });
 
