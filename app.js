@@ -62,6 +62,15 @@ async function init() {
   renderSidebar();
   window.addEventListener('popstate', restoreFromHash);
   restoreFromHash();
+  // Version info — fetched separately, failure is non-fatal
+  fetch('data/version.json').then(r => r.ok ? r.json() : null).then(v => {
+    if (!v) return;
+    const el = document.getElementById('version-info');
+    if (!el) return;
+    const label = v.version === 'dev' ? 'dev · local' : `${v.version} · ${v.commit} · ${v.date}`;
+    el.textContent = label;
+    el.title = `Build: ${v.build || '—'}`;
+  }).catch(() => {});
 }
 
 function showError(msg) {

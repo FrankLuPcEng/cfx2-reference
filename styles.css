@@ -32,6 +32,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 #sb-footer{border-top:1px solid var(--border);padding:8px 10px;flex-shrink:0;}
 #about-btn{width:100%;background:none;border:1px solid var(--border);border-radius:4px;color:var(--text3);font-size:11px;padding:5px 8px;cursor:pointer;text-align:left;transition:background 0.15s,color 0.15s;}
 #about-btn:hover{background:var(--bg3);color:var(--text);}
+.version-info{font-size:9px;color:var(--text3);text-align:center;margin-top:5px;font-family:var(--mono);opacity:0.7;letter-spacing:0.2px;}
 /* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(2px);overscroll-behavior:contain;}
 .modal-overlay[hidden]{display:none;}
