@@ -28,8 +28,15 @@
 </div>
 <div id="main">
   <div id="topbar">
-    <div style="flex:1"><h2 id="ftitle">選擇左側流程</h2><p id="fdesc">← 選擇 SMT 流程以查看 CFX 2.0 訊息循序圖</p></div>
+    <div style="flex:1">
+      <nav id="breadcrumb" style="display:none" aria-label="breadcrumb navigation"></nav>
+      <h2 id="ftitle">選擇左側流程</h2><p id="fdesc">← 選擇 SMT 流程以查看 CFX 2.0 訊息循序圖</p>
+    </div>
     <span id="fbadge" class="badge" style="display:none"></span>
+  </div>
+  <div id="view-bar" style="display:none">
+    <button class="vbtn active" data-view="diagram">⬡ 流程圖</button>
+    <button class="vbtn" data-view="list">≡ 訊息列表</button>
   </div>
   <div class="filter-bar" id="fbar" style="display:none">
     <span style="font-size:10px;color:var(--text3);margin-right:4px">顯示：</span>
@@ -43,6 +50,7 @@
       <div id="empty-state"><div class="ico">⬡</div><p style="font-size:13px;line-height:1.9">選擇左側的 SMT 流程<br>查看 CFX 2.0 訊息交握循序圖</p></div>
       <div id="seqc"></div>
     </div>
+    <div id="list-panel" style="display:none"><div id="listc"></div></div>
     <div id="detail-panel" class="hidden"><div id="di"><p style="color:var(--text3);font-size:12px;padding:10px 0">點擊循序圖中的訊息查看格式規範</p></div></div>
   </div>
 </div>

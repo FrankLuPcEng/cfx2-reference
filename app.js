@@ -1,5 +1,5 @@
 let P = {}, MSGS = {}, FLOWS = [], SCENARIOS = [];
-let curFlow = null, curMsg = null, msgFilter = 'all', curMode = 'flows', curMachine = null, curScenario = null;
+let curFlow = null, curMsg = null, msgFilter = 'all', curMode = 'flows', curMachine = null, curScenario = null, curView = 'diagram';
 
 async function init() {
   initTheme();
@@ -46,10 +46,20 @@ function setupListeners() {
     btn.addEventListener('click', () => setFilter(btn.dataset.filter, btn));
   });
 
+  document.querySelectorAll('#view-bar .vbtn').forEach(btn => {
+    btn.addEventListener('click', () => setViewMode(btn.dataset.view));
+  });
+
   // Event delegation for SVG message label clicks
   document.getElementById('seqc').addEventListener('click', e => {
     const g = e.target.closest('[data-msg]');
     if (g) selectMsg(g.dataset.msg);
+  });
+
+  // Event delegation for list view clicks
+  document.getElementById('listc').addEventListener('click', e => {
+    const row = e.target.closest('.list-step[data-step-msg]');
+    if (row && row.dataset.stepMsg) selectMsg(row.dataset.stepMsg);
   });
 
   // Event delegation for detail panel close button + copy button
@@ -103,6 +113,10 @@ function setMode(mode, btn) {
   main.classList.remove('msg-mode');
   dp.classList.add('hidden');
   sw.style.display = '';
+  document.getElementById('view-bar').style.display = 'none';
+  document.getElementById('breadcrumb').style.display = 'none';
+  document.getElementById('list-panel').style.display = 'none';
+  document.getElementById('seq-panel').style.display = '';
 
   if (mode === 'messages') {
     curMsg = null;
@@ -147,8 +161,11 @@ function setMode(mode, btn) {
   } else {
     // flows
     curMsg = null;
+    curView = 'diagram';
     search.value = '';
     search.placeholder = '搜尋流程…';
+    document.getElementById('list-panel').style.display = 'none';
+    document.getElementById('seq-panel').style.display = '';
     if (curFlow) {
       document.title = `${curFlow.label} — CFX 2.0 Reference`;
       document.getElementById('ftitle').textContent = curFlow.label;
@@ -159,12 +176,16 @@ function setMode(mode, btn) {
       b.style.color = curFlow.badgeColor;
       b.style.borderColor = curFlow.badgeColor + '55';
       b.style.background  = curFlow.badgeColor + '18';
-      fbar.style.display = 'flex';
+      fbar.style.display = 'none'; // filter only available in list view
+      updateBreadcrumb(curFlow);
+      showViewBar('diagram');
       renderSeq(curFlow);
     } else {
       document.title = 'CFX 2.0 Message Reference';
       document.getElementById('ftitle').textContent = '選擇左側流程';
       document.getElementById('fdesc').textContent  = '← 選擇 SMT 流程以查看 CFX 2.0 訊息循序圖';
+      document.getElementById('breadcrumb').style.display = 'none';
+      document.getElementById('view-bar').style.display = 'none';
       fbar.style.display = 'none';
     }
     renderSidebar();
@@ -203,6 +224,72 @@ const MOD_LABELS = {
 };
 
 const COMMON_FLOW_IDS = ['conn', 'shutdown', 'wip', 'recipe', 'fault'];
+
+/* ── Flow group helpers ─────────────────────────── */
+function findFlowGroup(flowId) {
+  return FLOWS.find(g => g.items.some(f => f.id === flowId));
+}
+
+function updateBreadcrumb(flow) {
+  const bc = document.getElementById('breadcrumb');
+  const g = findFlowGroup(flow.id);
+  if (!g) { bc.style.display = 'none'; return; }
+  bc.style.display = 'flex';
+  bc.innerHTML = `<a href="#" class="bc-home">流程</a><span class="bc-sep">/</span><span class="bc-dot" style="background:${g.color}"></span>${g.group}<span class="bc-sep">/</span><span class="bc-cur">${flow.label}</span>`;
+  bc.querySelector('.bc-home').addEventListener('click', e => e.preventDefault());
+}
+
+function showViewBar(activeView) {
+  const vb = document.getElementById('view-bar');
+  vb.style.display = 'flex';
+  vb.querySelectorAll('.vbtn').forEach(b => {
+    b.classList.toggle('active', b.dataset.view === activeView);
+  });
+}
+
+function setViewMode(view) {
+  curView = view;
+  showViewBar(view);
+  const seqPanel  = document.getElementById('seq-panel');
+  const listPanel = document.getElementById('list-panel');
+  const fbar      = document.getElementById('fbar');
+  if (view === 'diagram') {
+    seqPanel.style.display  = '';
+    listPanel.style.display = 'none';
+    fbar.style.display      = 'none';
+    if (curFlow) renderSeq(curFlow);
+  } else {
+    seqPanel.style.display  = 'none';
+    listPanel.style.display = '';
+    fbar.style.display      = 'flex';
+    if (curFlow) renderListView(curFlow);
+  }
+}
+
+function renderListView(flow) {
+  const el = document.getElementById('listc');
+  let html = '';
+  let idx = 0;
+  flow.steps.forEach(step => {
+    if (msgFilter !== 'all' && step.type !== msgFilter) return;
+    idx++;
+    const spec  = MSGS[step.msg];
+    const isAct = curMsg === step.msg;
+    const from  = (P[step.from]?.label || step.from).replace('\n', ' ');
+    const to    = (P[step.to]?.label || step.to).replace('\n', ' ');
+    const dc = step.type === 'response' ? '#555e70' : step.type === 'event' ? 'var(--green)' : '#1565c0';
+    const dl = step.type === 'response' ? 'RES' : step.type === 'event' ? 'EVT' : 'REQ';
+    const canClick = !!spec;
+    html += `<div class="list-step${isAct ? ' active' : ''}${canClick ? '' : ' no-spec'}" ${canClick ? `data-step-msg="${step.msg.replace(/"/g,'&quot;')}"` : ''}>
+      <div class="list-step-num">${idx}</div>
+      <span class="msg-dir" style="color:${dc};border-color:${dc}44;background:${dc}15">${dl}</span>
+      <div class="list-step-via">${from} → ${to}</div>
+      <div class="list-step-name${step.raw ? ' raw' : ''}" title="${step.msg}">${step.msg}</div>
+      ${step.note ? `<div class="list-step-note">${step.note}</div>` : ''}
+    </div>`;
+  });
+  el.innerHTML = html || `<p style="color:var(--text3);font-size:12px;padding:24px 0;text-align:center">沒有符合篩選條件的訊息</p>`;
+}
 
 const MACHINE_DEFS = [
   { id: 'ENDPOINT',   label: 'Generic CFX Endpoint',          color: '#5e35b1' },
@@ -464,8 +551,11 @@ function renderSidebar(term = '') {
 function selectFlow(flow) {
   curFlow = flow;
   curMsg = null;
+  curView = 'diagram';
   document.title = `${flow.label} — CFX 2.0 Reference`;
   document.getElementById('detail-panel').classList.add('hidden');
+  document.getElementById('list-panel').style.display = 'none';
+  document.getElementById('seq-panel').style.display = '';
   document.querySelectorAll('.flow-item').forEach(e => e.classList.remove('active'));
   document.querySelectorAll('.flow-item').forEach(e => {
     if (e.textContent.trim() === flow.label) e.classList.add('active');
@@ -478,15 +568,17 @@ function selectFlow(flow) {
   b.style.color = flow.badgeColor;
   b.style.borderColor = flow.badgeColor + '55';
   b.style.background = flow.badgeColor + '18';
-  document.getElementById('fbar').style.display = 'flex';
+  document.getElementById('fbar').style.display = 'none'; // filter only in list view
   document.getElementById('empty-state').style.display = 'none';
+  updateBreadcrumb(flow);
+  showViewBar('diagram');
   renderSeq(flow);
 }
 
 function renderSeq(flow) {
   const parts = flow.participants;
   const nP = parts.length;
-  const steps = flow.steps.filter(s => msgFilter === 'all' || s.type === msgFilter);
+  const steps = flow.steps; // always show ALL steps in diagram — preserves narrative
 
   const BOX_W = 120, BOX_H = 44, PAD = 10;
   const COL_W = Math.max(BOX_W + 30, Math.floor((Math.min(nP * 160, 900)) / nP));
@@ -505,6 +597,9 @@ function renderSeq(flow) {
     <marker id="ah" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="8" orient="auto">
       <polygon points="0,0 10,3.5 0,7" fill="#454f6b"/>
     </marker>
+    <filter id="msg-glow" x="-40%" y="-80%" width="180%" height="260%">
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#4f6db8" flood-opacity="0.65"/>
+    </filter>
   </defs>`;
 
   // Top participant boxes
@@ -570,9 +665,10 @@ function renderSeq(flow) {
     const ly = y - lh / 2;
     const fsize = step.msg.length > 50 ? 8.5 : step.msg.length > 38 ? 9.5 : 10.5;
     const dataMsgAttr = spec ? ` data-msg="${step.msg.replace(/"/g, '&quot;')}"` : '';
-    s += `<g style="cursor:${spec ? 'pointer' : 'default'}"${dataMsgAttr}>
-      <rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="2" fill="${isAct ? '#dce6fa' : 'white'}" stroke="${isAct ? '#2d4f9e' : spec ? '#b0b8cc' : '#c8cedc'}" stroke-width="${isAct ? 1.5 : 1}"/>
-      <text x="${midX}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${fsize}" font-weight="${isAct ? '700' : '600'}" fill="${isAct ? '#2d4f9e' : step.raw ? '#8898b0' : spec ? '#1a2035' : '#8898b0'}">${step.msg}</text>
+    const glowAttr = isAct ? ' filter="url(#msg-glow)"' : '';
+    s += `<g style="cursor:${spec ? 'pointer' : 'default'}"${dataMsgAttr}${glowAttr}>
+      <rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="2" fill="${isAct ? '#4f6db8' : 'white'}" stroke="${isAct ? '#2d4f9e' : spec ? '#b0b8cc' : '#c8cedc'}" stroke-width="${isAct ? 2 : 1}"/>
+      <text x="${midX}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${fsize}" font-weight="${isAct ? '700' : '600'}" fill="${isAct ? '#ffffff' : step.raw ? '#8898b0' : spec ? '#1a2035' : '#8898b0'}">${step.msg}</text>
     </g>`;
   });
 
@@ -589,10 +685,15 @@ function renderSeq(flow) {
 
   s += `</svg>`;
 
+  const partChips = flow.participants.map(p => {
+    const info = P[p];
+    return info ? `<span class="part-chip">${info.label.replace('\n', ' ')}</span>` : '';
+  }).join('');
+
   document.getElementById('seqc').innerHTML = `
     <div style="margin-bottom:16px">
-      <div style="font-size:15px;font-weight:700;color:#1a2035;margin-bottom:3px">${flow.label}</div>
-      <div style="font-size:11px;color:#8898b0">${flow.desc}</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:6px">${flow.desc}</div>
+      <div class="part-chips">${partChips}</div>
     </div>
     <div style="overflow-x:auto">${s}</div>`;
 }
@@ -608,13 +709,19 @@ function selectMsg(msgName) {
       renderMsgList(document.getElementById('search').value);
     } else {
       document.getElementById('detail-panel').classList.add('hidden');
-      if (curFlow) renderSeq(curFlow);
+      if (curFlow) {
+        if (curView === 'diagram') renderSeq(curFlow);
+        else renderListView(curFlow);
+      }
     }
     return;
   }
   curMsg = msgName;
   document.title = `${msgName} — CFX 2.0 Reference`;
-  if (curMode === 'flows' && curFlow) renderSeq(curFlow);
+  if (curMode === 'flows' && curFlow) {
+    if (curView === 'diagram') renderSeq(curFlow);
+    else renderListView(curFlow);
+  }
   if (curMode === 'messages') renderMsgList(document.getElementById('search').value);
 
   const dc = m.dir === 'response' ? '#555e70' : m.dir === 'event' ? '#1a7a40' : '#1565c0';
@@ -652,7 +759,7 @@ function setFilter(type, btn) {
   msgFilter = type;
   document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  if (curFlow) renderSeq(curFlow);
+  if (curFlow && curView === 'list') renderListView(curFlow);
 }
 
 document.addEventListener('DOMContentLoaded', init);
