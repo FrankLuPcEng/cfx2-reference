@@ -3,6 +3,7 @@ name: Generate Version
 on:
   push:
     branches: [master]
+    tags: ['v*']
 
 permissions:
   contents: write
@@ -34,5 +35,5 @@ jobs:
             echo "No changes to version.json"
           else
             git commit -m "chore: update version.json [skip ci]"
-            git push
+            git push origin HEAD:master
           fi
