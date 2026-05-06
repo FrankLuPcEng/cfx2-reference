@@ -25,6 +25,44 @@
   </div>
   <div id="search-wrap"><input id="search" placeholder="搜尋流程…"></div>
   <div id="flow-list"></div>
+  <footer id="sb-footer">
+    <button id="about-btn" title="資料來源與免責聲明">ℹ 關於此工具</button>
+  </footer>
+</div>
+
+<!-- About Modal -->
+<div id="about-modal" class="modal-overlay" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-header">
+      <h3 id="modal-title">關於 CFX 2.0 Reference</h3>
+      <button class="modal-close" id="about-close" aria-label="關閉">✕</button>
+    </div>
+    <div class="modal-body">
+      <section>
+        <h4>📋 資料來源</h4>
+        <p>本工具內容依據 <strong>IPC-CFX-2591</strong>（Connected Factory Exchange）標準規範整理，訊息定義與流程說明參考自：</p>
+        <ul>
+          <li>IPC-CFX-2591 官方標準文件</li>
+          <li><a href="https://www.connectedfactoryexchange.com" target="_blank" rel="noopener">connectedfactoryexchange.com</a> 提供的 SDK 與範例</li>
+        </ul>
+        <p>訊息資料由人工整理匯入，共收錄 183 筆 CFX 訊息定義。</p>
+      </section>
+      <section>
+        <h4>⚠️ 免責聲明</h4>
+        <p>本工具為<strong>非官方</strong>參考用途，僅供學習與開發參考。</p>
+        <ul>
+          <li>資料內容可能未反映最新版本標準，不保證完整性或正確性</li>
+          <li>正式系統實作請以 IPC 發布之官方標準文件為準</li>
+          <li>本工具不隸屬於 IPC 組織，亦未獲其背書</li>
+        </ul>
+      </section>
+      <section>
+        <h4>🔗 開放原始碼</h4>
+        <p>本工具以 MIT 授權開放原始碼，歡迎回報問題或貢獻：<br>
+        <a href="https://github.com/FrankLuPcEng/cfx2-reference" target="_blank" rel="noopener">github.com/FrankLuPcEng/cfx2-reference</a></p>
+      </section>
+    </div>
+  </div>
 </div>
 <div id="main">
   <div id="topbar">

@@ -5,6 +5,7 @@ async function init() {
   initTheme();
   initSidebar();
   initDpResize();
+  initAbout();
   try {
     const [pRes, mRes, fRes, sRes] = await Promise.all([
       fetch('data/participants.json'),
@@ -147,6 +148,18 @@ function initDpResize() {
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseup', onUp);
   });
+}
+
+function initAbout() {
+  const modal = document.getElementById('about-modal');
+  const open  = document.getElementById('about-btn');
+  const close = document.getElementById('about-close');
+  const hide = () => { modal.hidden = true; document.removeEventListener('keydown', onKey); };
+  const show = () => { modal.hidden = false; close.focus(); document.addEventListener('keydown', onKey); };
+  const onKey = e => { if (e.key === 'Escape') hide(); };
+  open.addEventListener('click', show);
+  close.addEventListener('click', hide);
+  modal.addEventListener('click', e => { if (e.target === modal) hide(); }); // click backdrop
 }
 
 function setMode(mode, btn) {
