@@ -1,5 +1,5 @@
 let P = {}, MSGS = {}, FLOWS = [];
-let curFlow = null, curMsg = null, msgFilter = 'all', curMode = 'flows';
+let curFlow = null, curMsg = null, msgFilter = 'all', curMode = 'flows', curMachine = null;
 
 async function init() {
   try {
@@ -63,13 +63,20 @@ function setMode(mode, btn) {
   document.querySelectorAll('.mtbtn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const search = document.getElementById('search');
-  search.value = '';
-  search.placeholder = mode === 'flows' ? '搜尋流程…' : '搜尋訊息…';
-  const main = document.getElementById('main');
-  const dp   = document.getElementById('detail-panel');
-  const fbar = document.getElementById('fbar');
+  const main   = document.getElementById('main');
+  const dp     = document.getElementById('detail-panel');
+  const fbar   = document.getElementById('fbar');
+  const sw     = document.getElementById('search-wrap');
+
+  // Reset shared layout state
+  main.classList.remove('msg-mode');
+  dp.classList.add('hidden');
+  sw.style.display = '';
+
   if (mode === 'messages') {
     curMsg = null;
+    search.value = '';
+    search.placeholder = '搜尋訊息…';
     main.classList.add('msg-mode');
     dp.classList.remove('hidden');
     document.getElementById('ftitle').textContent = '訊息瀏覽器';
@@ -78,10 +85,24 @@ function setMode(mode, btn) {
     fbar.style.display = 'none';
     showMsgPlaceholder();
     renderMsgList();
-  } else {
+
+  } else if (mode === 'machines') {
     curMsg = null;
-    main.classList.remove('msg-mode');
-    dp.classList.add('hidden');
+    curMachine = null;
+    sw.style.display = 'none';
+    fbar.style.display = 'none';
+    document.getElementById('fbadge').style.display = 'none';
+    document.getElementById('ftitle').textContent = '機台視角';
+    document.getElementById('fdesc').textContent  = '← 選擇機台類型查看 CFX 2.0 實作清單';
+    document.getElementById('empty-state').style.display = 'flex';
+    document.getElementById('seqc').innerHTML = '';
+    renderMachineList();
+
+  } else {
+    // flows
+    curMsg = null;
+    search.value = '';
+    search.placeholder = '搜尋流程…';
     if (curFlow) {
       document.getElementById('ftitle').textContent = curFlow.label;
       document.getElementById('fdesc').textContent  = curFlow.desc;
@@ -133,8 +154,115 @@ const MOD_LABELS = {
   'CFX.Sensor.Identification':                             'Sensor · Identification',
 };
 
+const COMMON_FLOW_IDS = ['conn', 'shutdown', 'wip', 'recipe', 'fault'];
+
+const MACHINE_DEFS = [
+  { id: 'ENDPOINT',   label: 'Generic CFX Endpoint',          color: '#5e35b1' },
+  { id: 'PRINTER_M',  label: 'Stencil Printer',               color: '#1565c0' },
+  { id: 'SPI_M',      label: 'SPI Machine',                   color: '#00838f' },
+  { id: 'MOUNTER_M',  label: 'SMT Mounter',                   color: '#2e7d32' },
+  { id: 'AOI_M',      label: 'AOI / AXI',                     color: '#558b2f' },
+  { id: 'REFLOW_M',   label: 'Reflow Oven',                   color: '#e65100' },
+  { id: 'SOLDER_M',   label: 'Soldering',                     color: '#bf360c' },
+  { id: 'TESTER_M',   label: 'Test Equipment',                color: '#6a1b9a' },
+  { id: 'LABELER_M',  label: 'Labeler / Laser Marker',        color: '#37474f' },
+  { id: 'COATING_M',  label: 'Conformal Coating / Cleaning',  color: '#4e342e' },
+];
+
+function getMachineFlows(machineId) {
+  const allFlows = FLOWS.flatMap(g =>
+    g.items.map(f => ({ ...f, groupColor: g.color, groupLabel: g.group }))
+  );
+  const common   = COMMON_FLOW_IDS.map(id => allFlows.find(f => f.id === id)).filter(Boolean);
+  const specific = machineId === 'ENDPOINT'
+    ? []
+    : allFlows.filter(f => f.participants.includes(machineId) && !COMMON_FLOW_IDS.includes(f.id));
+  return { common, specific };
+}
+
+function countMachineMessages(flows) {
+  const seen = new Set();
+  flows.forEach(f => f.steps.forEach(s => { if (s.msg && !s.raw) seen.add(s.msg); }));
+  return seen.size;
+}
+
 function showMsgPlaceholder() {
   document.getElementById('di').innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;color:var(--text3);text-align:center"><div style="font-size:36px;margin-bottom:12px;opacity:0.3">✉</div><p style="font-size:13px;line-height:1.9">從左側選擇 CFX 訊息<br>查看規格與 JSON 範例</p></div>';
+}
+
+function renderMachineList() {
+  const el = document.getElementById('flow-list');
+  el.innerHTML = '';
+  MACHINE_DEFS.forEach(m => {
+    const d = document.createElement('div');
+    d.className = 'machine-item' + (curMachine === m.id ? ' active' : '');
+    d.innerHTML = `<span class="dot" style="background:${m.color}"></span>${m.label}`;
+    d.addEventListener('click', () => selectMachine(m.id));
+    el.appendChild(d);
+  });
+}
+
+function renderMachineDetail(machineId) {
+  const def = MACHINE_DEFS.find(m => m.id === machineId);
+  const { common, specific } = getMachineFlows(machineId);
+  const allFlows = [...common, ...specific];
+  const msgCount = countMachineMessages(allFlows);
+
+  function cardHTML(flow) {
+    const bc = flow.badgeColor || flow.groupColor;
+    return `<div class="flow-card" data-flow-id="${flow.id}">
+      <span class="dot" style="background:${flow.groupColor};margin-top:3px;flex-shrink:0"></span>
+      <div class="flow-card-body">
+        <div class="flow-card-label">${flow.label}</div>
+        <div class="flow-card-desc">${flow.desc}</div>
+      </div>
+      <span class="flow-card-badge" style="color:${bc};border-color:${bc}44;background:${bc}15">${flow.groupLabel} →</span>
+    </div>`;
+  }
+
+  const specificHTML = specific.length
+    ? specific.map(cardHTML).join('')
+    : `<div class="no-specific">此機型無獨立的專屬流程</div>`;
+
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('seqc').innerHTML = `
+    <div class="mach-detail">
+      <div class="mach-section-hdr">共用基礎流程 (${common.length})</div>
+      ${common.map(cardHTML).join('')}
+      <div class="mach-section-hdr">機型專屬流程 (${specific.length})</div>
+      ${specificHTML}
+      <div class="mach-summary">合計：${allFlows.length} 個流程 &nbsp;·&nbsp; ${msgCount} 個相關訊息</div>
+    </div>`;
+
+  document.getElementById('seqc').querySelectorAll('.flow-card[data-flow-id]').forEach(card => {
+    card.addEventListener('click', () => {
+      const flow = FLOWS.flatMap(g => g.items).find(f => f.id === card.dataset.flowId);
+      if (flow) goToFlow(flow);
+    });
+  });
+}
+
+function selectMachine(machineId) {
+  curMachine = machineId;
+  const def = MACHINE_DEFS.find(m => m.id === machineId);
+  document.querySelectorAll('.machine-item').forEach(el => {
+    el.classList.toggle('active', el.textContent.trim() === def.label);
+  });
+  document.getElementById('ftitle').textContent = def.label;
+  document.getElementById('fdesc').textContent  = 'CFX 2.0 實作清單 — 此機台需實作的完整流程列表';
+  const b = document.getElementById('fbadge');
+  b.textContent = '機台';
+  b.style.display = 'inline';
+  b.style.color = def.color;
+  b.style.borderColor = def.color + '55';
+  b.style.background  = def.color + '18';
+  renderMachineDetail(machineId);
+}
+
+function goToFlow(flow) {
+  const btn = document.querySelector('.mtbtn[data-mode="flows"]');
+  setMode('flows', btn);
+  selectFlow(flow);
 }
 
 function renderMsgList(term = '') {
