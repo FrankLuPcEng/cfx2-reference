@@ -41,7 +41,7 @@ function setupListeners() {
     else renderMsgList(e.target.value);
   });
 
-  document.querySelectorAll('#mode-toggle .mtbtn').forEach(btn => {
+  document.querySelectorAll('#mode-nav .nav-item').forEach(btn => {
     btn.addEventListener('click', () => setMode(btn.dataset.mode, btn));
   });
 
@@ -164,7 +164,7 @@ function initAbout() {
 
 function setMode(mode, btn) {
   curMode = mode;
-  document.querySelectorAll('.mtbtn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const search = document.getElementById('search');
   const main   = document.getElementById('main');
@@ -474,9 +474,7 @@ function selectMachine(machineId) {
 }
 
 function goToFlow(flow) {
-  const btn = document.querySelector('.mtbtn[data-mode="flows"]');
-  setMode('flows', btn);
-  selectFlow(flow);
+  const btn = document.querySelector('.nav-item[data-mode="flows"]');
 }
 
 function renderScenarioList() {
@@ -897,7 +895,7 @@ function appendFlowBacklinks(msgName) {
     chip.addEventListener('click', () => {
       const flow = allFlows.find(f => f.id === chip.dataset.fid);
       if (!flow) return;
-      const btn = document.querySelector('.mtbtn[data-mode="flows"]');
+      const btn = document.querySelector('.nav-item[data-mode="flows"]');
       setMode('flows', btn);
       selectFlow(flow);
     });

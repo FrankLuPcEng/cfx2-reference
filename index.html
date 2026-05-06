@@ -17,13 +17,14 @@
       <button id="theme-toggle" title="切換深色/亮色模式" aria-label="Toggle dark mode">☀</button>
     </div>
   </header>
-  <div id="mode-toggle">
-    <button class="mtbtn active" data-mode="flows">流程</button>
-    <button class="mtbtn" data-mode="messages">訊息</button>
-    <button class="mtbtn" data-mode="machines">機台</button>
-    <button class="mtbtn" data-mode="scenarios">情境</button>
-    <button class="mtbtn mtbtn-guide" data-mode="guide">🛠 開發指南</button>
-  </div>
+  <nav id="mode-nav" aria-label="視角選擇">
+    <button class="nav-item active" data-mode="flows"><span class="nav-item-icon">⬡</span>流程</button>
+    <button class="nav-item" data-mode="messages"><span class="nav-item-icon">≡</span>訊息</button>
+    <button class="nav-item" data-mode="machines"><span class="nav-item-icon">⚙</span>機台</button>
+    <button class="nav-item" data-mode="scenarios"><span class="nav-item-icon">▶</span>情境</button>
+    <div class="nav-sep"></div>
+    <button class="nav-item" data-mode="guide"><span class="nav-item-icon">🛠</span>開發指南</button>
+  </nav>
   <div id="search-wrap"><input id="search" placeholder="搜尋流程…"></div>
   <div id="flow-list"></div>
   <footer id="sb-footer">
