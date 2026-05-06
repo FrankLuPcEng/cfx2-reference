@@ -3,6 +3,8 @@ let curFlow = null, curMsg = null, msgFilter = 'all', curMode = 'flows', curMach
 
 async function init() {
   initTheme();
+  initSidebar();
+  initDpResize();
   try {
     const [pRes, mRes, fRes, sRes] = await Promise.all([
       fetch('data/participants.json'),
@@ -97,6 +99,54 @@ function toggleTheme() {
   document.documentElement.dataset.theme = isDark ? 'light' : 'dark';
   localStorage.setItem('cfx-theme', isDark ? 'light' : 'dark');
   document.getElementById('theme-toggle').textContent = isDark ? '☀' : '☾';
+}
+
+function initSidebar() {
+  const sb = document.getElementById('sidebar');
+  const btn = document.getElementById('sb-toggle');
+  const apply = (collapsed) => {
+    sb.classList.toggle('collapsed', collapsed);
+    btn.textContent = collapsed ? '›' : '‹';
+    btn.title = collapsed ? '展開側邊欄' : '收合側邊欄';
+  };
+  apply(localStorage.getItem('cfx-sb-collapsed') === '1');
+  btn.addEventListener('click', () => {
+    const next = !sb.classList.contains('collapsed');
+    apply(next);
+    localStorage.setItem('cfx-sb-collapsed', next ? '1' : '0');
+  });
+}
+
+function initDpResize() {
+  const handle = document.getElementById('dp-handle');
+  const dp = document.getElementById('detail-panel');
+  const savedW = parseInt(localStorage.getItem('cfx-dp-width'), 10);
+  if (savedW >= 280) { dp.style.width = savedW + 'px'; dp.style.minWidth = savedW + 'px'; }
+  handle.addEventListener('mousedown', e => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startW = dp.offsetWidth;
+    handle.classList.add('dragging');
+    dp.classList.add('resizing');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    const onMove = e => {
+      const w = Math.max(280, Math.min(800, startW - (e.clientX - startX)));
+      dp.style.width = w + 'px';
+      dp.style.minWidth = w + 'px';
+    };
+    const onUp = () => {
+      handle.classList.remove('dragging');
+      dp.classList.remove('resizing');
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      localStorage.setItem('cfx-dp-width', dp.offsetWidth);
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
 }
 
 function setMode(mode, btn) {

@@ -28,6 +28,7 @@
 </div>
 <div id="main">
   <div id="topbar">
+    <button id="sb-toggle" title="收合 / 展開側邊欄" aria-label="Toggle sidebar">‹</button>
     <div style="flex:1">
       <nav id="breadcrumb" style="display:none" aria-label="breadcrumb navigation"></nav>
       <h2 id="ftitle">選擇左側流程</h2><p id="fdesc">← 選擇 SMT 流程以查看 CFX 2.0 訊息循序圖</p>
@@ -51,7 +52,7 @@
       <div id="seqc"></div>
     </div>
     <div id="list-panel" style="display:none"><div id="listc"></div></div>
-    <div id="detail-panel" class="hidden"><div id="di"><p style="color:var(--text3);font-size:12px;padding:10px 0">點擊循序圖中的訊息查看格式規範</p></div></div>
+    <div id="detail-panel" class="hidden"><div id="dp-handle" title="拖曳調整寬度"></div><div id="di"><p style="color:var(--text3);font-size:12px;padding:10px 0">點擊循序圖中的訊息查看格式規範</p></div></div>
   </div>
 </div>
 <script type="module" src="app.js"></script>
