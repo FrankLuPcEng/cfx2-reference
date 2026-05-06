@@ -189,7 +189,13 @@
         "desc": "The amount of time to expect between Heartbeast messasges for this endpoint"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Heartbeat.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Heartbeat.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "HeartbeatFrequency": "00:00:30",
+      "ActiveRecipes": [],
+      "ActiveFaults": []
+    }
   },
   "CFX.NotSupportedResponse": {
     "dir": "response",
@@ -204,7 +210,14 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_NotSupportedResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_NotSupportedResponse.htm",
+    "examplePayload": {
+      "RequestResult": {
+        "Result": "Failed",
+        "ResultCode": 100,
+        "Message": "此 Endpoint 不支援此請求類型"
+      }
+    }
   },
   "CFX.WhoIsThereRequest": {
     "dir": "request",
@@ -308,7 +321,16 @@
         "desc": "Specifies the mode of transfer. File data may be transferred within the CFX messages themselves (In-Band), or transferred via a separate secure protocol (Out-of-Band), such as HTTPS, SFTP, etc. Direct, in-band file transfer is not recommended for larger data files. Many AMQP message broker platforms limit the maximum total message size of an AMQP message. Microsoft's Azure message bus, for example, limits messages to 256KB for a standard subscription, and 1MB for a premium subscription. RabbitMQ recommends limiting messages to 128MB or less. Use OutOfBand transfer for larger file sizes."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_DataTransfer_FileTransferRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_DataTransfer_FileTransferRequest.htm",
+    "examplePayload": {
+      "TransferDirection": "Push",
+      "FileTitle": "recipe_SMT_A001.xml",
+      "FileLocation": "/recipes/SMT_A001.xml",
+      "File": {
+        "TransferMode": "InBand",
+        "FileData": "PD94bWwgdmVyc2lvbj0iMS4wIj8+..."
+      }
+    }
   },
   "CFX.InformationSystem.DataTransfer.FileTransferResponse": {
     "dir": "response",
@@ -347,7 +369,17 @@
         "desc": "Specifies the mode of transfer. File data may be transferred within the CFX messages themselves (In-Band), or transferred via a separate secure protocol (Out-of-Band), such as HTTPS, SFTP, etc. Direct, in-band file transfer is not recommended for larger data files. Many AMQP message broker platforms limit the maximum total message size of an AMQP message. Microsoft's Azure message bus, for example, limits messages to 256KB for a standard subscription, and 1MB for a premium subscription. RabbitMQ recommends limiting messages to 128MB or less. Use OutOfBand transfer for larger file sizes."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_DataTransfer_FileTransferResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_DataTransfer_FileTransferResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "FileTitle": "recipe_SMT_A001.xml",
+      "FileLocation": "/recipes/SMT_A001.xml",
+      "File": null
+    }
   },
   "CFX.InformationSystem.OperatorValidation.ValidateOperatorRequest": {
     "dir": "request",
@@ -362,7 +394,14 @@
         "desc": "A structure which defines the Operator."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_OperatorValidation_ValidateOperatorRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_OperatorValidation_ValidateOperatorRequest.htm",
+    "examplePayload": {
+      "Operator": {
+        "OperatorIdentifier": "OP-EMP-002",
+        "OperatorName": "Chen Ming",
+        "Badge": "BADGE-002"
+      }
+    }
   },
   "CFX.InformationSystem.OperatorValidation.ValidateOperatorResponse": {
     "dir": "response",
@@ -377,7 +416,19 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_OperatorValidation_ValidateOperatorResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_OperatorValidation_ValidateOperatorResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "IsValid": true,
+      "Operator": {
+        "OperatorIdentifier": "OP-EMP-002",
+        "OperatorName": "Chen Ming"
+      }
+    }
   },
   "CFX.InformationSystem.ProductionScheduling.WorkOrdersScheduled": {
     "dir": "event",
@@ -392,7 +443,17 @@
         "desc": "A list of Work Orders that have been scheduled."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_ProductionScheduling_WorkOrdersScheduled.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_ProductionScheduling_WorkOrdersScheduled.htm",
+    "examplePayload": {
+      "WorkOrders": [
+        {
+          "WorkOrderId": "WO-2024-001",
+          "ScheduledStartDate": "2024-11-04T08:00:00Z",
+          "ScheduledEndDate": "2024-11-04T16:00:00Z",
+          "Quantity": 500
+        }
+      ]
+    }
   },
   "CFX.InformationSystem.ProductionScheduling.WorkOrdersUnscheduled": {
     "dir": "event",
@@ -407,7 +468,12 @@
         "desc": "A list of Work Orders that have been scheduled."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_ProductionScheduling_WorkOrdersUnscheduled.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_ProductionScheduling_WorkOrdersUnscheduled.htm",
+    "examplePayload": {
+      "WorkOrderIds": [
+        "WO-2024-001"
+      ]
+    }
   },
   "CFX.InformationSystem.TopicValidation.ValidateTopicRequest": {
     "dir": "request",
@@ -428,7 +494,10 @@
         "desc": "A structure which defines the ValidationTopicData fo the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_TopicValidation_ValidateTopicRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_TopicValidation_ValidateTopicRequest.htm",
+    "examplePayload": {
+      "Topic": "CFX/SMTPlus.Model_21232.SN23123/CFX.Production.WorkCompleted"
+    }
   },
   "CFX.InformationSystem.TopicValidation.ValidateTopicResponse": {
     "dir": "response",
@@ -449,7 +518,15 @@
         "desc": "An enum for the specific validation topic of the request."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_TopicValidation_ValidateTopicResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_TopicValidation_ValidateTopicResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "IsValid": true
+    }
   },
   "CFX.InformationSystem.UnitValidation.ValidateUnitsRequest": {
     "dir": "request",
@@ -488,7 +565,15 @@
         "desc": "List of validations to be performed”. Options are: UnitRouteValidation\", \"UnitStatusValidation\""
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_UnitValidation_ValidateUnitsRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_UnitValidation_ValidateUnitsRequest.htm",
+    "examplePayload": {
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "BatchIdentifier": "BATCH-2024-001"
+        }
+      ]
+    }
   },
   "CFX.InformationSystem.UnitValidation.ValidateUnitsResponse": {
     "dir": "response",
@@ -515,7 +600,20 @@
         "desc": "Individual results of the validation request (for multiple units in a carrier or PCB Panel)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_UnitValidation_ValidateUnitsResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_UnitValidation_ValidateUnitsResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "ValidationResults": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "IsValid": true
+        }
+      ]
+    }
   },
   "CFX.InformationSystem.WorkOrderManagement.WorkOrderQuantityUpdated": {
     "dir": "event",
@@ -542,7 +640,12 @@
         "desc": "The Identifier of the relevant Work Order or Work Order sub-batch"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_WorkOrderManagement_WorkOrderQuantityUpdated.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_WorkOrderManagement_WorkOrderQuantityUpdated.htm",
+    "examplePayload": {
+      "WorkOrderId": "WO-2024-001",
+      "NewQuantity": 600,
+      "PreviousQuantity": 500
+    }
   },
   "CFX.InformationSystem.WorkOrderManagement.WorkOrderStatusUpdated": {
     "dir": "event",
@@ -569,7 +672,12 @@
         "desc": "The Identifier of the relevant Work Order or Work Order sub-batch"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_WorkOrderManagement_WorkOrderStatusUpdated.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_WorkOrderManagement_WorkOrderStatusUpdated.htm",
+    "examplePayload": {
+      "WorkOrderId": "WO-2024-001",
+      "Status": "Active",
+      "PreviousStatus": "Queued"
+    }
   },
   "CFX.InformationSystem.WorkOrderManagement.WorkOrdersCreated": {
     "dir": "event",
@@ -584,7 +692,18 @@
         "desc": "The new Work Order."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_WorkOrderManagement_WorkOrdersCreated.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_WorkOrderManagement_WorkOrdersCreated.htm",
+    "examplePayload": {
+      "WorkOrders": [
+        {
+          "WorkOrderId": "WO-2024-002",
+          "PartNumber": "PCB-A002",
+          "PartRevision": "B",
+          "Quantity": 300,
+          "StartDate": "2024-11-05T08:00:00Z"
+        }
+      ]
+    }
   },
   "CFX.InformationSystem.WorkOrderManagement.WorkOrdersDeleted": {
     "dir": "event",
@@ -599,7 +718,12 @@
         "desc": "The identifier of the Work Order that has been deleted."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_WorkOrderManagement_WorkOrdersDeleted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_WorkOrderManagement_WorkOrdersDeleted.htm",
+    "examplePayload": {
+      "WorkOrderIds": [
+        "WO-2024-003"
+      ]
+    }
   },
   "CFX.InformationSystem.WorkOrderManagement.WorkOrdersUpdated": {
     "dir": "event",
@@ -614,7 +738,17 @@
         "desc": "The new details of the updated Work Order (or Work Order sub-batch)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_WorkOrderManagement_WorkOrdersUpdated.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_InformationSystem_WorkOrderManagement_WorkOrdersUpdated.htm",
+    "examplePayload": {
+      "WorkOrders": [
+        {
+          "WorkOrderId": "WO-2024-001",
+          "PartNumber": "PCB-A001",
+          "Quantity": 500,
+          "Priority": 1
+        }
+      ]
+    }
   },
   "CFX.Maintenance.GetResourceInformationRequest": {
     "dir": "request",
@@ -629,7 +763,10 @@
         "desc": "The handle of the endpoint about which the sender wishes to obtain information."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceInformationRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceInformationRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123"
+    }
   },
   "CFX.Maintenance.GetResourceInformationResponse": {
     "dir": "response",
@@ -650,7 +787,20 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceInformationResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceInformationResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "ResourceInformation": {
+        "SoftwareVersion": "3.2.1",
+        "FirmwareVersion": "1.4.0",
+        "ManufacturingDate": "2021-03-15"
+      }
+    }
   },
   "CFX.Maintenance.GetResourceMaintenanceAndServiceRequest": {
     "dir": "request",
@@ -665,7 +815,10 @@
         "desc": "The handle of the endpoint about which the sender wishes to obtain information."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceMaintenanceAndServiceRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceMaintenanceAndServiceRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123"
+    }
   },
   "CFX.Maintenance.GetResourceMaintenanceAndServiceResponse": {
     "dir": "response",
@@ -692,7 +845,21 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceMaintenanceAndServiceResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceMaintenanceAndServiceResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "MaintenanceRecords": [
+        {
+          "MaintenanceType": "Preventive",
+          "LastMaintenanceDate": "2024-10-01T09:00:00Z",
+          "NextMaintenanceDate": "2025-01-01T09:00:00Z"
+        }
+      ]
+    }
   },
   "CFX.Maintenance.GetResourceMaintenanceStatusRequest": {
     "dir": "request",
@@ -713,7 +880,10 @@
         "desc": "Dynamic structure that describes the request about maintenance details of this resource."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceMaintenanceStatusRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceMaintenanceStatusRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123"
+    }
   },
   "CFX.Maintenance.GetResourceMaintenanceStatusResponse": {
     "dir": "response",
@@ -740,7 +910,16 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceMaintenanceStatusResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceMaintenanceStatusResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "MaintenanceStatus": "GreenOK",
+      "NextMaintenanceDue": "2025-01-01T00:00:00Z"
+    }
   },
   "CFX.Maintenance.GetResourceSetupRequest": {
     "dir": "request",
@@ -755,7 +934,10 @@
         "desc": "The handle of the endpoint about which the sender wishes to obtain information."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceSetupRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceSetupRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123"
+    }
   },
   "CFX.Maintenance.GetResourceSetupResponse": {
     "dir": "response",
@@ -776,7 +958,19 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceSetupResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_GetResourceSetupResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "SetupConfiguration": {
+        "RecipeId": "RECIPE-SMT-A001",
+        "ToolingId": "TOOL-001",
+        "SetupDate": "2024-11-01T07:30:00Z"
+      }
+    }
   },
   "CFX.Maintenance.ResourceInformationEvent": {
     "dir": "event",
@@ -797,7 +991,13 @@
         "desc": "Dynamic structure that describes the details of this resource."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_ResourceInformationEvent.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_ResourceInformationEvent.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "SoftwareVersion": "3.2.1",
+      "FirmwareVersion": "1.4.0",
+      "SerialNumber": "SN23123"
+    }
   },
   "CFX.Maintenance.ResourceMaintenanceAndServiceEvent": {
     "dir": "event",
@@ -824,7 +1024,16 @@
         "desc": "Dynamic structure that describes the details of this maintenance and service."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_ResourceMaintenanceAndServiceEvent.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_ResourceMaintenanceAndServiceEvent.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "MaintenanceType": "Preventive",
+      "MaintenanceDate": "2024-11-01T09:00:00Z",
+      "PerformedBy": {
+        "OperatorIdentifier": "TECH-003",
+        "OperatorName": "Lee Kang"
+      }
+    }
   },
   "CFX.Maintenance.ResourceMaintenanceStatusEvent": {
     "dir": "event",
@@ -851,7 +1060,12 @@
         "desc": "Dynamic structure that describes the response about maintenance details of this resource."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_ResourceMaintenanceStatusEvent.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_ResourceMaintenanceStatusEvent.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "MaintenanceStatus": "YellowWarning",
+      "NextMaintenanceDue": "2024-12-01T00:00:00Z"
+    }
   },
   "CFX.Maintenance.ResourceSetupEvent": {
     "dir": "event",
@@ -872,7 +1086,16 @@
         "desc": "Dynamic structure that describes the details of this resource."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_ResourceSetupEvent.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Maintenance_ResourceSetupEvent.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "RecipeId": "RECIPE-SMT-A001",
+      "SetupDate": "2024-11-01T07:30:00Z",
+      "SetupBy": {
+        "OperatorIdentifier": "OP-EMP-001",
+        "OperatorName": "Wang Fang"
+      }
+    }
   },
   "CFX.Materials.Management.BlockMaterialsRequest": {
     "dir": "request",
@@ -905,7 +1128,15 @@
         "desc": "An enumeration describing the reason for the block"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_BlockMaterialsRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_BlockMaterialsRequest.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-001",
+          "Reason": "QualityHold"
+        }
+      ]
+    }
   },
   "CFX.Materials.Management.BlockMaterialsResponse": {
     "dir": "response",
@@ -926,7 +1157,14 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_BlockMaterialsResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_BlockMaterialsResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      }
+    }
   },
   "CFX.Materials.Management.GetMaterialInformationRequest": {
     "dir": "request",
@@ -941,7 +1179,13 @@
         "desc": "A list of the unique identifiers of the material packages for which detailed information is requested."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_GetMaterialInformationRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_GetMaterialInformationRequest.htm",
+    "examplePayload": {
+      "MaterialIdentifiers": [
+        "MAT-REEL-001",
+        "MAT-REEL-002"
+      ]
+    }
   },
   "CFX.Materials.Management.GetMaterialInformationResponse": {
     "dir": "response",
@@ -962,7 +1206,22 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_GetMaterialInformationResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_GetMaterialInformationResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-001",
+          "PartNumber": "0402-10K-1%",
+          "Quantity": 3500,
+          "Status": "Available"
+        }
+      ]
+    }
   },
   "CFX.Materials.Management.MaterialsChainSplit": {
     "dir": "event",
@@ -983,7 +1242,18 @@
         "desc": "The splitted chain is the packaging unit chain, which is removed from the machine"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsChainSplit.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsChainSplit.htm",
+    "examplePayload": {
+      "OriginalMaterialIdentifier": "MAT-REEL-001",
+      "NewMaterialIdentifiers": [
+        "MAT-REEL-001A",
+        "MAT-REEL-001B"
+      ],
+      "SplitQuantities": [
+        1500,
+        2000
+      ]
+    }
   },
   "CFX.Materials.Management.MaterialsConsumed": {
     "dir": "event",
@@ -998,7 +1268,17 @@
         "desc": "A list of one or more materials that have been consumed"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsConsumed.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsConsumed.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-001",
+          "QuantityConsumed": 250,
+          "QuantityRemaining": 3250,
+          "ConsumptionDate": "2024-11-01T10:30:00Z"
+        }
+      ]
+    }
   },
   "CFX.Materials.Management.MaterialsInitialized": {
     "dir": "event",
@@ -1013,7 +1293,17 @@
         "desc": "A list of the new material packages, including details"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsInitialized.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsInitialized.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-003",
+          "PartNumber": "0603-100nF-50V",
+          "Quantity": 5000,
+          "ManufacturerLot": "LOT-2024-110A"
+        }
+      ]
+    }
   },
   "CFX.Materials.Management.MaterialsJoined": {
     "dir": "event",
@@ -1034,7 +1324,14 @@
         "desc": "Of the two material packages being joined, the material package which will be consumed last after joining"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsJoined.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsJoined.htm",
+    "examplePayload": {
+      "MaterialIdentifiers": [
+        "MAT-REEL-001A",
+        "MAT-REEL-001B"
+      ],
+      "NewMaterialIdentifier": "MAT-REEL-001-JOINED"
+    }
   },
   "CFX.Materials.Management.MaterialsModified": {
     "dir": "event",
@@ -1055,7 +1352,16 @@
         "desc": "The reason for the changes"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsModified.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsModified.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-001",
+          "PartNumber": "0402-10K-1%",
+          "Status": "Quarantine"
+        }
+      ]
+    }
   },
   "CFX.Materials.Management.MaterialsRetired": {
     "dir": "event",
@@ -1070,7 +1376,13 @@
         "desc": "A list of the materials that have been exhausted / depleted"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsRetired.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsRetired.htm",
+    "examplePayload": {
+      "MaterialIdentifiers": [
+        "MAT-REEL-OLD-001"
+      ],
+      "Reason": "Empty"
+    }
   },
   "CFX.Materials.Management.MaterialsSplit": {
     "dir": "event",
@@ -1103,7 +1415,18 @@
         "desc": "The quantity of material remaining in the original material package after it was divided"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsSplit.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MaterialsSplit.htm",
+    "examplePayload": {
+      "OriginalMaterialIdentifier": "MAT-REEL-002",
+      "NewMaterialIdentifiers": [
+        "MAT-REEL-002A",
+        "MAT-REEL-002B"
+      ],
+      "SplitQuantities": [
+        2000,
+        2500
+      ]
+    }
   },
   "CFX.Materials.Management.UnblockMaterialsRequest": {
     "dir": "request",
@@ -1130,7 +1453,14 @@
         "desc": "The person responsible for removing the block (optional)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_UnblockMaterialsRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_UnblockMaterialsRequest.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-001"
+        }
+      ]
+    }
   },
   "CFX.Materials.Management.UnblockMaterialsResponse": {
     "dir": "response",
@@ -1145,7 +1475,14 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_UnblockMaterialsResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_UnblockMaterialsResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      }
+    }
   },
   "CFX.Materials.Management.MSDManagement.MaterialsExpired": {
     "dir": "event",
@@ -1160,7 +1497,16 @@
         "desc": "The materials which have expired"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MSDManagement_MaterialsExpired.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MSDManagement_MaterialsExpired.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-MSD-001",
+          "ExpirationDate": "2024-11-01T23:59:59Z",
+          "FloorLifeRemaining": "00:00:00"
+        }
+      ]
+    }
   },
   "CFX.Materials.Management.MSDManagement.MaterialsOpened": {
     "dir": "event",
@@ -1175,7 +1521,16 @@
         "desc": "The materials which have been opened / exposed"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MSDManagement_MaterialsOpened.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MSDManagement_MaterialsOpened.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-MSD-001",
+          "OpenDate": "2024-11-01T08:00:00Z",
+          "FloorLife": "24:00:00"
+        }
+      ]
+    }
   },
   "CFX.Materials.Management.MSDManagement.MaterialsPlacedInDryStorage": {
     "dir": "event",
@@ -1190,7 +1545,16 @@
         "desc": "The materials which have been placed in dry storage"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MSDManagement_MaterialsPlacedInDryStorage.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MSDManagement_MaterialsPlacedInDryStorage.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-MSD-001",
+          "StorageDate": "2024-11-01T18:00:00Z",
+          "FloorLifeRemaining": "16:00:00"
+        }
+      ]
+    }
   },
   "CFX.Materials.Management.MSDManagement.MaterialsRemovedFromDryStorage": {
     "dir": "event",
@@ -1205,7 +1569,16 @@
         "desc": "The materials which have been removed from dry storage"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MSDManagement_MaterialsRemovedFromDryStorage.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MSDManagement_MaterialsRemovedFromDryStorage.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-MSD-001",
+          "RemovalDate": "2024-11-02T08:00:00Z",
+          "FloorLifeRemaining": "16:00:00"
+        }
+      ]
+    }
   },
   "CFX.Materials.Management.MSDManagement.MaterialsRestored": {
     "dir": "event",
@@ -1220,7 +1593,16 @@
         "desc": "The materials which have been restored"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MSDManagement_MaterialsRestored.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Management_MSDManagement_MaterialsRestored.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-MSD-001",
+          "RestorationDate": "2024-11-01T20:00:00Z",
+          "BakeTime": "8:00:00"
+        }
+      ]
+    }
   },
   "CFX.Materials.Storage.GetLoadedMaterialsRequest": {
     "dir": "request",
@@ -1241,7 +1623,10 @@
         "desc": "** NOTE: ADDED in CFX 1.7 ** The unique identifier of the resource in which the requestor is interested (optional) If set to null, the search is made on the endpoint itself. The use of this property should be reserved to an endpoint that is able to know the location of all the MaterialPackage of the factory, like an ERP for example"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_GetLoadedMaterialsRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_GetLoadedMaterialsRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "StorageTower.Model_ST100.SN00123"
+    }
   },
   "CFX.Materials.Storage.GetLoadedMaterialsResponse": {
     "dir": "response",
@@ -1262,7 +1647,21 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_GetLoadedMaterialsResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_GetLoadedMaterialsResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "LoadedMaterials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-003",
+          "LocationIdentifier": "SLOT-A01",
+          "PartNumber": "0603-100nF-50V"
+        }
+      ]
+    }
   },
   "CFX.Materials.Storage.MaterialCarriersLoaded": {
     "dir": "event",
@@ -1277,7 +1676,20 @@
         "desc": "There are two usage cases are available for this message: 1) Load MaterialCarrier directly to Endpoint (LocationIdentifier = Endpoint Slot Identifier, CarrierInformation = Carrier to be loaded) 2) Load MateriialCarrier to another MaterialCarrier (LocationIdentifier = Identifier of new parent carrier, CarrierInformation = Identifier of carrier to be loaded)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_MaterialCarriersLoaded.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_MaterialCarriersLoaded.htm",
+    "examplePayload": {
+      "Carriers": [
+        {
+          "CarrierIdentifier": "TRAY-001",
+          "LocationIdentifier": "SLOT-B02",
+          "Materials": [
+            {
+              "MaterialIdentifier": "MAT-REEL-004"
+            }
+          ]
+        }
+      ]
+    }
   },
   "CFX.Materials.Storage.MaterialCarriersUnloaded": {
     "dir": "event",
@@ -1292,7 +1704,15 @@
         "desc": "List of carriers to be unloaded. NOTE - This message DOES NOT mean that the MaterialPackage is unloaded from the MaterialCarrier. Only that the MaterialCarrier is unloaded from its parent (slot on and Endpoint, or another MaterialCarrier)."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_MaterialCarriersUnloaded.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_MaterialCarriersUnloaded.htm",
+    "examplePayload": {
+      "Carriers": [
+        {
+          "CarrierIdentifier": "TRAY-001",
+          "LocationIdentifier": "SLOT-B02"
+        }
+      ]
+    }
   },
   "CFX.Materials.Storage.MaterialsEmpty": {
     "dir": "event",
@@ -1307,7 +1727,15 @@
         "desc": "A list of the material locations where the depleted material packages are stored or loaded at the endpoint. Also includes the material package that is loaded at the location (if known). For example, if the endpoint is an SMT placement machine, the location identifies the feeder slot/position where the depleted material package is loaded."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_MaterialsEmpty.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_MaterialsEmpty.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-001",
+          "LocationIdentifier": "FEEDER-A01"
+        }
+      ]
+    }
   },
   "CFX.Materials.Storage.MaterialsLoaded": {
     "dir": "event",
@@ -1322,7 +1750,17 @@
         "desc": "There are three usage cases are available for this message: 1) Load MaterialPackage directly to Endpoint (LocationIdentifier = Endpoint Slot Identifier, CarrierInformation = null) 2) Load MaterialPackage to MaterialCarrier (LocationIdentifier = null, CarrierInformation = Identifier of carrier to be loaded) 3) Load MaterialPackage to MaterialCarrier AND Load MaterialCarrier to Endpoint (LocationIdentifier = Endpoint Slot Identifier, CarrierInformation = Identifier of carrier to be loaded)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_MaterialsLoaded.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_MaterialsLoaded.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-005",
+          "LocationIdentifier": "FEEDER-B03",
+          "PartNumber": "0805-1uF-25V",
+          "Quantity": 4000
+        }
+      ]
+    }
   },
   "CFX.Materials.Storage.MaterialsUnloaded": {
     "dir": "event",
@@ -1337,7 +1775,16 @@
         "desc": "List of material package identifiers to be unloaded."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_MaterialsUnloaded.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_MaterialsUnloaded.htm",
+    "examplePayload": {
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-005",
+          "LocationIdentifier": "FEEDER-B03",
+          "QuantityRemaining": 3200
+        }
+      ]
+    }
   },
   "CFX.Materials.Storage.SplicePointDetected": {
     "dir": "event",
@@ -1358,7 +1805,12 @@
         "desc": "Describes the location on the machine where a splice point was detected, along with information about the new material package that is now being actively consumed at that location."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_SplicePointDetected.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_SplicePointDetected.htm",
+    "examplePayload": {
+      "MaterialIdentifier": "MAT-REEL-001",
+      "LocationIdentifier": "FEEDER-A01",
+      "SpliceType": "StandardSplice"
+    }
   },
   "CFX.Materials.Storage.ValidateStationSetupRequest": {
     "dir": "request",
@@ -1461,7 +1913,12 @@
         "desc": "The number of the related transport order"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_CheckpointReached.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_CheckpointReached.htm",
+    "examplePayload": {
+      "TransportOrderId": "TO-2024-001",
+      "CheckpointId": "CHECKPOINT-02",
+      "CheckpointReachedTime": "2024-11-01T09:15:00Z"
+    }
   },
   "CFX.Materials.Transport.CreateTransportOrderRequest": {
     "dir": "request",
@@ -1518,7 +1975,18 @@
         "desc": "The order ID of the new transport order"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_CreateTransportOrderRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_CreateTransportOrderRequest.htm",
+    "examplePayload": {
+      "TransportOrderId": "TO-2024-002",
+      "SourceLocationIdentifier": "WAREHOUSE-01",
+      "DestinationLocationIdentifier": "LINE-A-MOUNTER",
+      "Materials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-006",
+          "PartNumber": "0402-10K-1%"
+        }
+      ]
+    }
   },
   "CFX.Materials.Transport.CreateTransportOrderResponse": {
     "dir": "response",
@@ -1545,7 +2013,15 @@
         "desc": "The order ID of the queried transport order"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_CreateTransportOrderResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_CreateTransportOrderResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "TransportOrderId": "TO-2024-002"
+    }
   },
   "CFX.Materials.Transport.GetTransportOrderStatusRequest": {
     "dir": "request",
@@ -1560,7 +2036,10 @@
         "desc": "The order number of the related transport order"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_GetTransportOrderStatusRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_GetTransportOrderStatusRequest.htm",
+    "examplePayload": {
+      "TransportOrderId": "TO-2024-001"
+    }
   },
   "CFX.Materials.Transport.GetTransportOrderStatusResponse": {
     "dir": "response",
@@ -1599,7 +2078,17 @@
         "desc": "The order number of the related transport order"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_GetTransportOrderStatusResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_GetTransportOrderStatusResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "TransportOrderId": "TO-2024-001",
+      "Status": "InProgress",
+      "CurrentLocation": "CHECKPOINT-02"
+    }
   },
   "CFX.Materials.Transport.StartTransferRequest": {
     "dir": "request",
@@ -1632,7 +2121,11 @@
         "desc": "The order ID of the new transport order"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_StartTransferRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_StartTransferRequest.htm",
+    "examplePayload": {
+      "TransportOrderId": "TO-2024-001",
+      "StartTime": "2024-11-01T09:00:00Z"
+    }
   },
   "CFX.Materials.Transport.StartTransferResponse": {
     "dir": "response",
@@ -1653,7 +2146,14 @@
         "desc": "The order ID of the queried transport order"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_StartTransferResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_StartTransferResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      }
+    }
   },
   "CFX.Materials.Transport.TransportOrderCompleted": {
     "dir": "event",
@@ -1692,7 +2192,12 @@
         "desc": "The order number of the related transport order"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_TransportOrderCompleted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_TransportOrderCompleted.htm",
+    "examplePayload": {
+      "TransportOrderId": "TO-2024-001",
+      "CompletedTime": "2024-11-01T09:30:00Z",
+      "DestinationLocationIdentifier": "LINE-A-MOUNTER"
+    }
   },
   "CFX.Materials.Transport.TransportOrderStarted": {
     "dir": "event",
@@ -1755,7 +2260,12 @@
         "desc": "The order number of the new transport order"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_TransportOrderStarted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_TransportOrderStarted.htm",
+    "examplePayload": {
+      "TransportOrderId": "TO-2024-001",
+      "StartTime": "2024-11-01T09:00:00Z",
+      "SourceLocationIdentifier": "WAREHOUSE-01"
+    }
   },
   "CFX.Materials.Transport.TransportOrderStatusChanged": {
     "dir": "event",
@@ -1812,7 +2322,13 @@
         "desc": "The operator who updated the status (optional, where applicable)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_TransportOrderStatusChanged.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Transport_TransportOrderStatusChanged.htm",
+    "examplePayload": {
+      "TransportOrderId": "TO-2024-001",
+      "NewStatus": "InProgress",
+      "PreviousStatus": "Queued",
+      "StatusChangedTime": "2024-11-01T09:00:00Z"
+    }
   },
   "CFX.Production.ActivateRecipeRequest": {
     "dir": "request",
@@ -1935,7 +2451,15 @@
         "desc": "An enumeration indicating the reason for the block."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_BlockMaterialLocationsRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_BlockMaterialLocationsRequest.htm",
+    "examplePayload": {
+      "Locations": [
+        {
+          "LocationIdentifier": "FEEDER-A01",
+          "Reason": "MaterialMismatch"
+        }
+      ]
+    }
   },
   "CFX.Production.BlockMaterialLocationsResponse": {
     "dir": "response",
@@ -1950,7 +2474,14 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_BlockMaterialLocationsResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_BlockMaterialLocationsResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      }
+    }
   },
   "CFX.Production.GetActiveRecipeRequest": {
     "dir": "request",
@@ -2030,7 +2561,10 @@
         "desc": "Pathname with wildcard, e.g. “myRecipes/CFX/A-Team*”."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetAvailableRecipesRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetAvailableRecipesRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123"
+    }
   },
   "CFX.Production.GetAvailableRecipesResponse": {
     "dir": "response",
@@ -2063,7 +2597,21 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetAvailableRecipesResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetAvailableRecipesResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "Recipes": [
+        {
+          "Name": "RECIPE-SMT-A001",
+          "Version": "2.1",
+          "PartNumber": "PCB-A001"
+        }
+      ]
+    }
   },
   "CFX.Production.GetRecipeRequest": {
     "dir": "request",
@@ -2139,7 +2687,10 @@
         "desc": "An optional property designating the specific Stage."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetRequiredSetupRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetRequiredSetupRequest.htm",
+    "examplePayload": {
+      "WorkOrderId": "WO-2024-001"
+    }
   },
   "CFX.Production.GetRequiredSetupResponse": {
     "dir": "response",
@@ -2184,7 +2735,22 @@
         "desc": "An optional property designating the specific Stage associated with this setup."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetRequiredSetupResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetRequiredSetupResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "WorkOrderId": "WO-2024-001",
+      "SetupRequirements": [
+        {
+          "LocationIdentifier": "FEEDER-A01",
+          "PartNumber": "0402-10K-1%",
+          "QuantityRequired": 500
+        }
+      ]
+    }
   },
   "CFX.Production.GetUnitInfoRequest": {
     "dir": "request",
@@ -2211,7 +2777,14 @@
         "desc": "Unique ID of Production Unit, e.g. Barcode, to be used in case the Primary Identifier is not available and, thus, PrimaryIdentifier is left empty."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetUnitInfoRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetUnitInfoRequest.htm",
+    "examplePayload": {
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001"
+        }
+      ]
+    }
   },
   "CFX.Production.GetUnitInfoResponse": {
     "dir": "response",
@@ -2250,7 +2823,22 @@
         "desc": "An optional list of structures that identify each specific instance of production unit (if known)."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetUnitInfoResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetUnitInfoResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "PartNumber": "PCB-A001",
+          "WorkOrderId": "WO-2024-001",
+          "ProcessStatus": "InProcess"
+        }
+      ]
+    }
   },
   "CFX.Production.LocalRecipeChanged": {
     "dir": "event",
@@ -2283,7 +2871,12 @@
         "desc": "Optional TransactionID if the changes only concern a particular work. If null, the message applies to all the current and future Works."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_LocalRecipeChanged.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_LocalRecipeChanged.htm",
+    "examplePayload": {
+      "RecipeName": "RECIPE-SMT-A001",
+      "Version": "2.2",
+      "ChangeDescription": "Updated paste volume for C001 from 1.2 to 1.4"
+    }
   },
   "CFX.Production.LockStationRequest": {
     "dir": "request",
@@ -2316,7 +2909,14 @@
         "desc": "An optional stage. When specified, only that stage shall be locked."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_LockStationRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_LockStationRequest.htm",
+    "examplePayload": {
+      "Reason": "MaintenancePending",
+      "RequestedBy": {
+        "OperatorIdentifier": "TECH-003",
+        "OperatorName": "Lee Kang"
+      }
+    }
   },
   "CFX.Production.LockStationResponse": {
     "dir": "response",
@@ -2331,7 +2931,14 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_LockStationResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_LockStationResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      }
+    }
   },
   "CFX.Production.OperatorActivated": {
     "dir": "event",
@@ -2346,7 +2953,14 @@
         "desc": "A structure which defines the Operator."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_OperatorActivated.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_OperatorActivated.htm",
+    "examplePayload": {
+      "Operator": {
+        "OperatorIdentifier": "OP-EMP-001",
+        "OperatorName": "Wang Fang"
+      },
+      "ActivationTime": "2024-11-01T08:05:00Z"
+    }
   },
   "CFX.Production.OperatorDeactivated": {
     "dir": "event",
@@ -2361,7 +2975,15 @@
         "desc": "A structure which defines the Operator (optional)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_OperatorDeactivated.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_OperatorDeactivated.htm",
+    "examplePayload": {
+      "Operator": {
+        "OperatorIdentifier": "OP-EMP-001",
+        "OperatorName": "Wang Fang"
+      },
+      "DeactivationTime": "2024-11-01T17:00:00Z",
+      "Reason": "EndOfShift"
+    }
   },
   "CFX.Production.ReadingsRecorded": {
     "dir": "event",
@@ -2382,7 +3004,18 @@
         "desc": "If the readings related to this message are associated with a work transaction, this property contains the Id of the transaction."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ReadingsRecorded.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ReadingsRecorded.htm",
+    "examplePayload": {
+      "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "Readings": [
+        {
+          "ReadingIdentifier": "TEMP-ZONE1",
+          "Value": 225.5,
+          "Unit": "Celsius",
+          "Timestamp": "2024-11-01T10:00:00Z"
+        }
+      ]
+    }
   },
   "CFX.Production.RecipeActivated": {
     "dir": "event",
@@ -2507,7 +3140,12 @@
         "desc": "** NOTE: ADDED in CFX 1.6 ** Identifies the Work Order (or Batch) that is related to the deactivated recipe."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_RecipeDeactivated.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_RecipeDeactivated.htm",
+    "examplePayload": {
+      "RecipeName": "RECIPE-SMT-A001",
+      "Version": "2.1",
+      "DeactivatedTime": "2024-11-01T18:00:00Z"
+    }
   },
   "CFX.Production.RecipeModified": {
     "dir": "event",
@@ -2552,7 +3190,17 @@
         "desc": "** NOTE: ADDED in CFX 1.6 ** Identifies the Work Order (or Batch) that is related to the modified recipe."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_RecipeModified.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_RecipeModified.htm",
+    "examplePayload": {
+      "RecipeName": "RECIPE-SMT-A001",
+      "OldVersion": "2.1",
+      "NewVersion": "2.2",
+      "ModifiedBy": {
+        "OperatorIdentifier": "TECH-003",
+        "OperatorName": "Lee Kang"
+      },
+      "ChangeDescription": "Preheat zone 1 adjusted from 150 to 155°C"
+    }
   },
   "CFX.Production.SetupRequirementsChanged": {
     "dir": "event",
@@ -2573,7 +3221,17 @@
         "desc": "An optional property designating the affected Stage."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_SetupRequirementsChanged.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_SetupRequirementsChanged.htm",
+    "examplePayload": {
+      "WorkOrderId": "WO-2024-001",
+      "NewSetupRequirements": [
+        {
+          "LocationIdentifier": "FEEDER-A02",
+          "PartNumber": "0603-100nF-50V",
+          "QuantityRequired": 300
+        }
+      ]
+    }
   },
   "CFX.Production.ToolsCleaned": {
     "dir": "event",
@@ -2600,7 +3258,18 @@
         "desc": "Related Transaction ID specified previously by ToolsLoaded Message"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ToolsCleaned.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ToolsCleaned.htm",
+    "examplePayload": {
+      "Tools": [
+        {
+          "ToolIdentifier": "SQUEEGEE-01",
+          "CleanedTime": "2024-11-01T10:00:00Z",
+          "CleanedBy": {
+            "OperatorIdentifier": "OP-EMP-001"
+          }
+        }
+      ]
+    }
   },
   "CFX.Production.ToolsLoaded": {
     "dir": "event",
@@ -2621,7 +3290,16 @@
         "desc": "Transaction ID used to attach events and data during subsequent processing, until ToolsUnloaded"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ToolsLoaded.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ToolsLoaded.htm",
+    "examplePayload": {
+      "Tools": [
+        {
+          "ToolIdentifier": "STENCIL-A001",
+          "LocationIdentifier": "STENCIL-SLOT-1",
+          "PartNumber": "STENCIL-PCB-A001"
+        }
+      ]
+    }
   },
   "CFX.Production.ToolsUnloaded": {
     "dir": "event",
@@ -2642,7 +3320,15 @@
         "desc": "Related Transaction ID specified previously by ToolsLoaded Message"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ToolsUnloaded.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ToolsUnloaded.htm",
+    "examplePayload": {
+      "Tools": [
+        {
+          "ToolIdentifier": "STENCIL-A001",
+          "LocationIdentifier": "STENCIL-SLOT-1"
+        }
+      ]
+    }
   },
   "CFX.Production.ToolsUsed": {
     "dir": "event",
@@ -2663,7 +3349,16 @@
         "desc": "A list of the tools that were used"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ToolsUsed.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ToolsUsed.htm",
+    "examplePayload": {
+      "Tools": [
+        {
+          "ToolIdentifier": "SQUEEGEE-01",
+          "UsageCount": 1,
+          "TotalLifetimeUsage": 1250
+        }
+      ]
+    }
   },
   "CFX.Production.UnblockMaterialLocationsRequest": {
     "dir": "request",
@@ -2678,7 +3373,14 @@
         "desc": "A list of locations to be unblocked"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnblockMaterialLocationsRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnblockMaterialLocationsRequest.htm",
+    "examplePayload": {
+      "Locations": [
+        {
+          "LocationIdentifier": "FEEDER-A01"
+        }
+      ]
+    }
   },
   "CFX.Production.UnblockMaterialLocationsResponse": {
     "dir": "response",
@@ -2693,7 +3395,14 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnblockMaterialLocationsResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnblockMaterialLocationsResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      }
+    }
   },
   "CFX.Production.UnitsArrived": {
     "dir": "event",
@@ -2847,7 +3556,17 @@
         "desc": "List of structures that identify each specific instance of production unit to be disqualified (could be within a carrier or panel)."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnitsDisqualified.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnitsDisqualified.htm",
+    "examplePayload": {
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-005",
+          "PartNumber": "PCB-A001"
+        }
+      ],
+      "Reason": "FailedInspection",
+      "DisqualificationTime": "2024-11-01T11:30:00Z"
+    }
   },
   "CFX.Production.UnitsInitialized": {
     "dir": "event",
@@ -2930,7 +3649,13 @@
         "desc": "An optional stage designating the particular production stage to be unlocked"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnlockStationRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnlockStationRequest.htm",
+    "examplePayload": {
+      "RequestedBy": {
+        "OperatorIdentifier": "TECH-003",
+        "OperatorName": "Lee Kang"
+      }
+    }
   },
   "CFX.Production.UnlockStationResponse": {
     "dir": "response",
@@ -2945,7 +3670,14 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnlockStationResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnlockStationResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      }
+    }
   },
   "CFX.Production.UpdateRecipeRequest": {
     "dir": "request",
@@ -3132,7 +3864,16 @@
         "desc": "The identifer of the Work Order or Work Order sub-batch"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkOrderActionExecuted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkOrderActionExecuted.htm",
+    "examplePayload": {
+      "WorkOrderId": "WO-2024-001",
+      "Action": "Pause",
+      "ActionTime": "2024-11-01T12:00:00Z",
+      "ExecutedBy": {
+        "OperatorIdentifier": "OP-EMP-001",
+        "OperatorName": "Wang Fang"
+      }
+    }
   },
   "CFX.Production.WorkStageCompleted": {
     "dir": "event",
@@ -3374,7 +4115,23 @@
         "desc": "The id of the work transaction with which this message is associated."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Application_MaterialsApplied.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Application_MaterialsApplied.htm",
+    "examplePayload": {
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "PartNumber": "PCB-A001"
+        }
+      ],
+      "AppliedMaterials": [
+        {
+          "MaterialIdentifier": "MAT-PASTE-001",
+          "AppliedQuantity": 1.8,
+          "Unit": "Grams"
+        }
+      ],
+      "ApplicationTime": "2024-11-01T08:45:00Z"
+    }
   },
   "CFX.Production.Application.MaterialsUnapplied": {
     "dir": "event",
@@ -3395,7 +4152,22 @@
         "desc": "A list of materials which have been uninstalled."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Application_MaterialsUnapplied.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Application_MaterialsUnapplied.htm",
+    "examplePayload": {
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "PartNumber": "PCB-A001"
+        }
+      ],
+      "UnappliedMaterials": [
+        {
+          "MaterialIdentifier": "MAT-PASTE-001",
+          "RemovedQuantity": 1.8,
+          "Unit": "Grams"
+        }
+      ]
+    }
   },
   "CFX.Production.Application.Solder.PCBSelectiveSoldered": {
     "dir": "event",
@@ -3422,7 +4194,25 @@
         "desc": "The id of the work transaction with which this inspection session is associated."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Application_Solder_PCBSelectiveSoldered.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Application_Solder_PCBSelectiveSoldered.htm",
+    "examplePayload": {
+      "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-003",
+          "PartNumber": "PCB-A001"
+        }
+      ],
+      "SolderPoints": [
+        {
+          "LocationIdentifier": "J1-1",
+          "SolderType": "LowTemperaturePaste",
+          "SolderResult": "Pass"
+        }
+      ],
+      "ProgramName": "SOLDER-PROG-A001",
+      "CompletedTime": "2024-11-01T10:45:00Z"
+    }
   },
   "CFX.Production.Assembly.MaterialsInstalled": {
     "dir": "event",
@@ -3475,7 +4265,23 @@
         "desc": "A list of materials which have been uninstalled."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_MaterialsUninstalled.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_MaterialsUninstalled.htm",
+    "examplePayload": {
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "PartNumber": "PCB-A001"
+        }
+      ],
+      "UninstalledMaterials": [
+        {
+          "MaterialIdentifier": "MAT-REEL-001",
+          "LocationIdentifier": "R101",
+          "PartNumber": "0402-10K-1%",
+          "ReferenceDesignator": "R101"
+        }
+      ]
+    }
   },
   "CFX.Production.Assembly.UnitsPersonalized": {
     "dir": "event",
@@ -3496,7 +4302,19 @@
         "desc": "The id of the work transaction with which this installation is associated."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_UnitsPersonalized.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_UnitsPersonalized.htm",
+    "examplePayload": {
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "PartNumber": "PCB-A001",
+          "PersonalizationData": {
+            "CustomerPartNumber": "CUST-PCB-A001-001",
+            "PersonalizedAt": "2024-11-01T10:00:00Z"
+          }
+        }
+      ]
+    }
   },
   "CFX.Production.Assembly.PressInsertion.ConditionCompleted": {
     "dir": "event",
@@ -3517,7 +4335,24 @@
         "desc": "Related Transaction ID specified previously by WorkStarted Message"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_PressInsertion_ConditionCompleted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_PressInsertion_ConditionCompleted.htm",
+    "examplePayload": {
+      "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "PartNumber": "PCB-A001"
+        }
+      ],
+      "Insertions": [
+        {
+          "ReferenceDesignator": "J1",
+          "Force": 48.5,
+          "Unit": "Newtons",
+          "Result": "Passed"
+        }
+      ]
+    }
   },
   "CFX.Production.Assembly.PressInsertion.GetConditionPermissionRequest": {
     "dir": "request",
@@ -3544,7 +4379,16 @@
         "desc": "Related Transaction ID specified previously by WorkStarted Message"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_PressInsertion_GetConditionPermissionRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_PressInsertion_GetConditionPermissionRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "PressInsertion.Model_PI100.SN00456",
+      "WorkOrderId": "WO-2024-001",
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001"
+        }
+      ]
+    }
   },
   "CFX.Production.Assembly.PressInsertion.GetConditionPermissionResponse": {
     "dir": "response",
@@ -3571,7 +4415,19 @@
         "desc": "Related Transaction ID specified previously by WorkStarted Message"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_PressInsertion_GetConditionPermissionResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_PressInsertion_GetConditionPermissionResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "IsPermitted": true,
+      "ConditionParameters": {
+        "MaxForce": 55,
+        "Unit": "Newtons"
+      }
+    }
   },
   "CFX.Production.Hermes.GetMagazineDataRequest": {
     "dir": "request",
@@ -3586,7 +4442,12 @@
         "desc": "Barcode of a magazine, required to identify the magazine."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_GetMagazineDataRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_GetMagazineDataRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "HermesStation.Model_H100.SN00789",
+      "MachineId": "HERMES-MACHINE-01",
+      "MagazineId": "MAG-001"
+    }
   },
   "CFX.Production.Hermes.GetMagazineDataResponse": {
     "dir": "response",
@@ -3607,7 +4468,21 @@
         "desc": "Result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_GetMagazineDataResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_GetMagazineDataResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "MagazineId": "MAG-001",
+      "MagazineData": {
+        "BoardCount": 10,
+        "BoardWidth": 250,
+        "BoardLength": 300,
+        "Unit": "Millimeter"
+      }
+    }
   },
   "CFX.Production.Hermes.GetWorkOrderDataRequest": {
     "dir": "request",
@@ -3628,7 +4503,11 @@
         "desc": "The identifier of the work order to look up."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_GetWorkOrderDataRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_GetWorkOrderDataRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "HermesStation.Model_H100.SN00789",
+      "WorkOrderId": "WO-2024-001"
+    }
   },
   "CFX.Production.Hermes.GetWorkOrderDataResponse": {
     "dir": "response",
@@ -3709,7 +4588,17 @@
         "desc": "The identifier of the work order whose data was retrieved."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_GetWorkOrderDataResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_GetWorkOrderDataResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "WorkOrderId": "WO-2024-001",
+      "PartNumber": "PCB-A001",
+      "Quantity": 500
+    }
   },
   "CFX.Production.Hermes.MagazineArrived": {
     "dir": "event",
@@ -3724,7 +4613,13 @@
         "desc": "Barcode of a magazine, required to identify the magazine."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_MagazineArrived.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_MagazineArrived.htm",
+    "examplePayload": {
+      "MachineId": "HERMES-MACHINE-01",
+      "MagazineId": "MAG-002",
+      "ArrivalTime": "2024-11-01T09:00:00Z",
+      "UpstreamMachineId": "HERMES-MACHINE-00"
+    }
   },
   "CFX.Production.Hermes.MagazineDeparted": {
     "dir": "event",
@@ -3739,7 +4634,13 @@
         "desc": "Barcode of a magazine, required to identify the magazine."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_MagazineDeparted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Hermes_MagazineDeparted.htm",
+    "examplePayload": {
+      "MachineId": "HERMES-MACHINE-01",
+      "MagazineId": "MAG-002",
+      "DepartureTime": "2024-11-01T09:45:00Z",
+      "DownstreamMachineId": "HERMES-MACHINE-02"
+    }
   },
   "CFX.Production.LoadingAndUnloading.UnitsLoaded": {
     "dir": "event",
@@ -3766,7 +4667,18 @@
         "desc": "A list of the specific units that were loaded along with positions they were loaded from."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_LoadingAndUnloading_UnitsLoaded.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_LoadingAndUnloading_UnitsLoaded.htm",
+    "examplePayload": {
+      "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "PartNumber": "PCB-A001",
+          "WorkOrderId": "WO-2024-001"
+        }
+      ],
+      "LoadedTime": "2024-11-01T08:30:00Z"
+    }
   },
   "CFX.Production.LoadingAndUnloading.UnitsUnloaded": {
     "dir": "event",
@@ -3793,7 +4705,17 @@
         "desc": "A list of the specific units that were unloaded along with positions they were unloaded to."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_LoadingAndUnloading_UnitsUnloaded.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_LoadingAndUnloading_UnitsUnloaded.htm",
+    "examplePayload": {
+      "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "PartNumber": "PCB-A001"
+        }
+      ],
+      "UnloadedTime": "2024-11-01T09:15:00Z"
+    }
   },
   "CFX.Production.Processing.UnitsProcessed": {
     "dir": "event",
@@ -3867,7 +4789,29 @@
         "desc": "The id of the work transaction with which this inspection session is associated."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ReworkAndRepair_UnitsRepaired.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ReworkAndRepair_UnitsRepaired.htm",
+    "examplePayload": {
+      "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-005",
+          "PartNumber": "PCB-A001"
+        }
+      ],
+      "RepairActions": [
+        {
+          "ReferenceDesignator": "R101",
+          "RepairType": "ComponentReplaced",
+          "OriginalPartNumber": "0402-10K-1%",
+          "ReplacedPartNumber": "0402-10K-1%"
+        }
+      ],
+      "RepairedBy": {
+        "OperatorIdentifier": "TECH-003",
+        "OperatorName": "Lee Kang"
+      },
+      "RepairedTime": "2024-11-01T14:00:00Z"
+    }
   },
   "CFX.Production.TestAndInspection.GetInspectionInfoRequest": {
     "dir": "request",
@@ -3894,7 +4838,14 @@
         "desc": "List of Units for which inspection data is queried"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_TestAndInspection_GetInspectionInfoRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_TestAndInspection_GetInspectionInfoRequest.htm",
+    "examplePayload": {
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001"
+        }
+      ]
+    }
   },
   "CFX.Production.TestAndInspection.GetInspectionInfoResponse": {
     "dir": "response",
@@ -3909,7 +4860,21 @@
         "desc": "List of Units with the requested inspection results"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_TestAndInspection_GetInspectionInfoResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_TestAndInspection_GetInspectionInfoResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "Units": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "InspectionStatus": "Pass",
+          "FailedTests": []
+        }
+      ]
+    }
   },
   "CFX.Production.TestAndInspection.UnitsInspected": {
     "dir": "event",
@@ -4068,7 +5033,23 @@
         "desc": "** NOTE: ADDED in CFX 2.0 ** Optional: The id of the work transaction with which this calibration is associated. Empty if calibration not associated with a work transaction."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_CalibrationPerformed.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_CalibrationPerformed.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "CalibrationDate": "2024-11-01T07:00:00Z",
+      "PerformedBy": {
+        "OperatorIdentifier": "TECH-003",
+        "OperatorName": "Lee Kang"
+      },
+      "CalibrationResults": [
+        {
+          "ParameterName": "PlacementAccuracy",
+          "Value": 0.025,
+          "Unit": "mm",
+          "Status": "Pass"
+        }
+      ]
+    }
   },
   "CFX.ResourcePerformance.ChangeSleepStateRequest": {
     "dir": "request",
@@ -4089,7 +5070,11 @@
         "desc": "Name of the Stage requested to change sleep state. If omitted then the sleep state for the whole station is to be changed."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ChangeSleepStateRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ChangeSleepStateRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "NewSleepState": "WakeUp"
+    }
   },
   "CFX.ResourcePerformance.ChangeSleepStateResponse": {
     "dir": "response",
@@ -4134,7 +5119,14 @@
         "desc": "If the new sleep state requires less wake up time than the old, this indicates that the state is in the process of being changed. Time interval can be nullable (for example if there is no time remaining)."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ChangeSleepStateResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ChangeSleepStateResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      }
+    }
   },
   "CFX.ResourcePerformance.ConsumptionDetail": {
     "dir": "event",
@@ -4149,7 +5141,25 @@
         "desc": "** NOTE: ADDED in CFX 2.1 ** Sub-device name, like zones/modules within a device"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ConsumptionDetail.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ConsumptionDetail.htm",
+    "examplePayload": {
+      "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "StartTime": "2024-11-01T10:00:00Z",
+      "EndTime": "2024-11-01T10:15:00Z",
+      "ConsumptionDetails": [
+        {
+          "EnergyType": "Electricity",
+          "Value": 2.5,
+          "Unit": "kWh"
+        },
+        {
+          "EnergyType": "AirPressure",
+          "Value": 0.6,
+          "Unit": "m3"
+        }
+      ]
+    }
   },
   "CFX.ResourcePerformance.EnergyConsumed": {
     "dir": "event",
@@ -4368,7 +5378,14 @@
         "desc": "** NOTE: ADDED in CFX 1.3 ** The instantaneous amount of voltage recorded at EndTime on three phases (in Volts DC or AC (RMS))"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_EnergyConsumed.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_EnergyConsumed.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "StartTime": "2024-11-01T10:00:00Z",
+      "EndTime": "2024-11-01T10:15:00Z",
+      "TotalEnergyConsumed": 2.5,
+      "Unit": "kWh"
+    }
   },
   "CFX.ResourcePerformance.EnergyConsumptionRequest": {
     "dir": "request",
@@ -4596,7 +5613,23 @@
         "desc": "The instantaneous amount of voltage recorded at EndTime on three phases (in Volts DC or AC (RMS))"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_EnergyConsumptionResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_EnergyConsumptionResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "ConsumptionData": [
+        {
+          "StartTime": "2024-11-01T09:00:00Z",
+          "EndTime": "2024-11-01T10:00:00Z",
+          "TotalEnergyConsumed": 10.2,
+          "Unit": "kWh"
+        }
+      ]
+    }
   },
   "CFX.ResourcePerformance.FaultAcknowledged": {
     "dir": "event",
@@ -4702,7 +5735,22 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_GetActiveFaultsResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_GetActiveFaultsResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "ActiveFaults": [
+        {
+          "FaultCode": "E001",
+          "FaultDescription": "Z-axis servo alarm",
+          "Severity": "Warning",
+          "OccurrenceTime": "2024-11-01T09:55:00Z"
+        }
+      ]
+    }
   },
   "CFX.ResourcePerformance.HandleFaultRequest": {
     "dir": "request",
@@ -4797,7 +5845,13 @@
         "desc": ""
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_LogEntryRecorded.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_LogEntryRecorded.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "LogTime": "2024-11-01T10:00:00Z",
+      "LogLevel": "Information",
+      "Message": "Production started for WO-2024-001"
+    }
   },
   "CFX.ResourcePerformance.MaintenancePerformed": {
     "dir": "event",
@@ -4836,7 +5890,21 @@
         "desc": "A list of the specific tasks that were performed while conducting this maintenance event"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_MaintenancePerformed.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_MaintenancePerformed.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "MaintenanceType": "Preventive",
+      "MaintenanceDate": "2024-11-01T07:00:00Z",
+      "PerformedBy": {
+        "OperatorIdentifier": "TECH-003",
+        "OperatorName": "Lee Kang"
+      },
+      "MaintenanceActivities": [
+        "NozzlesCleaned",
+        "CameraCalibrated",
+        "ConveyorAdjusted"
+      ]
+    }
   },
   "CFX.ResourcePerformance.ModifyStationParametersRequest": {
     "dir": "request",
@@ -4851,7 +5919,17 @@
         "desc": "A list of the paramters to be modified. The Parameter structure is a dynamic structure, and may be of differing types depending on the type of endpoint."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ModifyStationParametersRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ModifyStationParametersRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "ParameterUpdates": [
+        {
+          "ParameterName": "ConveyorSpeed",
+          "NewValue": "350",
+          "Unit": "mm/min"
+        }
+      ]
+    }
   },
   "CFX.ResourcePerformance.ModifyStationParametersResponse": {
     "dir": "response",
@@ -4866,7 +5944,14 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ModifyStationParametersResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ModifyStationParametersResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      }
+    }
   },
   "CFX.ResourcePerformance.ProcessDataRecorded": {
     "dir": "event",
@@ -4881,7 +5966,24 @@
         "desc": "Process data recorded"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ProcessDataRecorded.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ProcessDataRecorded.htm",
+    "examplePayload": {
+      "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "ProcessData": [
+        {
+          "DataName": "PlacementSpeed",
+          "Value": 35000,
+          "Unit": "CPH"
+        },
+        {
+          "DataName": "CycleTime",
+          "Value": 12.5,
+          "Unit": "seconds"
+        }
+      ],
+      "RecordedTime": "2024-11-01T10:00:00Z"
+    }
   },
   "CFX.ResourcePerformance.SleepStateChanged": {
     "dir": "event",
@@ -4920,7 +6022,13 @@
         "desc": "If the new sleep state requires less wake up time than the old, this indicates that the state is in the process of being changed. Time interval can be nullable (for example if there is no time remaining)."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SleepStateChanged.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SleepStateChanged.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "NewSleepState": "Awake",
+      "PreviousSleepState": "Sleep",
+      "ChangeTime": "2024-11-01T08:00:00Z"
+    }
   },
   "CFX.ResourcePerformance.StageStateChanged": {
     "dir": "event",
@@ -4977,7 +6085,14 @@
         "desc": "The name of the stage that has changed state"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_StageStateChanged.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_StageStateChanged.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "StageName": "FrontConveyor",
+      "NewState": "Running",
+      "PreviousState": "Idle",
+      "ChangeTime": "2024-11-01T08:30:00Z"
+    }
   },
   "CFX.ResourcePerformance.StationOffline": {
     "dir": "event",
@@ -5024,7 +6139,21 @@
         "desc": "A list of the paramters that have been modified, along with their new values. The Parameter structure is a dynamic structure, and may be of differing types depending on the type of endpoint."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_StationParametersModified.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_StationParametersModified.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "ModifiedParameters": [
+        {
+          "ParameterName": "ConveyorSpeed",
+          "NewValue": "350",
+          "PreviousValue": "300",
+          "Unit": "mm/min"
+        }
+      ],
+      "ModifiedBy": {
+        "OperatorIdentifier": "TECH-003"
+      }
+    }
   },
   "CFX.ResourcePerformance.StationStateChanged": {
     "dir": "event",
@@ -5112,7 +6241,24 @@
         "desc": "The location on the endpoint where the old tool was returned (if any)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ToolChanged.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_ToolChanged.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "RemovedTools": [
+        {
+          "ToolIdentifier": "NOZZLE-0402-001",
+          "ToolType": "Nozzle",
+          "LocationIdentifier": "HEAD-1-SLOT-1"
+        }
+      ],
+      "InstalledTools": [
+        {
+          "ToolIdentifier": "NOZZLE-0402-002",
+          "ToolType": "Nozzle",
+          "LocationIdentifier": "HEAD-1-SLOT-1"
+        }
+      ]
+    }
   },
   "CFX.ResourcePerformance.PressInsertion.ComponentsPressed": {
     "dir": "event",
@@ -5145,7 +6291,20 @@
         "desc": "The total number of components that were successfully pressed during the sample period"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_PressInsertion_ComponentsPressed.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_PressInsertion_ComponentsPressed.htm",
+    "examplePayload": {
+      "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "CFXHandle": "PressInsertion.Model_PI100.SN00456",
+      "PressedComponents": [
+        {
+          "ReferenceDesignator": "J1",
+          "PartNumber": "CONN-2x5-2.54",
+          "Force": 48.5,
+          "Unit": "Newtons",
+          "Result": "Passed"
+        }
+      ]
+    }
   },
   "CFX.ResourcePerformance.SMTPlacement.ComponentsPlaced": {
     "dir": "event",
@@ -5178,7 +6337,21 @@
         "desc": "The total number of components that were successfully placed during the sample period"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SMTPlacement_ComponentsPlaced.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SMTPlacement_ComponentsPlaced.htm",
+    "examplePayload": {
+      "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "CFXHandle": "SMTPlus.Model_21232.SN23123",
+      "PlacedComponents": [
+        {
+          "ReferenceDesignator": "R101",
+          "PartNumber": "0402-10K-1%",
+          "PickAccuracy": 0.02,
+          "PlaceAccuracy": 0.02,
+          "Unit": "mm",
+          "Result": "Passed"
+        }
+      ]
+    }
   },
   "CFX.ResourcePerformance.SolderPastePrinting.CleanSqueegeeRequest": {
     "dir": "request",
@@ -5193,7 +6366,14 @@
         "desc": "An enumeration indicating the type of clean operation that is being requested"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_CleanSqueegeeRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_CleanSqueegeeRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "SPP.Model_SP100.SN11001",
+      "CleaningType": "Wet",
+      "RequestedBy": {
+        "OperatorIdentifier": "OP-EMP-001"
+      }
+    }
   },
   "CFX.ResourcePerformance.SolderPastePrinting.CleanSqueegeeResponse": {
     "dir": "response",
@@ -5208,7 +6388,14 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_CleanSqueegeeResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_CleanSqueegeeResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      }
+    }
   },
   "CFX.ResourcePerformance.SolderPastePrinting.CleanStencilRequest": {
     "dir": "request",
@@ -5223,7 +6410,12 @@
         "desc": "An enumeration indicating the type of clean operation that is being requested"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_CleanStencilRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_CleanStencilRequest.htm",
+    "examplePayload": {
+      "CFXHandle": "SPP.Model_SP100.SN11001",
+      "CleaningType": "Dry",
+      "CleaningMode": "AutomaticUnder"
+    }
   },
   "CFX.ResourcePerformance.SolderPastePrinting.CleanStencilResponse": {
     "dir": "response",
@@ -5238,7 +6430,14 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_CleanStencilResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_CleanStencilResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      }
+    }
   },
   "CFX.ResourcePerformance.SolderPastePrinting.SqueegeeCleaned": {
     "dir": "event",
@@ -5283,7 +6482,15 @@
         "desc": "Indicates the length of time that has ellapsed since the last time the squeegee was cleaned"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_SqueegeeCleaned.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_SqueegeeCleaned.htm",
+    "examplePayload": {
+      "CFXHandle": "SPP.Model_SP100.SN11001",
+      "CleaningType": "Wet",
+      "CleanedTime": "2024-11-01T09:30:00Z",
+      "CleanedBy": {
+        "OperatorIdentifier": "OP-EMP-001"
+      }
+    }
   },
   "CFX.ResourcePerformance.SolderPastePrinting.StencilCleaned": {
     "dir": "event",
@@ -5368,7 +6575,20 @@
         "desc": "The total number of components that were not successfully inserted during the sample period"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_THTInsertion_ComponentsInserted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_THTInsertion_ComponentsInserted.htm",
+    "examplePayload": {
+      "TransactionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "CFXHandle": "THT.Model_TH200.SN00999",
+      "InsertedComponents": [
+        {
+          "ReferenceDesignator": "R201",
+          "PartNumber": "1/4W-4.7K-THT",
+          "InsertionForce": 12.5,
+          "Unit": "Newtons",
+          "Result": "Passed"
+        }
+      ]
+    }
   },
   "CFX.Sensor.Identification.IdentifiersNotRead": {
     "dir": "event",
@@ -5383,7 +6603,13 @@
         "desc": "And optional property indicated the position that cannot be read. Used in the case that multiple production units are moving through the process, and the sensor is capable if reading multiple identifiers."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Sensor_Identification_IdentifiersNotRead.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Sensor_Identification_IdentifiersNotRead.htm",
+    "examplePayload": {
+      "CFXHandle": "Scanner.Model_SC100.SN00321",
+      "ScanAttempts": 3,
+      "FailureReason": "BarcodeObstructed",
+      "LocationIdentifier": "CONVEYOR-ENTRY"
+    }
   },
   "CFX.Sensor.Identification.IdentifiersRead": {
     "dir": "event",
@@ -5410,7 +6636,18 @@
         "desc": "An optional list of actual production unit identifiers, in the case that multiple production units are moving through the process, and the sensor is capable if reading multiple identifiers."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Sensor_Identification_IdentifiersRead.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Sensor_Identification_IdentifiersRead.htm",
+    "examplePayload": {
+      "CFXHandle": "Scanner.Model_SC100.SN00321",
+      "Identifiers": [
+        {
+          "Identifier": "SN-PCB-001",
+          "IdType": "Barcode1D",
+          "LocationIdentifier": "CONVEYOR-ENTRY"
+        }
+      ],
+      "ReadTime": "2024-11-01T08:30:00Z"
+    }
   },
   "CFX.Sensor.Identification.IdentifyUnitsRequest": {
     "dir": "request",
@@ -5452,6 +6689,20 @@
         "desc": "An optional list of actual production unit identifiers, in the case that multiple production units are moving through the process, and the sensor is capable if reading multiple identifiers."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Sensor_Identification_IdentifyUnitsResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Sensor_Identification_IdentifyUnitsResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success",
+        "ResultCode": 0,
+        "Message": null
+      },
+      "IdentifiedUnits": [
+        {
+          "UniqueIdentifier": "SN-PCB-001",
+          "PartNumber": "PCB-A001",
+          "WorkOrderId": "WO-2024-001"
+        }
+      ]
+    }
   }
 }

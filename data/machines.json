@@ -1,0 +1,92 @@
+[
+  {
+    "id": "ENDPOINT",
+    "label": "Generic CFX Endpoint",
+    "color": "#5e35b1",
+    "desc": "任何 CFX 2.0 相容設備的基本實作需求。所有機台均需實作這些通用流程。",
+    "vendor": null,
+    "category": "generic",
+    "flowIds": ["conn", "shutdown", "heartbeat", "wip", "recipe", "fault"]
+  },
+  {
+    "id": "PRINTER_M",
+    "label": "Stencil Printer",
+    "color": "#1565c0",
+    "desc": "錫膏印刷機（鋼板印刷機）。負責透過鋼板將錫膏印刷到 PCB 焊盤上。",
+    "vendor": null,
+    "category": "smt",
+    "flowIds": ["conn", "shutdown", "wip", "recipe", "fault", "spi-result", "mat-mgmt"]
+  },
+  {
+    "id": "SPI_M",
+    "label": "SPI Machine",
+    "color": "#00838f",
+    "desc": "錫膏檢查機（Solder Paste Inspection）。以 3D 光學量測技術檢查錫膏印刷品質。",
+    "vendor": null,
+    "category": "smt",
+    "flowIds": ["conn", "shutdown", "wip", "recipe", "fault", "inspection"]
+  },
+  {
+    "id": "MOUNTER_M",
+    "label": "SMT Mounter",
+    "color": "#2e7d32",
+    "desc": "SMT 貼片機。高速精密地將電子元件貼裝到 PCB 上的錫膏位置。",
+    "vendor": null,
+    "category": "smt",
+    "flowIds": ["conn", "shutdown", "wip", "recipe", "fault", "mat-mgmt", "mat-load"]
+  },
+  {
+    "id": "AOI_M",
+    "label": "AOI / AXI",
+    "color": "#558b2f",
+    "desc": "自動光學/X 光檢查機（AOI / AXI）。對 PCB 組裝品質進行自動視覺或 X 光檢查。",
+    "vendor": null,
+    "category": "smt",
+    "flowIds": ["conn", "shutdown", "wip", "recipe", "fault", "inspection"]
+  },
+  {
+    "id": "REFLOW_M",
+    "label": "Reflow Oven",
+    "color": "#e65100",
+    "desc": "迴焊爐。以精確的溫度曲線熔化錫膏，完成 SMT 元件與 PCB 的焊接。",
+    "vendor": null,
+    "category": "smt",
+    "flowIds": ["conn", "shutdown", "wip", "recipe", "fault"]
+  },
+  {
+    "id": "SOLDER_M",
+    "label": "Soldering",
+    "color": "#bf360c",
+    "desc": "波峰焊/選擇性焊接機。用於 THT 元件的焊接製程。",
+    "vendor": null,
+    "category": "tht",
+    "flowIds": ["conn", "shutdown", "wip", "recipe", "fault", "selective-solder"]
+  },
+  {
+    "id": "TESTER_M",
+    "label": "Test Equipment",
+    "color": "#6a1b9a",
+    "desc": "測試設備（ICT / FCT / Flying Probe）。對組裝完成的 PCB 進行電氣功能測試。",
+    "vendor": null,
+    "category": "test",
+    "flowIds": ["conn", "shutdown", "wip", "recipe", "fault", "inspection", "unit-validate"]
+  },
+  {
+    "id": "LABELER_M",
+    "label": "Labeler / Laser Marker",
+    "color": "#37474f",
+    "desc": "標籤機/雷射打標機。在 PCB 或產品上印刷或雕刻序號、QR Code 等識別標記。",
+    "vendor": null,
+    "category": "marking",
+    "flowIds": ["conn", "shutdown", "wip", "fault"]
+  },
+  {
+    "id": "COATING_M",
+    "label": "Conformal Coating / Cleaning",
+    "color": "#4e342e",
+    "desc": "三防塗覆/清洗設備。對組裝後的 PCB 進行防護塗覆或助焊劑清洗。",
+    "vendor": null,
+    "category": "post-process",
+    "flowIds": ["conn", "shutdown", "wip", "recipe", "fault"]
+  }
+]
