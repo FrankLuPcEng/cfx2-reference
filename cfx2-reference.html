@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CFX 2.0 Message Reference</title>
+<style>
+:root {
+  --bg:#f8f9fb; --bg2:#ffffff; --bg3:#f1f3f8; --bg4:#e8ebf4;
+  --border:#c8cedc; --border2:#a0aabe; --accent:#4f6db8; --accent2:#2d4f9e;
+  --green:#1a7a40; --amber:#b45d00; --red:#c0392b;
+  --text:#1a2035; --text2:#454f6b; --text3:#8898b0;
+  --mono:'Courier New',monospace; --sans:system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;display:flex;height:100vh;overflow:hidden;}
+#sidebar{width:240px;min-width:240px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+#sidebar header{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--accent2);}
+#sidebar header h1{font-size:14px;font-weight:700;color:#fff;letter-spacing:0.3px;}
+#sidebar header p{font-size:10px;color:rgba(255,255,255,0.6);margin-top:2px;}
+#search-wrap{padding:8px 10px;border-bottom:1px solid var(--border);}
+#search{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:12px;padding:5px 9px;outline:none;}
+#search:focus{border-color:var(--accent);}
+#flow-list{overflow-y:auto;flex:1;padding:6px 0;}
+.grp-hdr{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:10px 14px 3px;}
+.flow-item{display:flex;align-items:center;gap:7px;padding:6px 14px;cursor:pointer;border-left:3px solid transparent;font-size:12px;color:var(--text2);transition:all 0.1s;}
+.flow-item:hover{background:var(--bg3);color:var(--text);}
+.flow-item.active{background:#eef2fc;border-left-color:var(--accent);color:var(--accent2);font-weight:600;}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+#topbar{padding:10px 18px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;gap:10px;}
+#topbar h2{font-size:14px;font-weight:700;flex:1;}
+#topbar p{font-size:11px;color:var(--text3);margin-top:1px;}
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid;flex-shrink:0;}
+.filter-bar{display:flex;gap:5px;padding:8px 18px;border-bottom:1px solid var(--border);background:var(--bg2);align-items:center;}
+.fbtn{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);background:none;color:var(--text2);cursor:pointer;}
+.fbtn:hover{border-color:var(--accent);color:var(--accent2);}
+.fbtn.active{background:var(--accent2);border-color:var(--accent2);color:#fff;}
+#content{flex:1;display:flex;overflow:hidden;}
+#seq-panel{flex:1;overflow:auto;padding:24px 28px;background:var(--bg);}
+#empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text3);text-align:center;}
+#empty-state .ico{font-size:36px;margin-bottom:12px;opacity:0.3;}
+#detail-panel{width:400px;min-width:400px;background:var(--bg2);border-left:1px solid var(--border);overflow-y:auto;transition:width 0.2s;}
+#detail-panel.hidden{width:0;min-width:0;overflow:hidden;}
+#di{padding:18px;min-width:360px;}
+.dt{font-size:15px;font-weight:700;margin-bottom:2px;}
+.ds{font-size:11px;color:var(--text3);margin-bottom:10px;}
+.sl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:14px 0 6px;border-top:1px solid var(--border);padding-top:10px;}
+.sl:first-of-type{border-top:none;padding-top:0;margin-top:6px;}
+.cb{background:#f5f7fb;border:1px solid var(--border);border-radius:4px;padding:10px 12px;font-family:var(--mono);font-size:11px;color:#2d5a8e;overflow-x:auto;line-height:1.6;white-space:pre;}
+.ft{width:100%;border-collapse:collapse;font-size:11.5px;}
+.ft th{text-align:left;color:var(--text3);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;padding:5px 7px;border-bottom:1px solid var(--border);background:var(--bg3);}
+.ft td{padding:6px 7px;border-bottom:1px solid var(--border);vertical-align:top;}
+.ft tr:last-child td{border-bottom:none;}
+.fn{font-family:var(--mono);color:#2d4f9e;font-size:11px;}
+.ftype{font-family:var(--mono);color:var(--amber);font-size:11px;}
+.rb{font-size:9px;padding:1px 5px;border-radius:3px;font-weight:700;}
+.rb.req{background:#fde8e8;color:#c0392b;border:1px solid #f5c6c6;}
+.rb.opt{background:#f1f3f8;color:var(--text3);border:1px solid var(--border);}
+.nb{background:#fffbea;border:1px solid #e6c84a;border-radius:4px;padding:8px 10px;font-size:11px;color:#7a5800;margin-top:8px;line-height:1.6;}
+.xbtn{float:right;background:none;border:1px solid var(--border);color:var(--text3);font-size:12px;width:22px;height:22px;border-radius:3px;cursor:pointer;}
+.xbtn:hover{background:var(--bg3);}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+</style>
+</head>
+<body>
+<div id="sidebar">
+  <header>
+    <h1>CFX 2.0 Reference</h1>
+    <p>IPC-CFX-2591 · SMT Message Guide</p>
+  </header>
+  <div id="search-wrap"><input id="search" placeholder="搜尋流程…" oninput="renderSidebar(this.value)"></div>
+  <div id="flow-list"></div>
+</div>
+<div id="main">
+  <div id="topbar">
+    <div style="flex:1"><h2 id="ftitle">選擇左側流程</h2><p id="fdesc">← 選擇 SMT 流程以查看 CFX 2.0 訊息循序圖</p></div>
+    <span id="fbadge" class="badge" style="display:none"></span>
+  </div>
+  <div class="filter-bar" id="fbar" style="display:none">
+    <span style="font-size:10px;color:var(--text3);margin-right:4px">顯示：</span>
+    <button class="fbtn active" onclick="setFilter('all',this)">全部</button>
+    <button class="fbtn" onclick="setFilter('request',this)">Request</button>
+    <button class="fbtn" onclick="setFilter('response',this)">Response</button>
+    <button class="fbtn" onclick="setFilter('event',this)">Event</button>
+  </div>
+  <div id="content">
+    <div id="seq-panel">
+      <div id="empty-state"><div class="ico">⬡</div><p style="font-size:13px;line-height:1.9">選擇左側的 SMT 流程<br>查看 CFX 2.0 訊息交握循序圖</p></div>
+      <div id="seqc"></div>
+    </div>
+    <div id="detail-panel" class="hidden"><div id="di"><p style="color:var(--text3);font-size:12px;padding:10px 0">點擊循序圖中的訊息查看格式規範</p></div></div>
+  </div>
+</div>
+<script>
+const P={
+  BROKER:{label:'AMQP Broker'},ENDPOINT:{label:'CFX Machine\nEndpoint'},MES:{label:'MES / Line\nSystem'},
+  UPSTREAM:{label:'Upstream\nMachine'},PROCESS:{label:'Process\nEndpoint'},
+  TRACEABILITY:{label:'MES /\nTraceability'},DOWNSTREAM:{label:'Downstream\nMachine'},
+  SPI_M:{label:'SPI Machine'},PICK_M:{label:'Pick & Place'},AOI_M:{label:'AOI Machine'},REFLOW_M:{label:'Reflow Oven'},
+};
+
+const MSGS={
+  'CFX.EndpointConnected':{dir:'event',module:'CFX.Core',
+    desc:'機台成功連線 AMQP Broker 後，廣播通知所有訂閱者（含 MES）機台已上線。',
+    schema:`{\n  "MessageBody": {\n    "CFXHandle": "SMTLine1.PickAndPlace001",\n    "ConnectedAt": "2025-05-01T07:58:00Z"\n  }\n}`,
+    fields:[{name:'CFXHandle',type:'string',req:true,desc:'機台唯一識別碼，格式：{Line}.{Machine}'},{name:'ConnectedAt',type:'DateTime',req:true,desc:'連線成功時間（ISO 8601 UTC）'}],
+    notes:'此訊息 publish 至 broadcast topic，所有已訂閱的系統皆會收到。'},
+  'CFX.AreYouThereRequest':{dir:'request',module:'CFX.Core',
+    desc:'MES 詢問特定 CFXHandle 的機台是否在線，用於健康檢查。',
+    schema:`{\n  "MessageBody": {\n    "RequestID": "uuid-1234-...",\n    "CFXHandle": "SMTLine1.PickAndPlace001"\n  }\n}`,
+    fields:[{name:'RequestID',type:'UUID',req:true,desc:'本次請求唯一 UUID'},{name:'CFXHandle',type:'string',req:true,desc:'欲詢問的目標機台 Handle'}]},
+  'CFX.AreYouThereResponse':{dir:'response',module:'CFX.Core',
+    desc:'機台回應確認自己在線。',
+    schema:`{\n  "MessageBody": {\n    "RequestID": "uuid-1234-...",\n    "CFXHandle": "SMTLine1.PickAndPlace001",\n    "Result": { "Result": "Success", "ResultCode": 0 }\n  }\n}`,
+    fields:[{name:'RequestID',type:'UUID',req:true,desc:'對應請求 UUID'},{name:'CFXHandle',type:'string',req:true,desc:'回應機台 Handle'},{name:'Result.Result',type:'enum',req:true,desc:'Success | Failed'}]},
+  'CFX.GetEndpointInformationRequest':{dir:'request',module:'CFX.Core',
+    desc:'詢問機台完整端點資訊，包含硬體規格、支援 Topic/Message 清單與版面配置。',
+    schema:`{\n  "MessageBody": {\n    "RequestID": "uuid-5678-..."\n  }\n}`,
+    fields:[{name:'RequestID',type:'UUID',req:true,desc:'本次請求唯一識別碼'}]},
+  'CFX.GetEndpointInformationResponse':{dir:'response',module:'CFX.Core',
+    desc:'回傳機台端點完整資訊：型號、韌體版本、SupportedTopics、SupportedMessages、Lane/Stage 版面。',
+    schema:`{\n  "MessageBody": {\n    "RequestID": "uuid-5678-...",\n    "CFXHandle": "SMTLine1.PickAndPlace001",\n    "EndpointInformation": {\n      "UniqueIdentifier": "SN-2025-0042",\n      "Name": "FUJI NXT III",\n      "Vendor": "FUJI",\n      "ModelNumber": "NXT-III",\n      "FirmwareVersion": "5.1.2",\n      "NumberOfLanes": 1,\n      "NumberOfStages": 2,\n      "SupportedTopics": [\n        "CFX.Production.WorkStarted",\n        "CFX.Production.WorkCompleted",\n        "CFX.Production.ActivitiesExecuted"\n      ],\n      "SupportedMessages": [\n        "CFX.Production.Application.SMTPlacement.ActivitiesExecuted"\n      ]\n    }\n  }\n}`,
+    fields:[
+      {name:'UniqueIdentifier',type:'string',req:true,desc:'機台硬體序號'},
+      {name:'Name',type:'string',req:true,desc:'機台名稱'},
+      {name:'Vendor',type:'string',req:false,desc:'製造商'},
+      {name:'ModelNumber',type:'string',req:false,desc:'型號'},
+      {name:'FirmwareVersion',type:'string',req:false,desc:'韌體版本'},
+      {name:'NumberOfLanes',type:'int',req:false,desc:'產線道數'},
+      {name:'NumberOfStages',type:'int',req:false,desc:'製程階段數'},
+      {name:'SupportedTopics',type:'string[]',req:true,desc:'支援 publish 的 CFX Topic 清單'},
+      {name:'SupportedMessages',type:'string[]',req:false,desc:'應用層特定訊息（如貼片資料）'},
+    ],
+    notes:'SupportedTopics 是 MES 判斷機台能力的主要依據，建議回傳完整清單。'},
+  'CFX.WhoIsThereRequest':{dir:'request',module:'CFX.Core',
+    desc:'廣播詢問目前在線所有 CFX Endpoint，用於網路發現（Discovery）。',
+    schema:`{\n  "MessageBody": {\n    "RequestID": "uuid-9999-...",\n    "CFXHandleFilter": "*"\n  }\n}`,
+    fields:[{name:'RequestID',type:'UUID',req:true,desc:'請求識別碼'},{name:'CFXHandleFilter',type:'string',req:false,desc:'Handle 篩選，支援 * 萬用字元'}]},
+  'CFX.WhoIsThereResponse':{dir:'response',module:'CFX.Core',
+    desc:'各機台收到 WhoIsThereRequest 後回應自身基本資訊。',
+    schema:`{\n  "MessageBody": {\n    "RequestID": "uuid-9999-...",\n    "CFXHandle": "SMTLine1.PickAndPlace001",\n    "EndpointInformation": { "UniqueIdentifier": "SN-2025-0042" }\n  }\n}`,
+    fields:[{name:'RequestID',type:'UUID',req:true,desc:'對應請求 UUID'},{name:'CFXHandle',type:'string',req:true,desc:'回應機台 Handle'},{name:'UniqueIdentifier',type:'string',req:true,desc:'機台硬體序號'}]},
+  'CFX.Production.UnitsArrived':{dir:'event',module:'CFX.Production',
+    desc:'Unit（PCB）進入本站時發布，觸發 WIP 追蹤與作業指示查詢。',
+    schema:`{\n  "MessageBody": {\n    "WorkOrderIdentifier": { "WorkOrderID": "WO-2025-1001" },\n    "Units": [\n      { "UnitIdentifier": "PCB-SN-000042", "Lane": 1, "Stage": 1 }\n    ]\n  }\n}`,
+    fields:[{name:'WorkOrderID',type:'string',req:true,desc:'工單編號'},{name:'UnitIdentifier',type:'string',req:true,desc:'PCB 唯一序號'},{name:'Lane',type:'int',req:false,desc:'進入道次'},{name:'Stage',type:'int',req:false,desc:'進入製程階段'}],
+    notes:'MES 收到此事件後應更新 WIP 位置，可同步查詢作業指示。'},
+  'CFX.Production.WorkStarted':{dir:'event',module:'CFX.Production',
+    desc:'機台開始對 Unit 進行實際作業，記錄開始時間。',
+    schema:`{\n  "MessageBody": {\n    "WorkOrderIdentifier": { "WorkOrderID": "WO-2025-1001" },\n    "Units": [ { "UnitIdentifier": "PCB-SN-000042" } ],\n    "StartedAt": "2025-05-01T08:10:05Z"\n  }\n}`,
+    fields:[{name:'WorkOrderID',type:'string',req:true,desc:'工單編號'},{name:'UnitIdentifier',type:'string',req:true,desc:'PCB 序號'},{name:'StartedAt',type:'DateTime',req:true,desc:'作業開始時間'}]},
+  'CFX.Production.WorkStageStarted':{dir:'event',module:'CFX.Production',
+    desc:'多段製程中，單一 Stage 開始時發布。',
+    schema:`{\n  "MessageBody": {\n    "WorkOrderIdentifier": { "WorkOrderID": "WO-2025-1001" },\n    "Stage": 1,\n    "Units": [ { "UnitIdentifier": "PCB-SN-000042" } ],\n    "StartedAt": "2025-05-01T08:10:10Z"\n  }\n}`,
+    fields:[{name:'Stage',type:'int',req:true,desc:'開始的製程階段（從 1 起）'},{name:'UnitIdentifier',type:'string',req:true,desc:'PCB 序號'},{name:'StartedAt',type:'DateTime',req:true,desc:'Stage 開始時間'}]},
+  'CFX.Production.WorkStagePaused':{dir:'event',module:'CFX.Production',
+    desc:'Stage 中途暫停（等待補料、操作員介入），記錄暫停原因。',
+    schema:`{\n  "MessageBody": {\n    "WorkOrderIdentifier": { "WorkOrderID": "WO-2025-1001" },\n    "Stage": 1,\n    "Cause": "OPERATOR_INTERVENTION",\n    "PausedAt": "2025-05-01T08:12:00Z"\n  }\n}`,
+    fields:[{name:'Stage',type:'int',req:true,desc:'暫停的 Stage 編號'},{name:'Cause',type:'string',req:false,desc:'暫停原因代碼'},{name:'PausedAt',type:'DateTime',req:true,desc:'暫停時間'}]},
+  'CFX.Production.WorkStageResumed':{dir:'event',module:'CFX.Production',
+    desc:'暫停的 Stage 恢復繼續作業。',
+    schema:`{\n  "MessageBody": {\n    "WorkOrderIdentifier": { "WorkOrderID": "WO-2025-1001" },\n    "Stage": 1,\n    "ResumedAt": "2025-05-01T08:14:30Z"\n  }\n}`,
+    fields:[{name:'Stage',type:'int',req:true,desc:'恢復的 Stage 編號'},{name:'ResumedAt',type:'DateTime',req:true,desc:'恢復時間'}]},
+  'CFX.Production.ActivitiesExecuted':{dir:'event',module:'CFX.Production',
+    desc:'記錄製程中執行的各項活動明細（貼片座標、印刷參數、量測值），為追溯性核心資料。',
+    schema:`{\n  "MessageBody": {\n    "WorkOrderIdentifier": { "WorkOrderID": "WO-2025-1001" },\n    "CommonProcessData": {\n      "MachineID": "SMTLine1.PickAndPlace001",\n      "ProcessedAt": "2025-05-01T08:15:22Z",\n      "Lane": 1, "Stage": 1\n    },\n    "Activities": [\n      {\n        "ActivityType": "SMTPlacement",\n        "UnitIdentifier": "PCB-SN-000042",\n        "ReferenceDesignator": "U3",\n        "ManufacturerPartNumber": "STM32F4xx",\n        "PlacementResult": "Placed",\n        "NominalX": 45.2, "NominalY": 22.8,\n        "PlacedX": 45.21, "PlacedY": 22.79, "PlacedAngle": 270.0\n      }\n    ]\n  }\n}`,
+    fields:[
+      {name:'MachineID',type:'string',req:true,desc:'機台 CFX Handle'},
+      {name:'ProcessedAt',type:'DateTime',req:true,desc:'作業時間'},
+      {name:'ActivityType',type:'string',req:true,desc:'SMTPlacement | SolderPasteInspection | Inspection 等'},
+      {name:'UnitIdentifier',type:'string',req:true,desc:'PCB 序號'},
+      {name:'ReferenceDesignator',type:'string',req:false,desc:'元件位號（如 U3、R12）'},
+      {name:'ManufacturerPartNumber',type:'string',req:false,desc:'元件廠商料號'},
+      {name:'PlacementResult',type:'enum',req:false,desc:'Placed | MissingPart | PickupError | OmitError'},
+      {name:'NominalX/Y',type:'double',req:false,desc:'設計座標（mm）'},
+      {name:'PlacedX/Y/Angle',type:'double',req:false,desc:'實際貼附座標與角度（mm, deg）'},
+    ],
+    notes:'貼片機可帶入每個元件的位置偏差，供 SPI/AOI 做相關性分析。'},
+  'CFX.Production.WorkStageCompleted':{dir:'event',module:'CFX.Production',
+    desc:'多段製程中，單一 Stage 完成。',
+    schema:`{\n  "MessageBody": {\n    "WorkOrderIdentifier": { "WorkOrderID": "WO-2025-1001" },\n    "Stage": 1,\n    "Units": [ { "UnitIdentifier": "PCB-SN-000042", "UnitResult": "Passed" } ],\n    "CompletedAt": "2025-05-01T08:16:00Z"\n  }\n}`,
+    fields:[{name:'Stage',type:'int',req:true,desc:'完成的 Stage 編號'},{name:'UnitResult',type:'enum',req:true,desc:'Passed | Failed | Blocked'},{name:'CompletedAt',type:'DateTime',req:true,desc:'Stage 完成時間'}]},
+  'CFX.Production.WorkCompleted':{dir:'event',module:'CFX.Production',
+    desc:'Unit 完成本站所有作業，包含全部 Stage 結果與消耗物料清單（追溯性核心）。',
+    schema:`{\n  "MessageBody": {\n    "WorkOrderIdentifier": { "WorkOrderID": "WO-2025-1001" },\n    "Units": [\n      {\n        "UnitIdentifier": "PCB-SN-000042",\n        "UnitResult": "Passed",\n        "UnitRoute": [{ "Stage": 1, "StageResult": "Passed" }]\n      }\n    ],\n    "ConsumedMaterials": [\n      {\n        "UniqueIdentifier": "REEL-SN-7890",\n        "InternalPartNumber": "CAP-0402-100NF",\n        "Quantity": 48.0, "QuantityUnit": "EA"\n      }\n    ],\n    "CompletedAt": "2025-05-01T08:16:30Z"\n  }\n}`,
+    fields:[
+      {name:'UnitIdentifier',type:'string',req:true,desc:'PCB 序號'},
+      {name:'UnitResult',type:'enum',req:true,desc:'Passed | Failed | Blocked | Unprocessed'},
+      {name:'ConsumedMaterials',type:'array',req:false,desc:'本站消耗物料清單（料卷序號、料號、數量）'},
+      {name:'CompletedAt',type:'DateTime',req:true,desc:'作業完成時間'},
+    ],
+    notes:'ConsumedMaterials 是物料追溯關鍵，記錄哪個 Reel 的料貼到哪片 PCB 上。'},
+  'CFX.Production.UnitsDeparted':{dir:'event',module:'CFX.Production',
+    desc:'Unit 離開本站，關閉本站 WIP，觸發下游機台 UnitsArrived。',
+    schema:`{\n  "MessageBody": {\n    "WorkOrderIdentifier": { "WorkOrderID": "WO-2025-1001" },\n    "Units": [ { "UnitIdentifier": "PCB-SN-000042" } ],\n    "DepartedAt": "2025-05-01T08:17:00Z",\n    "NextEndpointID": "SMTLine1.ReflowOven001"\n  }\n}`,
+    fields:[
+      {name:'UnitIdentifier',type:'string',req:true,desc:'PCB 序號'},
+      {name:'DepartedAt',type:'DateTime',req:true,desc:'離站時間'},
+      {name:'NextEndpointID',type:'string',req:false,desc:'下一站的 CFX Handle'},
+    ],
+    notes:'若有 Hermes 協定，此訊息與 Hermes ServiceDescription 握手會並行發生。'},
+  'CFX.Test.UnitsInspected':{dir:'event',module:'CFX.Test',
+    desc:'AOI / SPI / AXI 完成板面檢測後發布，回報量測值與缺陷清單。',
+    schema:`{\n  "MessageBody": {\n    "InspectionMethod": "AOI",\n    "SamplingInformation": { "SamplingMethod": "Population" },\n    "Units": [\n      {\n        "UnitIdentifier": "PCB-SN-000042",\n        "UnitResult": "Failed",\n        "Defects": [\n          {\n            "DefectCode": "SOLDER_BRIDGE",\n            "DefectCategory": "Solder",\n            "ComponentReferenceDesignator": "R12",\n            "RelatedMeasurements": [\n              {\n                "MeasurementName": "BridgeWidth",\n                "MeasuredValue": 0.12,\n                "ExpectedValue": 0.0,\n                "Unit": "mm"\n              }\n            ]\n          }\n        ]\n      }\n    ]\n  }\n}`,
+    fields:[
+      {name:'InspectionMethod',type:'enum',req:true,desc:'AOI | SPI | AXI | Manual'},
+      {name:'SamplingMethod',type:'enum',req:false,desc:'Population（全檢）| Sampling（抽檢）'},
+      {name:'UnitResult',type:'enum',req:true,desc:'Passed | Failed | Skipped'},
+      {name:'DefectCode',type:'string',req:true,desc:'缺陷代碼'},
+      {name:'ComponentReferenceDesignator',type:'string',req:false,desc:'缺陷元件位號'},
+      {name:'MeasuredValue / ExpectedValue',type:'double',req:false,desc:'量測值與目標值（含單位）'},
+    ],
+    notes:'SPI 用此訊息回報錫膏體積/偏移；AOI 回報橋接、少件、極性錯誤等缺陷。'},
+  'CFX.ResourcePerformance.StationStateChanged':{dir:'event',module:'CFX.ResourcePerformance',
+    desc:'機台狀態改變時發布（依 SEMI E10 標準），供 MES 計算 OEE。',
+    schema:`{\n  "MessageBody": {\n    "OldStationState": "Production",\n    "NewStationState": "Fault",\n    "Fault": {\n      "FaultOccurrenceID": "FAULT-001",\n      "Cause": "FEEDER_EMPTY",\n      "Severity": "Error",\n      "Description": "Feeder 01 material exhausted",\n      "OccurrenceDateTime": "2025-05-01T09:12:00Z"\n    }\n  }\n}`,
+    fields:[
+      {name:'OldStationState',type:'enum',req:true,desc:'前一個狀態'},
+      {name:'NewStationState',type:'enum',req:true,desc:'Production | Idle | Fault | Starved | Blocked | Changeover'},
+      {name:'FaultOccurrenceID',type:'string',req:false,desc:'故障事件唯一識別碼'},
+      {name:'Cause',type:'string',req:false,desc:'故障原因代碼'},
+      {name:'Severity',type:'enum',req:false,desc:'Error | Warning | Information'},
+    ],
+    notes:'StationState 分類依 SEMI E10：Productive、Standby、Engineering、Scheduled/Unscheduled Downtime。'},
+  'CFX.Materials.MaterialsLoaded':{dir:'event',module:'CFX.Materials',
+    desc:'物料（元件料卷、錫膏）上料至機台時發布，記錄料卷序號與位置。',
+    schema:`{\n  "MessageBody": {\n    "OperatorIdentifier": "OP-001",\n    "Materials": [\n      {\n        "LocationIdentifier": "Feeder-01",\n        "LocationName": "Lane1-Slot1",\n        "CarrierInformation": {\n          "UniqueIdentifier": "REEL-SN-7890",\n          "InternalPartNumber": "CAP-0402-100NF",\n          "Quantity": 5000.0,\n          "QuantityUnit": "EA"\n        }\n      }\n    ]\n  }\n}`,
+    fields:[
+      {name:'OperatorIdentifier',type:'string',req:false,desc:'作業員 ID'},
+      {name:'LocationIdentifier',type:'string',req:true,desc:'Feeder/位置識別碼'},
+      {name:'UniqueIdentifier',type:'string',req:true,desc:'料卷/載具序號'},
+      {name:'InternalPartNumber',type:'string',req:false,desc:'工廠內部料號'},
+      {name:'Quantity',type:'double',req:false,desc:'載入數量'},
+      {name:'QuantityUnit',type:'enum',req:false,desc:'EA | GR | ML'},
+    ]},
+  'CFX.Materials.MaterialsUnloaded':{dir:'event',module:'CFX.Materials',
+    desc:'物料從機台卸除時發布，記錄剩餘數量，用於 MES 庫存回倉。',
+    schema:`{\n  "MessageBody": {\n    "OperatorIdentifier": "OP-001",\n    "Materials": [\n      {\n        "LocationIdentifier": "Feeder-01",\n        "CarrierInformation": {\n          "UniqueIdentifier": "REEL-SN-7890",\n          "Quantity": 320.0, "QuantityUnit": "EA"\n        }\n      }\n    ]\n  }\n}`,
+    fields:[{name:'LocationIdentifier',type:'string',req:true,desc:'Feeder/位置識別碼'},{name:'UniqueIdentifier',type:'string',req:true,desc:'料卷序號'},{name:'Quantity',type:'double',req:false,desc:'卸除時剩餘數量'}],
+    notes:'配合 MaterialsLoaded 計算實際消耗量，供 MES 自動扣帳。'},
+  'CFX.Production.RecipeActivated':{dir:'event',module:'CFX.Production',
+    desc:'機台切換至新配方時發布（換線完成信號）。',
+    schema:`{\n  "MessageBody": {\n    "RecipeID": "RECIPE_PCB_B_V1",\n    "RecipeName": "PCB Type B Rev1",\n    "WorkOrderID": "WO-2025-1002",\n    "ActivatedAt": "2025-05-01T11:00:00Z"\n  }\n}`,
+    fields:[{name:'RecipeID',type:'string',req:true,desc:'配方唯一識別碼'},{name:'RecipeName',type:'string',req:false,desc:'配方名稱'},{name:'WorkOrderID',type:'string',req:false,desc:'關聯工單'},{name:'ActivatedAt',type:'DateTime',req:true,desc:'配方啟用時間'}]},
+};
+
+const FLOWS=[
+  {group:'連線管理',color:'#5e35b1',items:[
+    {id:'conn',label:'Endpoint 上線與能力宣告',desc:'機台啟動→連線 Broker→與 MES 能力交換的完整握手流程（對應 IPC-CFX 2.1 節）',
+     badgeText:'連線',badgeColor:'#5e35b1',
+     participants:['BROKER','ENDPOINT','MES'],
+     frames:[],
+     steps:[
+       {from:'ENDPOINT',to:'BROKER',msg:'connect AMQP',type:'event',note:'TCP/TLS 連線（非 CFX 訊息）',raw:true},
+       {from:'ENDPOINT',to:'MES',msg:'CFX.EndpointConnected',type:'event',note:'廣播：機台上線'},
+       {from:'MES',to:'ENDPOINT',msg:'CFX.AreYouThereRequest',type:'request',note:''},
+       {from:'ENDPOINT',to:'MES',msg:'CFX.AreYouThereResponse',type:'response',note:''},
+       {from:'MES',to:'ENDPOINT',msg:'CFX.GetEndpointInformationRequest',type:'request',note:''},
+       {from:'ENDPOINT',to:'MES',msg:'CFX.GetEndpointInformationResponse',type:'response',note:'SupportedTopics / SupportedMessages / layout'},
+       {from:'MES',to:'ENDPOINT',msg:'CFX.WhoIsThereRequest',type:'request',note:'廣播：詢問全網在線機台'},
+       {from:'ENDPOINT',to:'MES',msg:'CFX.WhoIsThereResponse',type:'response',note:''},
+     ]}
+  ]},
+  {group:'生產 WIP',color:'#1565c0',items:[
+    {id:'wip',label:'一般生產 WIP 流程',desc:'PCB 進站→作業→完工→出站的完整 CFX 事件序列（對應 IPC-CFX 2.2 節）',
+     badgeText:'WIP',badgeColor:'#1565c0',
+     participants:['UPSTREAM','PROCESS','TRACEABILITY','DOWNSTREAM'],
+     frames:[{label:'opt',cond:'stage pause/resume supported',startStep:3,endStep:4}],
+     steps:[
+       {from:'PROCESS',to:'TRACEABILITY',msg:'CFX.Production.UnitsArrived',type:'event',note:'PCB 到達本站'},
+       {from:'PROCESS',to:'TRACEABILITY',msg:'CFX.Production.WorkStarted',type:'event',note:''},
+       {from:'PROCESS',to:'TRACEABILITY',msg:'CFX.Production.WorkStageStarted',type:'event',note:''},
+       {from:'PROCESS',to:'TRACEABILITY',msg:'CFX.Production.WorkStagePaused',type:'event',note:''},
+       {from:'PROCESS',to:'TRACEABILITY',msg:'CFX.Production.WorkStageResumed',type:'event',note:''},
+       {from:'PROCESS',to:'TRACEABILITY',msg:'CFX.Production.ActivitiesExecuted',type:'event',note:'貼片/印刷明細'},
+       {from:'PROCESS',to:'TRACEABILITY',msg:'CFX.Production.WorkStageCompleted',type:'event',note:''},
+       {from:'PROCESS',to:'TRACEABILITY',msg:'CFX.Production.WorkCompleted',type:'event',note:'含消耗物料清單'},
+       {from:'PROCESS',to:'TRACEABILITY',msg:'CFX.Production.UnitsDeparted',type:'event',note:''},
+       {from:'PROCESS',to:'DOWNSTREAM',msg:'handoff (Hermes / Line Control)',type:'event',note:'移交下游（非 CFX 訊息）',raw:true},
+     ]}
+  ]},
+  {group:'SPI 錫膏印刷',color:'#00695c',items:[
+    {id:'spi',label:'SPI 完整站別流程',desc:'錫膏印刷機含上料、生產事件、SPI 量測的完整 CFX 訊息序列',
+     badgeText:'SPI',badgeColor:'#00695c',
+     participants:['SPI_M','MES','AOI_M'],
+     frames:[],
+     steps:[
+       {from:'SPI_M',to:'MES',msg:'CFX.Materials.MaterialsLoaded',type:'event',note:'載入錫膏（含批次/重量）'},
+       {from:'SPI_M',to:'MES',msg:'CFX.Production.UnitsArrived',type:'event',note:''},
+       {from:'SPI_M',to:'MES',msg:'CFX.Production.WorkStarted',type:'event',note:''},
+       {from:'SPI_M',to:'MES',msg:'CFX.Production.ActivitiesExecuted',type:'event',note:'印刷參數（壓力/速度/偏移）'},
+       {from:'SPI_M',to:'MES',msg:'CFX.Production.WorkCompleted',type:'event',note:''},
+       {from:'SPI_M',to:'MES',msg:'CFX.Production.UnitsDeparted',type:'event',note:''},
+       {from:'AOI_M',to:'MES',msg:'CFX.Test.UnitsInspected',type:'event',note:'SPI 量測錫膏體積/偏移'},
+       {from:'SPI_M',to:'MES',msg:'CFX.Materials.MaterialsUnloaded',type:'event',note:'錫膏卸除，記錄剩餘量'},
+     ]}
+  ]},
+  {group:'貼片機',color:'#e65100',items:[
+    {id:'pp',label:'Pick & Place 貼片流程',desc:'貼片機完整事件序列，含物料追溯與貼片座標記錄',
+     badgeText:'P&P',badgeColor:'#e65100',
+     participants:['PICK_M','TRACEABILITY','MES'],
+     frames:[],
+     steps:[
+       {from:'PICK_M',to:'MES',msg:'CFX.Materials.MaterialsLoaded',type:'event',note:'掃碼上料'},
+       {from:'PICK_M',to:'TRACEABILITY',msg:'CFX.Production.UnitsArrived',type:'event',note:''},
+       {from:'PICK_M',to:'TRACEABILITY',msg:'CFX.Production.WorkStarted',type:'event',note:''},
+       {from:'PICK_M',to:'TRACEABILITY',msg:'CFX.Production.ActivitiesExecuted',type:'event',note:'每個元件貼片座標/偏差'},
+       {from:'PICK_M',to:'TRACEABILITY',msg:'CFX.Production.WorkCompleted',type:'event',note:'含消耗物料（料卷→PCB）'},
+       {from:'PICK_M',to:'TRACEABILITY',msg:'CFX.Production.UnitsDeparted',type:'event',note:''},
+       {from:'PICK_M',to:'MES',msg:'CFX.Materials.MaterialsUnloaded',type:'event',note:'料卷用盡或換料'},
+     ]}
+  ]},
+  {group:'AOI 光學檢測',color:'#2e7d32',items:[
+    {id:'aoi',label:'AOI 檢測流程',desc:'光學自動檢測機回報缺陷清單與量測結果的 CFX 訊息序列',
+     badgeText:'AOI',badgeColor:'#2e7d32',
+     participants:['UPSTREAM','AOI_M','TRACEABILITY'],
+     frames:[],
+     steps:[
+       {from:'AOI_M',to:'TRACEABILITY',msg:'CFX.Production.UnitsArrived',type:'event',note:'PCB 進入 AOI'},
+       {from:'AOI_M',to:'TRACEABILITY',msg:'CFX.Production.WorkStarted',type:'event',note:''},
+       {from:'AOI_M',to:'TRACEABILITY',msg:'CFX.Test.UnitsInspected',type:'event',note:'回報缺陷清單'},
+       {from:'AOI_M',to:'TRACEABILITY',msg:'CFX.Production.WorkCompleted',type:'event',note:''},
+       {from:'AOI_M',to:'TRACEABILITY',msg:'CFX.Production.UnitsDeparted',type:'event',note:''},
+     ]}
+  ]},
+  {group:'機台狀態 OEE',color:'#6d4c41',items:[
+    {id:'state',label:'機台狀態變更（OEE）',desc:'機台運行狀態改變時的事件序列，MES 依此計算 OEE',
+     badgeText:'OEE',badgeColor:'#6d4c41',
+     participants:['REFLOW_M','TRACEABILITY','MES'],
+     frames:[],
+     steps:[
+       {from:'REFLOW_M',to:'MES',msg:'CFX.ResourcePerformance.StationStateChanged',type:'event',note:'Production → Fault'},
+       {from:'REFLOW_M',to:'MES',msg:'CFX.ResourcePerformance.StationStateChanged',type:'event',note:'Fault → Idle（排除故障）'},
+       {from:'REFLOW_M',to:'MES',msg:'CFX.ResourcePerformance.StationStateChanged',type:'event',note:'Idle → Production（恢復生產）'},
+     ]}
+  ]},
+];
+
+let curFlow=null,curMsg=null,msgFilter='all';
+
+function renderSidebar(term=''){
+  const el=document.getElementById('flow-list');
+  el.innerHTML='';
+  const t=term.toLowerCase();
+  FLOWS.forEach(g=>{
+    const items=g.items.filter(f=>!t||f.label.toLowerCase().includes(t)||f.desc.toLowerCase().includes(t)||(f.steps&&f.steps.some(s=>s.msg.toLowerCase().includes(t))));
+    if(!items.length)return;
+    const grp=document.createElement('div');
+    grp.innerHTML=`<div class="grp-hdr">${g.group}</div>`;
+    items.forEach(flow=>{
+      const d=document.createElement('div');
+      d.className='flow-item'+(curFlow?.id===flow.id?' active':'');
+      d.innerHTML=`<span class="dot" style="background:${g.color}"></span>${flow.label}`;
+      d.onclick=()=>selectFlow(flow);
+      grp.appendChild(d);
+    });
+    el.appendChild(grp);
+  });
+}
+
+function selectFlow(flow){
+  curFlow=flow;curMsg=null;
+  document.getElementById('detail-panel').classList.add('hidden');
+  document.querySelectorAll('.flow-item').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.flow-item').forEach(e=>{if(e.textContent.trim()===flow.label)e.classList.add('active');});
+  document.getElementById('ftitle').textContent=flow.label;
+  document.getElementById('fdesc').textContent=flow.desc;
+  const b=document.getElementById('fbadge');
+  b.textContent=flow.badgeText;b.style.display='inline';
+  b.style.color=flow.badgeColor;b.style.borderColor=flow.badgeColor+'55';b.style.background=flow.badgeColor+'18';
+  document.getElementById('fbar').style.display='flex';
+  document.getElementById('empty-state').style.display='none';
+  renderSeq(flow);
+}
+
+function renderSeq(flow){
+  const parts=flow.participants;
+  const nP=parts.length;
+  const steps=flow.steps.filter(s=>msgFilter==='all'||s.type===msgFilter);
+
+  // Layout
+  const BOX_W=120, BOX_H=44, PAD=10;
+  const COL_W=Math.max(BOX_W+30, Math.floor((Math.min(nP*160,900))/nP));
+  const TOTAL_W=COL_W*nP+PAD*2;
+  const ROW_H=50;
+  const TOP_PAD=10;
+  const FIRST_Y=BOX_H+TOP_PAD+24;
+  const CANVAS_H=steps.length*ROW_H+40;
+  const BOT_Y=FIRST_Y+CANVAS_H;
+  const SVG_H=BOT_Y+BOX_H+20;
+
+  const cx=i=>PAD+i*COL_W+COL_W/2;
+
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${TOTAL_W}" height="${SVG_H}" style="font-family:system-ui,-apple-system,sans-serif">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="8" orient="auto">
+      <polygon points="0,0 10,3.5 0,7" fill="#454f6b"/>
+    </marker>
+  </defs>`;
+
+  // Top boxes
+  parts.forEach((p,i)=>{
+    const info=P[p]; const x=cx(i)-BOX_W/2;
+    const lines=info.label.split('\n');
+    s+=`<rect x="${x}" y="${TOP_PAD}" width="${BOX_W}" height="${BOX_H}" fill="white" stroke="#a0aabe" stroke-width="1.5"/>`;
+    lines.forEach((ln,li)=>{ s+=`<text x="${cx(i)}" y="${TOP_PAD+BOX_H/2+(li-( lines.length-1)/2)*14}" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#1a2035">${ln}</text>`; });
+  });
+
+  // Lifelines
+  parts.forEach((p,i)=>{ s+=`<line x1="${cx(i)}" y1="${TOP_PAD+BOX_H}" x2="${cx(i)}" y2="${BOT_Y}" stroke="#4f6db8" stroke-width="1" opacity="0.3"/>`; });
+
+  // Frames (opt/alt)
+  if(flow.frames){flow.frames.forEach(fr=>{
+    const sy=FIRST_Y+fr.startStep*ROW_H-ROW_H/2-6;
+    const ey=FIRST_Y+fr.endStep*ROW_H+ROW_H/2+6;
+    const fh=ey-sy;
+    s+=`<rect x="${PAD}" y="${sy}" width="${TOTAL_W-PAD*2}" height="${fh}" fill="none" stroke="#a0aabe" stroke-width="1.5" stroke-dasharray="6,3"/>`;
+    s+=`<rect x="${PAD}" y="${sy}" width="28" height="14" fill="#2d4f9e"/>`;
+    s+=`<text x="${PAD+14}" y="${sy+7}" text-anchor="middle" dominant-baseline="central" font-size="9" font-weight="700" fill="white">${fr.label}</text>`;
+    s+=`<text x="${PAD+36}" y="${sy+7}" dominant-baseline="central" font-size="9" fill="#454f6b" font-style="italic">[${fr.cond}]</text>`;
+  });}
+
+  // Messages
+  steps.forEach((step,idx)=>{
+    const y=FIRST_Y+idx*ROW_H;
+    const fi=parts.indexOf(step.from);
+    const ti=parts.indexOf(step.to);
+    if(fi<0||ti<0)return;
+    const x1=cx(fi), x2=cx(ti);
+    const goRight=x2>=x1;
+    const dash=step.type==='response'?'stroke-dasharray="6,3"':step.raw?'stroke-dasharray="4,4"':'';
+    const col=step.raw?'#a0aabe':'#454f6b';
+    const midX=(x1+x2)/2;
+    const hasNote=!!step.note;
+    const arY=hasNote?y+2:y-8;// arrow y position: note goes above, arrow slightly below center
+
+    // note
+    if(hasNote){s+=`<text x="${midX}" y="${y-20}" text-anchor="middle" font-size="9" fill="#8898b0" font-style="italic">${step.note}</text>`;}
+
+    // arrow
+    const ax1=goRight?x1+2:x1-2, ax2=goRight?x2-7:x2+7;
+    s+=`<line x1="${ax1}" y1="${y}" x2="${ax2}" y2="${y}" stroke="${col}" stroke-width="1.2" ${dash} marker-end="url(#ah)"/>`;
+    if(!goRight){
+      // need left arrowhead: flip by re-drawing arrowhead polygon manually
+      s+=`<polygon points="${x2+1},${y-4} ${x2+9},${y} ${x2+1},${y+4}" fill="${col}"/>`;
+    }
+
+    // clickable label
+    const spec=MSGS[step.msg];
+    const isAct=curMsg===step.msg;
+    const maxLW=Math.min(Math.abs(x2-x1)-6,300);
+    const lh=16, lw=Math.min(step.msg.length*6.5+16, maxLW);
+    const lx=midX-lw/2, ly=y-lh/2;
+    const fsize=step.msg.length>50?8.5:step.msg.length>38?9.5:10.5;
+    s+=`<g style="cursor:${spec?'pointer':'default'}" onclick="${spec?`selectMsg('${step.msg.replace(/'/g,"\\'")}')`:''}">
+      <rect x="${lx}" y="${ly}" width="${lw}" height="${lh}" rx="2" fill="${isAct?'#dce6fa':'white'}" stroke="${isAct?'#2d4f9e':spec?'#b0b8cc':'#c8cedc'}" stroke-width="${isAct?1.5:1}"/>
+      <text x="${midX}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="${fsize}" font-weight="${isAct?'700':'600'}" fill="${isAct?'#2d4f9e':step.raw?'#8898b0':spec?'#1a2035':'#8898b0'}">${step.msg}</text>
+    </g>`;
+  });
+
+  // Bottom boxes
+  parts.forEach((p,i)=>{
+    const info=P[p]; const x=cx(i)-BOX_W/2;
+    const lines=info.label.split('\n');
+    s+=`<rect x="${x}" y="${BOT_Y}" width="${BOX_W}" height="${BOX_H}" fill="white" stroke="#a0aabe" stroke-width="1.5"/>`;
+    lines.forEach((ln,li)=>{ s+=`<text x="${cx(i)}" y="${BOT_Y+BOX_H/2+(li-(lines.length-1)/2)*14}" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#1a2035">${ln}</text>`; });
+  });
+
+  s+=`</svg>`;
+
+  document.getElementById('seqc').innerHTML=`
+    <div style="margin-bottom:16px">
+      <div style="font-size:15px;font-weight:700;color:#1a2035;margin-bottom:3px">${flow.label}</div>
+      <div style="font-size:11px;color:#8898b0">${flow.desc}</div>
+    </div>
+    <div style="overflow-x:auto">${s}</div>`;
+}
+
+function selectMsg(msgName){
+  const m=MSGS[msgName];
+  if(!m)return;
+  if(curMsg===msgName){curMsg=null;document.getElementById('detail-panel').classList.add('hidden');if(curFlow)renderSeq(curFlow);return;}
+  curMsg=msgName;
+  if(curFlow)renderSeq(curFlow);
+  const dc=m.dir==='response'?'#555e70':m.dir==='event'?'#1a7a40':'#1565c0';
+  const dl=m.dir==='response'?'RESPONSE':m.dir==='event'?'EVENT':'REQUEST';
+  let fh='';
+  if(m.fields?.length){
+    fh=`<div class="sl">欄位規格</div><table class="ft"><thead><tr><th>欄位名稱</th><th>型別</th><th>必填</th><th>說明</th></tr></thead><tbody>`;
+    m.fields.forEach(f=>{fh+=`<tr><td class="fn">${f.name}</td><td class="ftype">${f.type}</td><td><span class="rb ${f.req?'req':'opt'}">${f.req?'Required':'Optional'}</span></td><td style="color:#454f6b;font-size:11px">${f.desc}</td></tr>`;});
+    fh+=`</tbody></table>`;
+  }
+  document.getElementById('di').innerHTML=`
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+      <div><div class="dt">${msgName}</div><div class="ds">${m.module}</div>
+        <span class="badge" style="color:${dc};border-color:${dc}44;background:${dc}15">${dl}</span></div>
+      <button class="xbtn" onclick="selectMsg('${msgName.replace(/'/g,"\\'")}')">✕</button>
+    </div>
+    <p style="font-size:12px;color:#454f6b;line-height:1.75">${m.desc}</p>
+    <div class="sl">JSON 範例</div>
+    <div class="cb">${esc(m.schema)}</div>
+    ${fh}
+    ${m.notes?`<div class="nb">⚠ ${m.notes}</div>`:''}`;
+  document.getElementById('detail-panel').classList.remove('hidden');
+}
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function setFilter(type,btn){
+  msgFilter=type;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(curFlow)renderSeq(curFlow);
+}
+
+renderSidebar();
+</script>
+</body>
+</html>

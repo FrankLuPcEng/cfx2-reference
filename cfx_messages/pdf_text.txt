@@ -1,0 +1,3025 @@
+
+
+===== PAGE 1 =====
+February 2025                  IPC-2591-
+Version 2.0 
+1 
+IPC-2591, Version 2.0 
+Connected Factory Exchange (CFX) 
+1 SCOPE 
+This standard establishes the requirements for the omnidirectional exchange of information between manufacturing processes 
+and associated host systems for assembly manufacturing. This standard applies to communication between all executable 
+processes in the manufacture of printed board assemblies - automated, semiautomated and manual - and is applicable to related 
+mechanical assembly and transactional processes. 
+1.1 Purpose With the growth and acceptance of digital modeling and practices in manufacturing, the lack of a holistic 
+Industrial Internet of Things (IIoT) standard for the transfer of information between machines, systems and processes has 
+become a severe limitation to the growth of digitization and computerization in the electronics manufacturing industry, 
+inhibiting technology innovations such as Industry 4.0 and Smart Factories being available to all companies in the industry, 
+regardless of size, sector and location. 
+This Connected Factory Exchange (CFX) standard provides a true "'plug and play" Internet of Things (loT) communication 
+environment throughout manufacturing, where all equipment, manufacturing processes and transactional stations can 
+communicate with each other without the need for the development and use of bespoke interfaces. CFX-enabled equipment and 
+solutions from different vendors work seamlessly together. 
+There are many types of users of this CFX standard, including equipment vendors, solution providers, in-house information 
+technology (IT) groups, etc. The many types of data included in CFX are used in different ways depending on the application; 
+for example, closed-loop feedback systems, live production dashboards, traceability (IPC-1782), manufacturing execution 
+systems (MES) control, lean supply chain management, active quality management, production control, etc. 
+As CFX data is fully omnidirectional, any CFX endpoint connection can consume data as well as create it. As an illustration, 
+consider the scenario in which a single machine from a certain vendor is connected in-line with other machines from different 
+vendors. CFX messages are sent from the single machine to other machines in the line, and to host systems such as MES. The 
+single machine can also receive CFX messages from all other machines in the line, as well as from the host systems in order to 
+optimize the machine operation and enable the vendor of the machines to create added-value functionality, such as to support 
+machine-specific Industry 4.0. In this way, a smart, digital, Industry 4.0 factory will be comprised of many different Industry   
+4.0 computerization applications, each of which can be provided by different suppliers, at the machine, line, site and even 
+enterprise levels, all working together, sharing data seamlessly through CFX. 
+This CFX standard supports the concept of big data by including data of different types from across the factory, including 
+performance, materials, resources, users, quality events, product tracking, etc., all of which can be combined to create a          
+big-data environment. CFX, therefore, provides many kinds of added value opportunities to the whole manufacturing operation, 
+including, for example, improving operational efficiency and productivity, quality and reliability, agility and responsiveness. 
+This CFX standard helps organizations ensure that end users/consumers will receive products and services that meet or exceed 
+their expectations and in the timeliest and most economically viable method. 
+1.2 Application of This Standard This standard defines the communication protocol and content across all assembly production 
+processes, irrespective of type or method of operation. It can also be applied to transactional operations. There are no restrictions 
+in terms of product classification sector, size of operation or location. Surface-mount technology (SMT) production is not 
+required to be a part of the factory. Though intended to support all aspects of printed board production, the use of CFX can be 
+extended downstream to include, for example, mechanical assembly, personalization, packing and shipping, as well as upstream 
+to include, for example, electrical and mechanical subassemblies. 
+1.3 CFX and the Hermes Standard This CFX standard is complementary to IPC-HERMES-9852. The Hermes Standard, as 
+an advanced, intelligent Surface Mount Equipment Manufacturers Association (SMEMA) standard replacement, provides    
+near-instant line control, passing information about production units as they pass down the line. CFX provides vertical 
+messaging that is complementary to Hermes. 
+1.4 Updates to This Standard The IPC-CFX Standard Task Group intends to make frequent incremental revisions to this 
+standard to support additional machines and processes. Version updates are identified by version number and the change   
+(added, removed, etc.), so the reader can easily identify changes in each version. See Figure 1-1 for an example of this version 
+change tracking using a portion of the CFX.Production.TestAndInspection table of this standard as an example. 
+Appendix A also provides an itemized version history. 
+
+===== PAGE 2 =====
+February 2025                  IPC-2591-
+Version 2.0 
+2 
+All messages in this standard apply to IPC-2591, Version 1.0 and subsequent versions, unless otherwise stated. 
+Table 7-21 CFX.Production.TestAndInspection Messages 
+ Name Type Description  
+ GetInspectionInfo RR This message requests from an endpoint solder paste inspection results for a list of 
+reference designators. -Added v1.7 
+ 
+ UnitsInspected E Sent by a station when one or more units have been inspected.  
+ UnitsTested E Sent by a station when one or more units undergo a series of tests.  
+     
+Figure 1-1 Version Change Tracking Example 
+1.5 Definition of Requirements The words shall or shall not are used in the text of this document wherever there is a 
+requirement for materials, preparation, process control or acceptance. 
+The word ''should'' reflects recommendations and is used to reflect general industry practices and procedures for guidance only. 
+Line drawings and illustrations are depicted herein to assist in the interpretation of the written requirements of this Standard.  
+The text takes precedence over the figures. 
+1.6 Order of Precedence The contract shall take precedence over this standard, referenced standards and drawings. 
+In the event of conflict, the following order of precedence applies: 
+1) Procurement as agreed and documented between user and supplier. 
+2) Master drawing, design brief or tech pack reflecting the user's detailed requirements. 
+3) When invoked by the customer or per contractual agreement, this standard. 
+When documents other than this standard are cited, the order of precedence shall be defined in the procurement documents. The 
+user can specify alternate acceptance criteria. 
+1.6.1 Conflict In the event of conflict between the requirements of this standard and the applicable drawing(s) and 
+documentation, the applicable user-approved drawing(s) and documentation govern. 
+Some examples of documentation include the contract, purchase order, technical data package, engineering specification or 
+performance specification. In the event of a conflict between the text of this standard and the applicable documents cited herein, 
+the text of this standard takes precedence. In the event of conflict between the requirements of this standard and drawing(s) and 
+documentation that has not been user approved, this standard governs. 
+1.6.2 Clause References When a clause in this document is referenced, its subordinate clauses apply, unless the requirement 
+references specific subordinate clauses. 
+1.7 Acronyms See Appendix B for a list of acronyms used in this standard. 
+1.8 Terms and Definitions Other than those terms listed below, the definitions of terms used in this standard are in accordance 
+with IPC-T-50. 
+1.8.1 Activity  An action performed by an endpoint in the course of performing its function. There are many different types of 
+activities that may be performed, depending on the specific function of the endpoint. Activities may be value added (such as 
+placing components on a printed board), or non-value added (such as a tool change by a pick-and-place machine). 
+1.8.2 Component The component is a single instance of a bulk material, such as a resistor, capacitor, integrated circuit (IC),   
+etc. Bulk components are normally supplied in material packages. 
+1.8.3 Dashboard An information management tool used to track key performance indicators (KPIs), metrics and other key    
+data points relevant to a business, department or specific process. Through the use of data visualizations, dashboards simplify 
+complex data sets to provide users with at-a-glance awareness of current performance. 
+1.8.4 Data Integrity  Maintaining and ensuring accuracy and consistency of data over the data's entire lifecycle. Data integrity  
+is a critical aspect to the design, implementation and usage of any system which stores, processes or retrieves data. 
+1.8.5 Endpoint A participant in a CFX network, which is a software instance that can both  send and receive CFX messages. 
+Each endpoint is a software program associated with a particular machine or process, used to exchange information related to 
+the operation. 
+
+===== PAGE 3 =====
+February 2025                  IPC-2591-
+Version 2.0 
+3 
+1.8.6 Factory Resource A physical location, machine, tool or device within the factory that performs any sort of function. 
+1.8.7 Lane A corridor within an endpoint down which production units flow through a series of production stages (see 1.8.23). 
+Many endpoints only have one singular lane, but multiple production lanes on a production line are possible and supported by 
+CFX. 
+1.8.8 Lock A process lock, or locked process, is one in which the endpoint must not continue any active operation. 
+1.8.9 Material Carrier The material carrier is the mechanism by which a material package is located for use at an endpoint. In 
+the case of SMT, for example, a feeder is a common example of the material carrier. 
+1.8.10 Material Chain A set of two or more material packages connected together (i.e., by splicing them together). 
+1.8.11 Material Location Identifies a specific location on an endpoint where material packages may be loaded or otherwise 
+mounted (perhaps employing a material carrier to do so). For example, a single feeder slot on a feeder bank of a pick-and-place 
+machine is a single material location. 
+1.8.12 Material Package Material package refers to the physical mechanism in which bulk materials are supplied (e.g., on a 
+reel, in a box or bag or on a tray). A single material package represents one singular package of material (one reel, one box, etc.) 
+and is identified by a unique identifier that is typically labeled on to the package. 
+1.8.13 Material Traceability The ability to verify the history, location or application of an item by means of documented 
+recorded identification. 
+1.8.14 Materials For purposes of this standard, all physical and nonphysical items which are combined together to create a  
+final assembly. 
+1.8.15 Operator A production operator who can actively work at an endpoint or is responsible for its operation. 
+1.8.16 Process Endpoint (Station)  An endpoint associated with a production process of any kind, whether automated or 
+manual. Normally referred to as a station. 
+1 .8.17 Production Unit A singular instance of an item that is being produced via a production process. For printed board 
+assembly, a single printed board would be considered a production unit. A single panelized printed board layout may contain 
+multiple printed boards / production units on one single panel. For final assembly, the uppermost assembly would also be 
+considered a production unit itself, perhaps containing one or more subassemblies, which are themselves production units 
+produced by a different, previously executed process. 
+1.8.18 Recipe A set of instructions, data or documentation used to control or guide the activity at an endpoint. For an SMT 
+machine, this would be the set of files that form the machine program. 
+1.8.19 Root The highest level in the structure, above level 1. 
+1.8.20 Setup A list of materials and tools that are required to be in place in specific locations at a station. 
+1.8.21 State (Production State) This refers to the state or mode of operation of a station. Possible states vary by process type, 
+identified by the process state model. 
+1.8.22 Station (Process Endpoint) An endpoint associated with a production process of any kind, whether automated or manual. 
+1.8.23 Stage An area or zone within a Production Station endpoint in which added-value work is performed. 
+1.8.24 Subassembly An assembly that will become a material of another assembly, whether they are made in the same 
+environment as their peers in the hierarchical product bill of materials (BOM) or transferred from outside as materials. 
+1.8.25 Symptom An indication that something may be wrong with a production unit under test. 
+1.8.26 Tool An item used by a person or automated endpoint in the course of performing a particular function. Examples of  
+tools used by humans would be wrench, hammer, screwdriver, etc. Examples of tools used by automated endpoints would be 
+stencil or squeegee (for a stencil printer), head or nozzle (for a pick-and-place machine). 
+  
+
+===== PAGE 4 =====
+February 2025                  IPC-2591-
+Version 2.0 
+4 
+1.8.27 Transactional Endpoint  An endpoint associated with a production process that manages or transacts, rather than being 
+associated with an operational process. A transactional endpoint is usually a piece of software that performs some type of 
+visibility or control function, such as a material logistics terminal. 
+ 
+2 APPLICABLE DOCUMENTS 
+2.1 IPC¹ 
+IPC-T-50 Terms and Definitions for Interconnecting and Packaging Electronic Circuits 
+IPC-1782 Standard for Manufacturing and Supply Chain Traceability of Electronic Products 
+IPC-2581 Generic Requirements for Printed Board Assembly Products Manufacturing Description Data and Transfer 
+Methodology 
+IPC-HERMES-9852 The Global Standard for Machine-to-Machine Communication in SMT Assembly 
+2.2 ECMA International² 
+Standard ECMA-262 3rd Edition ECMAScript Language Specification 
+2.3 International Organization for Standardization (ISO)³ 
+ISO 8601:2004 Data elements and interchange formats--Information interchange--Representation of dates and times 
+2.4 SEMI⁴ 
+SEMI E58-0703 Automated Reliability, Availability, and Maintainability Standard (ARAMS): Concepts, Behavior, and  
+Services 
+SEMI E10-0814E  Specification for Definition and Measurement of Equipment Reliability, Availability, and Maintainability 
+(RAM) and Utilization 
+ 
+3 GENERAL REQUIREMENTS 
+3.1 Guidance on the Use of This Standard This standard is comprised of two parts: 
+1)  The first part is this document. 
+2)  The second part is available online, which describes the detailed technical specification of messages and data structures. 
+The combination of both parts forms the complete documentation of this standard. 
+3.1.1 Technical Reference The link to the technical reference part of the standard is  
+www.connectedfactoryexchange.com/CFXDemo/sdk. 
+This link can also be used to access the CFX software development kit (SDK). 
+3.1.2 Application Reference  This CFX standard has a dedicated website that provides up to date information about the 
+standard, applications and supporters. Information is also posted about any updates that may be made to the CFX messaging as 
+the scope expands to cover additional and new technologies. Visit www.ipc-cfx.org. 
+3.2 Users of CFX There are many kinds of CFX endpoints that perform different purposes and roles within the overall CFX 
+network. Each of them is able to create and receive CFX messages. 
+3.2.1 Automated Assembly Processes A CFX endpoint can be created as part of the software package that exists as part of or 
+together with an automated machine process. This can be applied as a standard part of the machine software or as an optional 
+extra. CFX native support is expected to be built into new machines that appear on the market and provided where practical for 
+machines currently supported in the market. In certain environments, where multiple physical machines are managed within a 
+specific single-vendor-provided software environment, the vendor software can provide a single access point for CFX 
+1. www.ipc.org 
+2. www.ecma-international.org 
+3. www.iso.ch 
+4. www.semi.org 
+
+===== PAGE 5 =====
+February 2025                  IPC-2591-
+Version 2.0 
+5 
+communication, through which messages will flow as if directly to the machines. This emulation facility allows machine 
+vendors to utilize CFX in line applications as well as machine applications. 
+The native CFX interface represents a single data exchange mechanism to provide information about the machine operation to 
+users of the machines, replacing the need for additional proprietary interfaces. 
+Where there is no practical way to provide CFX native support, machine vendors and third parties may consider the use of a 
+gateway solution (see 6.6), which can act as a CFX endpoint. It is connected to the machine through a combination of legacy 
+native interface support and additional sensors and switches as required. 
+3.2.2 In-House Manufacturing Solution Development CFX provides a single interface for any specialist or bespoke internal 
+manufacturing IT projects, related to enterprise resource planning (ERP), MES, product lifecycle management (PLM), etc. 
+Multiple-point solutions can exist on the same CFX network, each providing niche functionality in a common data environment. 
+CFX messaging promotes the ability for point-solutions to communicate effectively through the option of inclusion of complete 
+information sets in messages. 
+3.2.3 MES Software Solutions  Many areas of CFX work in context within a defined factory environment. MES systems 
+provide the infrastructure around the various aspects of CFX messaging in a single environment, to gain the maximum value 
+from CFX. This does not exclude the use of in-house developed point solutions, which can coexist with MES solutions on the 
+CFX network. 
+3.3 Software Development Environment CFX endpoint software is created in a choice of development environments.          
+Any language and platform may be used. The default environment is based on Microsoft.Net, for which an SDK is         
+provided. It is updated in line with the latest CFX specification updates. To access the SDK, visit 
+www.connectedfactoryexchange.com/CFXDemo/sdk. 
+SDKs for other software development environments are encouraged, supported by members of the IPC Connected Factory 
+Initiative Subcommittee. News and information about these are announced on the CFX website (www.ipc-cfx.org) when 
+available. 
+3.4 CFX Support Declaration  This CFX specification allows the CFX developer to choose the areas of the CFX specification 
+that are appropriate for support based on the nature and capabilities of the machine, process or solution that is being developed. 
+It is essential that the level of support for CFX topics is clearly shown to end-users, as they select different CFX endpoints as 
+part of their overall CFX-based operation. These capabilities should also be detailed when requested by the CFX messaging 
+system. See 6.1.1 for guidance on support declaration and 6.5 for CFX messaging requirements by equipment type. 
+ 
+4 CFX STRUCTURAL OVERVIEW CFX communication consists of three key elements: 
+ㆍContent - the definition and meaning of data to be encoded 
+ㆍEncoding - the way in which data are encoded ready for transportation 
+ㆍTransport - the messaging mechanism and infrastructure 
+CFX combines all three of these elements to create a true plug-and-play standard. 
+4.1 Primary Transport Layer: AMQP v1.0 The primary transport layer for CFX messages is Advanced Message Queuing 
+Protocol (AMQP) v1.0(www.amqp.org). All CFX endpoints shall implement support for the primary CFX primary transport 
+layer. Versions of AMQP prior to v1.0 are not compatible with CFX. 
+AMQP was originally developed by the financial industry to facilitate the reliable processing of secure financial transactions 
+across broad geographies. Over the years, its footprint in the computerized world and IoT space has grown well beyond the 
+bounds of the financial industry, and its natural qualities of high-reliability  and secure message transmission make it an ideal fit 
+for CFX. 
+The use of AMQP as the primary transport protocol also greatly eases the burden of equipment makers and factory-level system 
+providers as they implement their CFX support by eliminating most of the development effort needed to send and receive CFX 
+messages. Equipment providers need not understand, nor worry, about the complexities of message routing and subscription 
+management. Routing architectures can be as simple or complicated as needed. 
+This CFX standard does not dictate any specific message AMQP v1.0 routing infrastructure, such as specific message brokers, 
+queues, exchanges, pub/sub subscription management, etc. The specifics of message routing are at the discretion of the factory-
+level system provider. Numerous open-source AMQP software development toolkits are freely available. Additionally, there    
+are numerous message routing systems (message brokers, cloud IoT message buses, message-oriented middleware, etc.) that 
+
+===== PAGE 6 =====
+February 2025                  IPC-2591-
+Version 2.0 
+6 
+support the AMQP v1.0 wire protocol, both easing the burden of factory-level system providers and providing them greater 
+flexibility in their implementations. 
+The use of alternative transport layers is technically possible and may be applied in special cases, though this requires 
+implementation in addition to the primary transport layer for all parties concerned. 
+4.1.1 CFX Message Channels CFX messages are exchanged through AMQP 1.0 protocol using one or more channels. A    
+single endpoint may be configured to exchange messages through multiple channels. There are three types of channels: 
+ㆍEvent Channels 
+CFX endpoints publish event messages to these event channels. In most cases, the recipient of event channel messages is an 
+AMQP v1.0 broker or host software, such that the messages can be received by any subscribed endpoints. Event channels are 
+used to publish all event type messages, as well as broadcast requests messages. The network address (URL) and AMQP target 
+(typically identifying an exchange on a message broker) of event channels must be preconfigured as part of the initial CFX 
+configuration for each endpoint. Event channels remain active at all times while the endpoint is active and participating in a 
+CFX network. Each CFX endpoint should be preconfigured to publish events to at least one event channel. Additional event 
+channels may be configured as required. 
+ㆍSubscription Channels 
+CFX endpoints may also be configured to receive unsolicited events and broadcast responses from one or more sources. The 
+network address (URL) and AMQP source (typically identifying a queue on a message broker) of subscription channels shall be 
+preconfigured as part of the initial CFX configuration for each endpoint. Subscription channels remain active at all times while 
+the endpoint is active and participating in a CFX network. Each CFX endpoint should be preconfigured to receive broadcast 
+requests from at least one subscription channel. Additional subscription channels may also be configured as may be required. 
+ 
+Figure 4-1 CFX Channels Between Endpoints 
+ㆍRequest/Response Channels 
+CFX endpoints may dynamically create request/response channels with which to communicate directly with another CFX 
+endpoint without the need to go through a broker or host. This mechanism is used for time-critical issues such as commands 
+where, unlike a broadcast message, a response from the specific targeted endpoint is a requirement. Request/Response channels  
+
+
+===== PAGE 7 =====
+February 2025                  IPC-2591-
+Version 2.0 
+7 
+are created on an on-demand basis as needed, when one CFX endpoint wishes to send a request type message to another. The 
+channel remains open for the lifetime of a single request/response transaction and then terminates. 
+The diagram in Figure 4 -1 illustrates the many ways in which a CFX network with a complex set of channels can be created. 
+In Figure 4-1, all three endpoints have been configured to publish their events to the same factory-level message routing system. 
+Additionally, endpoint #2 has been configured to also publish its events directly to endpoint #3. 
+The two request/response channels shown in the diagram are ad-hoc. They need not be preconfigured and may be opened and 
+closed by the requester as required. Any CFX endpoint may, at any time, solicit a direct request to any other CFX endpoint. 
+4.1.2 Channel Configuration Each CFX endpoint should permit end-users to configure any number of event and subscription 
+channels. Additionally, endpoints shall permit end-users to enable or disable the transmission of specific CFX topics for each 
+event channel, as well as specific messages within any CFX topics that are configured as enabled. 
+It might be that in a particular deployment, some of the event content is not needed by any consumers. Filtering messages at the 
+source prevents unnecessary information from cluttering the network and message routing infrastructure. 
+4.1.3 CFX Message Types Table 4-1 summarizes the CFX message types. 
+Table 4-1 Types of CFX Messages 
+Type Flow Recipient 
+Event Publish (Outbound Flow) Any Number of Recipients 
+Request Source -> Destination One Targeted Recipient 
+Response Destination -> Source Originator of Request 
+Broadcast Request Source -> Destination(s) Any Number of Recipients 
+Broadcast Response Destination(s) -> Source(s) Any Number of Recipients 
+4.1.4 CFX Compression Beginning with IPC-2591, v 1.1 (SDK v 1.1.11 and later), the ability to apply compression to message 
+data is supported. As of IPC-2591, v 1.2, compression is applied by default. Compression reduces the size of message data. The 
+amount of compression varies by data type and content. This is enabled by default when using the CFX SDK. 
+4.1.5 CFX - AMOP Message Properties Beginning with IPC-2591, v 1.2, all CFX messages transmitted via AMQP 1.0 
+protocol shall include the information in Table 4-2 in the AMQP message and message application properties. 
+ 
+4.2 Encoding: JSON The encoding of data in CFX refers to the format in which data fields and structures are written in CFX 
+messages. 
+JavaScript Object Notation (JSON) (www.json.org) is a lightweight data-interchange format. It is easy for humans to read and 
+write, and it is easy for machines to parse and generate. It is based on a subset of the JavaScript Programming Language, 
+Standard ECMA-262 3rd Edition. 
+All encoding within CFX shall comply with UTF-8 as defined by the Unicode Standard 
+(www.unicode.org/standard/stadard.html). 
+  
+
+===== PAGE 8 =====
+February 2025                  IPC-2591-
+Version 2.0 
+8 
+Table 4-2 CFX - AMQP Message Properties 
+Type Name CFX Population 
+AMQP Property 
+message-id CFXEnvelope.UniquelD 
+user-id << Not Populated >> 
+to CFXEnvelope.Target 
+subject 
+CFXEnvelope.Source + “.” + CFXEnvelope.MessageName 
+*Default value. Can be customized if desired. 
+reply-to CFXEnvelope.Source 
+correlation-id CFXEnvelope.RequestD 
+content-type 
+(no message 
+attachments) 
+application/json; charset=“utf-8” 
+content-type 
+(message 
+attachments) 
+Multipart/mixes; 
+boundary=”CHOSEN_ASCII_BOUNDARY_CHARACTERS” 
+content-encoding gzip(If using gzip compression,otherwise not populated) 
+absolute-expiry-time << Not Populated >> 
+creation-time CFXEnvelope.TimeStamp 
+group-id <<Not Populated >> 
+group-sequence << Not Populated >> 
+reply-to-group-id << Not Populated >> 
+AMOP Application 
+Property 
+cfx-topic 
+Fully qualified topic name of message contained in CFXEnvelope. 
+(e.g., If MessageName is CFX.Production.WorkStarted, cfxtopic = 
+CFX.Production) 
+cfx-message CFXEnvelope.MessageName 
+cfx-handle CFXEnvelope.Source 
+4.2.1 JSON Data Types The following data types are used with JSON data structure and messaging: 
+ㆍ Enum: The data element shall be one of the allowable choices as defined in an associated list. 
+Note: The English language will be used for enumeration data. 
+ㆍInteger: A whole number; for example,“123.” 
+ㆍNumeric: A number, represented by, for example,“1.23”or“12.65E3”(no commas, just one decimal point as required); 
+maximum precision is 15 digits. 
+ㆍString: A sequence of characters; for example,“Hello CFX.”The maximum length of a string is 2,000 characters, except 
+where noted. 
+ㆍDate/Time: Represented in ISO 8601 format, with mandatory time zone included. Fractional seconds are optional (i.e.,  
+"2018-09-15T15:53:08+05:00"). 
+ㆍString Lists: RFC 4180 compliant comma delimited list of multiple strings. Strings containing commas shall have them 
+enclosed by parentheses. 
+ㆍ Boolean: “1”(True) or“0”(False) 
+ㆍ GUID: A system-unique 128-bit integer. 
+
+===== PAGE 9 =====
+February 2025                  IPC-2591-
+Version 2.0 
+9 
+ㆍ MIME: Encoded binary, where the MIME type and data size are specified. 
+4.3 CFX-Defined Content The messages used in CFX have defined data content, as defined in the detailed on-line specification 
+(as referred to in 3.1.1). When possible, parameters, values and options have been defined to represent technology-based 
+information, rather than being vendor-dependent or proprietary. 
+4.4 CFX Key Parameters The key parameters in 4.4.1 and 4.4.2 are used throughout CFX messages. 
+4.4.1 Endpoint Identification (CFX Handle) Each endpoint is identified through the use of a CFX handle, which is represented 
+by a string of text that is unique within each CFX network instance. Each CFX endpoint is expected to allow end-users to 
+configure the associated CFX handle, rather than it be hard-coded. It is recommended that CFX handles have a human-readable 
+significance. Characters chosen as part of a CFX handle shall be able to be safely encoded in UTF-8/JSON format. The length 
+of a CFX handle shall not exceed 50 characters. 
+A CFX handle does not match necessarily to a singular network address or host, as a single network address might service more 
+than one CFX endpoint participant. For example, an SMT machine line controller might provide CFX support for multiple 
+machines. Within CFX, each machine is regarded as a separate endpoint with its own unique CFX handle, all serviced through   
+a single network point. 
+In order to avoid duplication within the industry, the recommended CFX Handle format is: 
+<maker>.<model>.<serial> 
+For example: “Acme.Rabbit.00001” 
+4.4.2 TransactionID Many CFX messages in the CFX.Production topic share TransactionID as a common parameter. This 
+parameter is used to tie events associated with a production unit as it is processed by a CFX endpoint. The TransactionlD is 
+created by the CFX.Production.WorkStarted message. Any message that then uses the TransactionlD can be interpreted as   
+being relevant to a specific production unit during the entire processing operation. Messages may also be sent after the CFX. 
+Production. WorkCompleted message using the TransactionlD, in the case, for example, time was taken by the endpoint to 
+prepare data about the production unit without blocking the operation of the machine. See Figure 4-2. 
+ 
+Figure 4-2 The CFX TransactionlD 
+4.5 CFX Message Envelope All C messages are transmitted together with a formatted envelope that is in addition to the 
+message itself. The envelope contains information regarding the message, including the sender and intended receiver of the 
+message. 
+Table 4-3 describes the information contained within a CFX envelope. 
+  
+
+
+===== PAGE 10 =====
+February 2025                  IPC-2591-
+Version 2.0 
+10 
+Table 4-3 CFX Message Envelope 
+Field Type Description 
+MessageName String The full name of the CFX message contained within the transmission (i.e., 
+CFX.Production.WorkStarted). 
+Version String The version of the CFX message contained within the payload of this transmission. This is the 
+version number (revision) of this published standard. 
+Timestamp Date-
+Time 
+The date and time when the event associated with this CFX message took place, rather than the 
+time the transmission is sent. 
+UniquelD GUID 
+A globally unique ID used to identify the message. This ID is used to ensure messages are not 
+processed more than once. It is also used in cases where the receiver needs to identify the specific 
+message that is being replied to. 
+Source String The CFX Handle of the creator/publisher of this message. 
+Target String For request/response type messages, this is the CFX Handle of the endpoint to which the message 
+is intended to be received. 
+RequestID GUID 
+For request/response type messages, this is a globally unique ID which identifies a specific 
+request/ response pairing. Each request/response pairing will have a unique and matching 
+RequestID. 
+Attachments Array When message attachments are present, they shall be described in this attachments array.  If no 
+attachments are present the array may either be empty or the field may be omitted entirely. 
+4.6 Operator Information Many CFX messages and data structures contain operator information. Depending on local 
+legislation and customer company policy, restrictions may be placed on the level of detail of personal information that may be 
+captured and/or exchanged using CFX messaging. All endpoints are responsible for enabling through configuration the level of 
+personal details such that any legal or policy requirements can be met. 
+4.7 CFX Endpoint Configuration  There are several elements that require configuration for any CFX endpoint. Ideally, an 
+intuitive user interface should be provided at the endpoint, which allows the user of the endpoint to enter and modify CFX 
+configuration data. Configuration shall include: 
+1) The CFX handle of the endpoint; example: Acme.Rabbit.0001 
+2) FriendlyName: A short name for easy reference to the endpoint; example: SMD Printer 5 
+3) RequestNetworkURI: The network address / URI to be used for requests to this endpoint; example: amqp://host55:5688/ 
+4) RequestTargetAddress: The AMQP 1.0 target address to be used for requests to this endpoint; example: /queue/SN23123 
+5) UniqueIdentifier: The barcode, radio-frequency identification (RFID) or other unique identifier that is used to identify this 
+machine/endpoint; example: Line 1-4.Acme.Rabbit 
+6) Restriction of operator personal information in line with local legislative and customer policy. 
+7) For each event channel to which the endpoint will publish events and broadcast requests, the configuration shall include: 
+    a. The network address (URI) of the target broker or system. For secure, encrypted communications over AMQP 1.0, the    
+URI will typically use the amqps:// protocol prefix, and TCP port 5671 (instead of the amqp:// prefix, and TCP port 5672,   
+which is used for unencrypted communication). 
+    b. The AMQP 1.0 target address to which messages will be directed (typically identifies an exchange on the target broker, 
+though other types of targets may also be used). 
+    c. If authentication is required to communicate with the target system, the end-user must be able to configure the username  
+and password of an account authorized on the target system to publish messages. 
+    Note: When using authentication, encrypted AMOPS (TLS/SSL Encrypted AMQP) should be utilized as well. Otherwise, 
+passwords may be transmitted across the network in plain text format. 
+  
+
+===== PAGE 11 =====
+February 2025                  IPC-2591-
+Version 2.0 
+11 
+    d. The CFX topics that shall be published to this channel (end user may enable/disable each supported topic selectively). 
+Additionally, for all enabled topics, end users may also enable/disable the publication of specific CFX messages within        
+those topics. 
+    e. The selection of whether Level 4 exact traceability data (as defined by IPC-1782) is sent by the machine. Where capable, 
+this selection can result in a far greater amount of data to be created and sent by the machines, the overhead of which may       
+not be required in all cases. 
+8) For each subscription channel from which the endpoint will receive broadcast responses (and perhaps events published by 
+other endpoints), the configuration shall include: 
+    a. The network address (URI) of the source broker or system. For secure, encrypted communications over AMQP 1.0, the  
+URI will typically use the amqps:// protocol prefix, and TCP port 5671 (instead of the amqp:// prefix, and TCP port 5672,   
+which is used for unencrypted communication). 
+    b. The AMQP 1.0 source address from which messages are to be received (typically identifies a queue on the source broker, 
+though other types of sources may also be used). 
+    c. If authentication is required to communicate with the target system, the end user needs to be able to configure the   
+username and password of an account authorized on the target system to publish messages. 
+    NOTE: When using authentication, encrypted AMQPS (TLS/SSL Encrypted AMQP) should be utilized as well. Otherwise, 
+passwords may be transmitted across the network in plain text format. 
+4.7.1 Specific CFX Endpoint Configuration Addresses CFX also includes direct send (request) and response messages that can    
+be targeted specifically at another CFX endpoint without the use of the broker. An example of this case is where a closed-loop 
+communication is set up between specific machines on the line, where data are exchanged between machines directly. Perhaps 
+an endpoint performing solder paste inspection (SPI) wants to direct a command to the upstream stencil printer to perform a 
+stencil clean operation. To accommodate this, the SPI machine would need to allow end-users to configure the Request URI 
+(network address) and Request AMQP Target Address of the appropriate stencil printer to which it should direct the clean   
+stencil request/command. 
+Another example would be the case in which an endpoint wishes to validate production units with an upper-level factory control 
+system before commencing work on a particular unit. The upper-level system may determine that this unit has skipped a critical 
+step in the process and should not be processed at the endpoint at this time. In this case, the endpoint would need to allow end-
+users to configure the Request URI (network address) and Request AMQP Target Address of the upper-level factory control 
+system to which validation requests should be made. 
+If an endpoint is capable of making different types of requests, it may be necessary to configure multiple targets for each type   
+of request. For example, stencil clean requests go to one target (the stencil printer), while unit validation requests go to a 
+different target (the upper-level control system). 
+For each endpoint to which request/response messages will be sent, the configuration shall include the following information: 
+1) The CFX handle of the target endpoint to which requests shall be directed. 
+2) The network address (URI) of the target endpoint. For secure, encrypted communications over AMQP 1.0, the URI will 
+typically use the amqps:// protocol prefix, and TCP port 5671 (instead of the amqp:// prefix, and TCP port 5672, which is     
+used for unencrypted communication). 
+3) The AMQP 1.0 target address to which requests will be directed. 
+4) If authentication is required to communicate with the target system, the end-user needs to be able to configure the username 
+and password of an account authorized on the target system to publish messages. 
+NOTE: When using authentication, encrypted AMQPS (TLS/SSL Encrypted AMOP) should be utilized as well. Otherwise, 
+passwords may be transmitted across the network in plain text format. 
+4.8 Message Attachments Starting with IPC-2591, Version 1.5, messages are allowed to have attachments. An attachment is      
+a data file containing additional information relevant to the CFX message to which it is attached but not transmitted inside of  
+the JSON message itself. The primary intended purpose of message attachments is to permit the transfer of large amounts of 
+tabular data along with CFX messages without requiring that the data be converted to JSON format. In keeping with the CFX 
+concept of fully standardizing all messages, message attachments shall not contain arbitrary or vendor-defined content. Instead, 
+each attachment shall conform to a defined schema. 
+  
+
+===== PAGE 12 =====
+February 2025                  IPC-2591-
+Version 2.0 
+12 
+4.8.1 Specifying Message Attachments When files are attached to a CFX message, the Attachments property of the CFX 
+envelope shall be present and contain a nonempty array, in which each entry in the array describes one attachment. The format 
+of these entries shall be as defined in Table 4-4. 
+Table 4-4: Format of Attachments Array Entries 
+Field Type Description 
+MimeType String The mime type of the attachment file. Only supported mime types as specified in this standard 
+may be attached. 
+AttachmentType String 
+The standardized attachment type that is being sent as defined in this standard and supporting 
+materials. Only supported attachment types shall be sent. The attachment type is equivalent to a 
+dynamic structure in the CFX format in that it describes the contents of the attachment in a fully 
+standardized way. 
+TransferMode String 
+The literal string "InBand" or "OutOfBand" , InBand signifies that the attachments directly 
+follow the main CFX message envelope in a multipart/mixed mime format as described in 4.8.2. 
+OutOfBand signifies that the attachment is not physically transferred with the CFX message and 
+may be downloaded from the location specified in AttachmentURL. 
+AttachmentURL String This shall be null unless TransferMode equals "OutOfBand", in which case it shall be a URL that 
+can be used to download the attachment file. 
+ As described in Table 4-4, attachments may be sent either in-band or out-of-band. Implementations should use in-band transfer 
+unless the attachment file size is so large that in-band transfer is not feasible. 
+4.8.2 In-band Message Attachments In-band message attachments are sent in a manner similar to attachments in electronic mail 
+(email). They are included by encoding the overall CFX message in multipart/mixed mime format as described in RFC-1341 
+with the first part of the multipart message being the main CFX message body in JSON format and any attachments following 
+as subsequent parts of the multipart message. The following requirements apply: 
+1) Unlike RFC-1341, the mime type of an attachment shall not itself be a multipart format (i.e., nested multipart messages are 
+not allowed). 
+2) Every part of the multipart message shall have a content-type header set with the same string value as the corresponding 
+MimeType property in the Attachments array. 
+3) All attachment parts of the multipart message shall additionally have an x-cfx-attachment-type header set to the same string 
+value as the corresponding AttachmentType property in the Attachments array. 
+4) The order of In-band attachments shall match the order of entries in the Attachments array. 
+5) If Out-of-band attachments are present they shall occur after any In-Band entries in the Attachments array. 
+6) The first part of the multipart message shall be the CFX message envelope and shall have its content-type header set to: 
+application/json; charset=''utf-8". 
+7) The content-type header of the AMQP message itself shall be multipart/mixed with a boundary as described in Table 4-4. 
+Listing 4-1 provides an example of a multipart CFX message with two in-band attachments. The first attachment contains 
+component offset measurements encoded in CSV format, and the second attachment contains solder paste measurements 
+encoded in Apache Parquet format. 
+  
+
+===== PAGE 13 =====
+February 2025                  IPC-2591-
+Version 2.0 
+13 
+Listing 4-1: 
+AMQP Header 
+content-type: multipart/mixed; boundary="ASCII_BOUNDARY_CHARACTERS" 
+AMQP Message Body 
+--ASCII_BOUNDARY_CHARACTERS 
+content-type:application/json;charset="utf-8" 
+{ 
+ ... CFXEnvelope in JSON Format 
+} 
+--ASCII_BOUNDARY_CHARACTERS 
+content-type: text/csv; charset="utf-8" 
+x-cfx-attachment-type: PCBInspection.OffsetMeasurement 
+...offset measurement data in csv format 
+--ASCII_BOUNDARY_CHARACTERS 
+content-type: application/vnd.apache.parquet 
+x-cfx-attachment-type: SolderPasteInspection.SolderPasteMeasurement 
+...solder paste measurements in apache Parquet format 
+--ASCII_BOUNARY_CHARACTERS--- 
+4.8.3 Out-of-Band Attachments Attachments sent out of band are indicated by using the OutOfBand TransferMode in the 
+Attachments array. These attachments are not physically sent as part of the CFX message itself.  Instead, the AttachmentURL 
+property is used to specify a location and method by which the attachment may be downloaded. AttachmentURL shall be 
+interpreted in the same way as the FileURL property used for large file transfers. Implementations should prefer in-band over 
+out-of-band attachments when possible. 
+4.8.4 Supported Tabular Data Formats For Message Attachments Attachments are limited to sending tabular data. The 
+following formats are supported for sending tabular data via attachments: 
+ㆍCSV format - The character set shall be utf-8 and the mime type shall be set to text/csv. CSV files shall have an initial   
+header row and the column header entries and order shall correspond exactly with the column definitions as given in    
+Supported Attachment Types. 
+ㆍApache Parquet format - Implementations shall support at least the snappy compression mode. The file schema shall 
+correspond exactly with the column definitions and order as given in Supported Attachment Types. 
+A reference specification on the parquet file format may be found at https://github.com/apache/parquet-format. 
+When sending attachments in Parquet format, the following logical parquet data types shall be used depending on the logical 
+column type of the attachment (see definition at https://github.com/apache/parquet-format/blob/master/LogicalTypes.md): 
+• Integer: INT_64 
+• Numeric: DOUBLE 
+• String:STRING 
+• Boolean:BOOLEAN 
+• Date/Time: TIMESTAMP (isAdjustedToUTC=true, unit=MICROS). The interpretation of this type is that datetimes shall 
+be sent in UTC time zone with a precision of microseconds. 
+• Guid:GUID 
+A tabular data attachment may be sent in any supported tabular data format.Implementations shall support receiving 
+attachments in any supported format. Implementations may support sending attachments in only a subset of supported formats. 
+4.9 Supported Message Attachment Types In keeping with the CFX standard philosophy of fully specifying the content of 
+messages, all attachments shall correspond with a supported attachment type. This section describes the currently supported 
+attachment types. Each attachment type is associated with a corresponding CFX dynamic structure. The interpretation of each 
+column in the attachment shall be the same as the interpretation of the field with the same name inside of the dynamic structure. 
+Any field which is nullable in the dynamic structure may be null in the attachment as well. 
+
+===== PAGE 14 =====
+February 2025                  IPC-2591-
+Version 2.0 
+14 
+4.9.1 SolderPasteInspection.SolderPasteMeasurement This attachment type corresponds with the CFX dynamic         
+structure CFX.Structures.SolderPasteInspection.SolderPasteMeasurement. The AttachmentType shall be specified as 
+SolderPasteInspection.SolderPasteMeasurement. 
+Table 4-5 specifies the columns definitions for the attachment. 
+Table 4-5 Columns for SolderPasteMeasurement Attachment Type 
+Field Type 
+UnitPositionNumber Integer 
+Unitldentifier String 
+CRDs String 
+MeasurementName String 
+Result Integer 
+TimeRecorded DateTime 
+A Numeric 
+AR Numeric 
+DX Numeric 
+DY Numeric 
+EA Numeric 
+EV ol Numeric 
+EX Numeric 
+EY Numeric 
+EZ Numeric 
+PX Numeric 
+PY Numeric 
+RXY Numeric 
+V ol Numeric 
+X Numeric 
+Y Numeric 
+Z Numeric 
+ 4.9.2 PCBInspection.OffsetMeasurement This attachment type corresponds with the CFX dynamic structure 
+CFX.Structures. PCBInspection.OffsetMeasurments. The AttachmentType shall be specified as 
+PCBInspection.OffsetMeasurement. 
+Table 4-6 specifies the column definitions for the attachment. 
+
+===== PAGE 15 =====
+February 2025                  IPC-2591-
+Version 2.0 
+15 
+ 
+Table 4-6 Columns for OffsetMeasurement Attachment Type 
+Field Type 
+UnitPositionNumber Integer 
+Unitldentifier String 
+CRDs String 
+MeasurementName String 
+Result Integer 
+TimeRecorded DateTime 
+DX Numeric 
+DY Numeric 
+DZ Numeric 
+RXY Numeric 
+RZX Numeric 
+RZY Numeric 
+4.10 Messages Supporting Attachments Implementations 
+shall only include attachments on the supported message 
+types defined in this section and shall only include the 
+indicated supported attachment types for each message type. 
+4.10.1 CFX.Production.TestAndInspection.UnitsInspected 
+Attachments Implementations shall include only the 
+following attachment types: 
+ㆍSolderPasteInspection.SolderPasteMeasurement 
+ㆍPCBInspection.OffsetMeasurement 
+If a given measurement type is included as an attachment, the 
+main message body shall not repeat that measurem ent 
+inside of any  Measurements array. All measurements of a 
+given type shall be included in a single attachment. For 
+example, if a UnitsInspected  message from a Solder Paste 
+Inspection machine contains anattachment of type SolderPasteMeasurement, then no measurement  structures of type 
+CFX.Structures. SolderPasteInspection.SolderPasteMeasurement or 
+CFX.Structures.SolderPasteInspection.InspectionMeasurementLean shall be present inside the main body of the message and 
+all such measurements shall instead be contained inside of a single SolderPasteMeasurement attachment. 
+The purpose of efficient tabular data attachments is to permit including more data than is technically feasible when it is encoded 
+inside the JSON message body. Therefore, implementations including measurement attachments should include all available 
+measurements, not just, for example, those for failed inspections. 
+4.11 CFX Message Recorder CFX messages contain detailed information on the activities performed by the endpoints that sent 
+them. Passively recording an archive of these messages can be a simple and effective way of capturing these data for a variety of 
+uses including traceability, performance monitoring, process control or data visualization.                                         
+Since the CFX standard uses the AMQP 1.0 messaging protocol and JSON encoding, it is possible to create a generic     
+recording program that can archive all CFX traffic in a factory. An open-source CFX Recorder program provided at 
+https://github.com/IPCConnectedFactoryExchange/CFXRecorder can be used for this purpose or as a starting point for  building 
+more advanced functionality. The CFX Recorder connects to an AMQP broker and passively records all CFX        traffic 
+observed to a series of archive files. These files can then be postprocessed as desired for any purpose, such as         loading into a 
+database or analytics environment. While the exact behavior of the CFX Recorder program is configurable,         its default 
+behavior is to save one archive file every hour with the filename name. (timestamp, where timestamp is the Unix epoch 
+timestamp in seconds when the file was created. 
+
+
+===== PAGE 16 =====
+February 2025                  IPC-2591-
+Version 2.0 
+16 
+The CFX Recorder program will be updated periodically with new functionality to keep pace with future CFX standard versions 
+and as an open source project, contributions are welcome. 
+5 CFX OPERATIONAL MODELING 
+As part of the message content standardization, there are many aspects of the product and assembly operations that require 
+consistency. This enables different endpoints to understand and transfer related production and resource performance events in 
+an efficient way. 
+5.1 Equipment State Model SEMI E10 (see SEMI E10-0814E) and SEMI E58 (see SEMI E58-0703) together define a model 
+to measure equipment performance. This equipment state model consists of six basic equipment states, as shown in Figure 5-1. 
+In addition, SEMI E58 defines substates to further detail equipment state, represented as follows: 
+Productive “PRD” (1000): 
+A period of time when the equipment is performing its intended function. Possible SEMI E58 substates are: 
+ㆍ1000 “PRD” 
+ㆍ1100 “PRD\Regular work” 
+ㆍ1200 “PRD\Work for third parties” 
+ㆍ1300 “PRD\Rework” 
+ㆍ1400 “PRD\Engineering runs” 
+Standby “SBY” (2000): 
+A period of time, other than nonscheduled time, when the equipment is in a condition to perform its intended function, but it is 
+not operated. Possible SEMI E58 substates are: 
+ㆍ2000 “SBY” 
+ㆍ2100 “SBY\No operator” 
+ㆍ2200 “SBY\'No product” 
+ㆍ2201 “SBY\No product\Blocked” which relates to the condition where the product cannot be moved out of the machine.       
+- Added vl.1 
+ㆍ2202 “SBY\No product\Starved” which relates to a machine process being stopped due to lack of product arrival.   - Added 
+vl.1 
+ㆍ2300 “SBY\No support tool” 
+ㆍ2400 “SBY\Associated cluster module down” 
+ㆍ 2500 “SBY\No host” 
+Engineering “ENG” (3000): 
+A period of time when the equipment is in a condition to perform its intended function (no equipment or process problem   
+exists) but is operated to conduct engineering experiments. Possible SEMI E58 substates are: 
+ㆍ3000 “ENG” 
+ㆍ3100 “ENG\Process experiments” 
+ㆍ3200 “ENG\Equipment experiments” 
+ㆍ3300­3900 Reserved 
+Scheduled Downtime “SDT” (4000): 
+A period of time when the equipment is not available to perform its intended function due to planned downtime events. Possible 
+SEMI E58 substates are: 
+  
+
+===== PAGE 17 =====
+February 2025                  IPC-2591-
+Version 2.0 
+17 
+ㆍ4000 “SDT” 
+ㆍ4100 “SDT\User maintenance delay” 
+ㆍ4200 “SDT\Supplied maintenance delay” 
+ㆍ4300 “SDT\Preventive maintenance” 
+ㆍ4400 “SDT\Change of consumables” 
+ㆍ4500 “SDT\Setup” 
+ㆍ4600 “SDT\Production test” 
+ㆍ4700 “SDT\Facilities-related” 
+Unscheduled Downtime “USD” (5000) : 
+A period of time when the equipment is not in a condition to perform its intended function due to unplanned downtime events. 
+Possible SEMI E58 substates are: 
+ㆍ5000 “USD” 
+ㆍ5100 “USD\User maintenance delay” 
+ㆍ5200 “USD\Supplied maintenance delay” 
+ㆍ5300 “USD\Repair” 
+ㆍ5400 “USD\Out-of-spec input material” 
+ㆍ5500 “USD\Change of consumables” 
+ㆍ 5600 “USD\Facilities-related” 
+Nonscheduled Time “NST” (6000): 
+A period of time when the equipment is not scheduled to be utilized in production, such as unworked shifts, weekends and 
+holidays (including shutdown and startup). Possible SEMI E58 substates are: 
+ㆍ6000 “NST” 
+ㆍ6100 “NST\Unworked shifts” 
+ㆍ6200 “NST\Equipment installation” 
+ㆍ6300 “NST\Equipment modifications” 
+ㆍ6400 “NST\Off-line training” 
+ㆍ 6500 “NST\Shutdown and Startup” 
+These states apply mainly to automated and manual production processes, though many states can also be used (i.e., for  
+transactional operations such as logistics stations). The “full thousands” states (i.e., 1000...6000) represent the SEMI E10 
+machine states; for each machine state there is a set of SEMI E58 substates to further qualify the SEMI E10 machine state.  
+Some SEMI E58 substates may not be relevant for certain station types. In turn, the list of SEMI E58 substates may  be 
+extended vendor-specific, which are not supported by CFX. 
+5.2 Station Fault Event Model  Fault events reported by stations are categorized according to Table 5-1. 
+  
+
+===== PAGE 18 =====
+February 2025                  IPC-2591-
+Version 2.0 
+18 
+Table 5-1 Station Event Fault Model 
+Fault Event Classification (Severity) Fault Occurred Requires 
+Fault Cleared ? 
+Implies State Change Indicates Dangerous Condition 
+Alarm Y Y Y 
+Error Y Y N 
+Warning Y N N 
+Information N N N 
+The meaning of each event classification is as follows: 
+ㆍAlarm: Sent when dangerous conditions occur that can cause danger to either people or equipment, if not addressed 
+immediately. 
+ㆍError: Events which cause the equipment to malfunction and not operate correctly. 
+ㆍWarning: Events which do not cause any immediate problems. 
+ㆍInformation: Events of potential interest that occur on the equipment, which are deemed necessary to record or log for any 
+purpose. 
+Notes: 
+ㆍAll events that occur are required to be cleared, except Information events. 
+ㆍAlarm and Error events usually occur together with a change of state of the operation of the endpoint. It may be, however, that 
+multiple events messages can describe a single state change. 
+ㆍCFX.ResourcePerformance.FaultOceured messages are used for Alarm, Error and Warning messages, whereas a 
+CFX.ResourcePerformance.LogEntryRecorded message is used for Information messages. 
+5.3  Production Unit Architecture  Many CFX messages are related to events involving production units. In almost all cases, 
+CFX messages allow for one or more production units to be associated with a process, to allow multiple production units that  
+are positioned together (i.e., on a jig or carrier) to be processed at the same time. Unless stated otherwise in this standard, 
+production unit refers to either a single production unit or a group of production units that are being transacted together. See 
+Figure 5-2 for examples of production unit groupings. 
+5.3.1 Production Unit Data Population The PrimaryIdentifier (example, “PCB00001”) and UnitIdentifer fields (examples, 
+UNIT00001 and UNIT00002) shall be populated as shown in Table 5-2. Figure 5-2 provides examples which illustrate each case 
+from Table 5-2. 
+Table 5-2 PrimaryIdentifier and UnitIdentifer Fields 
+Case PrimaryIdentifier UnitIdentifer 
+1)Printed board with no main barcode and only one unit (standalone printed 
+board) 
+Not required Not required 
+2)Printed board with no main barcode and multiple units without individual 
+barcode 
+Not required Not required 
+3)Printed board with main barcode and only one unit Required Required, same as 
+PrimaryIdentifier 
+4) Printed board with several units and a single barcode in the root pattern Required Not required 
+5) Printed board with several units and no barcode in the root pattern but a 
+barcode in the unit patterns 
+Required, same   
+as the first 
+UnitIdentifier 
+Required for each 
+Unit 
+6) Printed board with several units and a barcode in the root pattern and in the 
+unit patterns 
+Required Required for each 
+Unit 
+
+===== PAGE 19 =====
+February 2025                  IPC-2591-
+Version 2.0 
+19 
+ 
+Figure 5-2 Examples of PrimaryIdentifier of UnitIdentifer Cases 
+Figure note: Number 1 through 6 align with case numbers in Table 5-2. 
+ 
+Figure 5-3 Examples of Groupings of Production Units 
+A - Single-board printed board panel, one ID     C - Multiple-board printed board panel, single ID 
+B - Multiple-board printed board panel, individual IDs    D - Multiple boards/panels on a carrier, single ID 
+
+
+===== PAGE 20 =====
+February 2025                  IPC-2591-
+Version 2.0 
+20 
+In the case of panelized printed boards, it is very important to maintain data integrity during the various production operations 
+such that data are correctly associated back to the correct production unit ID. There are many cases in which a single unique ID 
+is used to represent all the individual production units that exist on a board or are in a carrier. To create a common 
+understanding of how to refer to boards within a multiple-board panel, the following rule is used when determining which 
+element of the multiple-board panel is being addressed. 
+The primary view of the printed board is as presented by the computer-aided design (CAD) data model in Figure 5-4, which 
+shows the panelized board being made up of individual images, commonly called circuits, which are referred to in CFX as 
+production units. The definitions of primary and secondary surfaces of printed boards follow IPC-T-50 and correspond directly 
+to the top and bottom sides of the printed board following terminology commonly used throughout printed board assembly 
+equipment. 
+This defines the original view in terms of the position of each of the panelized production units. In this orientation, it is assumed 
+that x dimension is depending on  the surface: 
+ㆍFor a Primary surface, x dimension is left to right, with x increasing to the right. 
+ㆍFor a Secondary surface, x dimension is right to left, with x increasing to the left. 
+The y dimension is assumed to be from bottom to top, increasing upwards. Rotation is assumed to be clockwise. It is also 
+assumed that the panel is flipped in x dimension. It is recommended to refer to x and y coordinate of the production unit origin  
+as defined in IPC-2581, otherwise as it is known to the endpoint. 
+The rule to determine the relative identity of each production unit uses the x and y coordinate and rotation of each, through a 
+process of sorting, as follows: 
+A. Sort by rotation, low (0) to high (359) 
+B. Sort by y coordinate (high to low) 
+C. Sort by x coordinate (low to high) 
+See Figure 5-5. 
+In messages related to data for a production unit, where production units are grouped together onto a panel or in a carrier for 
+processing, this rule is followed. Data within CFX messages will refer to specific Unit Locations. All CFX endpoints shall 
+interpret the relative positions of production units using this rule, as applied to any variation that may exist in the operation of  
+the endpoint itself. 
+5.3.2 Production Unit Status There are three status conditions of a production unit, defined as follows: 
+ㆍPass: The production unit has completed all prior operations without defects, or with all defects resolved. 
+ㆍFail: The production unit has not passed the preceding operation, though it may be recoverable. The production unit with 
+this status needs to be routed to a suitable recovery station. 
+ㆍScrap: The production unit has not passed the preceding operation and has been deemed unrepairable, either at the station 
+that discovered the defect or the station where the defect was confirmed. 
+ㆍSkip: The production unit did not require processing.  
+In cases in which multiple production units are held in a carrier (i.e., on a panel), the status of the panel is related to the statuses 
+of each production unit contained. 
+The work order relates to the summation of the status of each of the production units that are identifies as part of the work 
+order. It can be expected that the work order quality is variable, due to scrapped production units, as well as additional ones 
+introduced to compensate for scrap or to anticipate scrap. 
+Figure 5-4 Panelized Printed Board(Top view) Figure 5-5 CFX Unit Locations Identified on Multiple- Board 
+Panel(Top view) 
+
+
+===== PAGE 21 =====
+February 2025                  IPC-2591-
+Version 2.0 
+21 
+5.3.3 Production Endpoint Decision-Making Categories The determination of each production unit status is made by stations 
+according to the following categories: 
+ㆍProcessing Station: Performs activities to build products, does not change Production Quantity, may result in Pass or Scrap 
+status determinations 
+ㆍInspection or Test Station / Hybrid Processing & Inspection: Performs activities that include product inspection; may 
+result in Pass, Fail or Scrap determinations 
+ㆍReview / Repair Station: Determines whether a failed production unit can be corrected to become passed or  if it should be 
+scrapped; may result in Pass or Scrap determinations 
+Inspection stations, Hybrid Processing & Inspection Stations and Review/Repair stations should use the 
+CFX.Production.TestAndInspection.UnitsInspected message to reflect the status of each production unit with “OverallResult” 
+and with the appropriate “Verification” result: 
+ㆍNotVerifiedYet The defect which was detected is not classified. 
+ㆍDefectConfirmed  The defect which was detected is confirmed. 
+ㆍ DefectRejected The defect which was detected is rejected "FalseFail". 
+ㆍ DefectAccepted The defect which was detected is rejected "FalseFail", but corrective action for SMT process shall       
+be initiated. - Added v1.5 
+ㆍDefectRepaired  The defect which was detected is repaired. - Added v1.5 
+ㆍDefectClosed   The defect which was detected is repaired and successful repair confirmed. -Added v1.5 
+Production stations should reflect the status using the CFX.Production.WorkCompleted message, indicating the status using    
+the “Result” property. 
+5.3.4 Examples of Production Unit Status This section describes examples of production unit status transitions, based on a 
+panel containing four production units (as circuits), as it passes through different production stations. 
+5.3.4.1 Processing Station In this example, a panel passes through a Processing Station, in which all work is completed as 
+expected, with no issues. See Figure 5-6. 
+  
+Figure 5-6 Panel Processing Example - No Defects Found  
+ 
+5.3.4.2 Processing Station Creating Scrap In this example, a panel passes through a Processing Station, in which for some 
+reason one of the production units experiences an unrecoverable issue. This causes the station to determine that Production unit 
+#3 is scrapped, and the scrap status is assigned to that unit. The production quantity associated with the panel reduces to three   
+at this point. See Figure 5-7.  
+A - Arrival Status 
+      Panel status = Pass 
+      Pass quantity = 4 
+      Scrap quantity = 0 
+      Fail quantity = 0  
+B - Processing Station 
+      Process quantity = 4 
+C - Leaving Status 
+      Panel status = Pass 
+      Pass quantity = 4 
+      Scrap quantity = 0 
+      Fail quantity = 0 
+
+===== PAGE 22 =====
+February 2025                  IPC-2591-
+Version 2.0 
+22 
+  
+Figure 5-7 Panel Processing Example - One Production Unit Scrapped 
+ 
+5.3.4.3 Inspection Station Identifying Potential Defect In this example, the previous panel passes through an Inspection 
+Station, at which for production unit #2 the inspection process creates a determination that a potential defect has occurred. The 
+status of production unit 2 is set to "failed", a status which his inherited by the panel, as the panel now needs to be assessed by a 
+Review/Repair Station. Note that the process quantity by the station is reduced to 3, due to the previously scrapped production 
+unit #3. See Figure 5-8. 
+  
+Figure 5-8 Panel Inspection Example - One Production Unit Failure 
+ 
+5.3.4.4 Review/Repair Station Resolving Failed Production Unit In this example, the previous panel passes through a 
+Review /Repair Station, at which it is determined that the issue with production unit #2 has been resolved. The change in status 
+does not make any direct implication as to the subsequent routing of the panel (i.e,, to repeat the previous inspection). See 
+Figure 5-9. 
+  
+A - Arrival Status 
+      Panel status = Pass 
+      Pass quantity = 4 
+      Scrap quantity = 0 
+      Fail quantity = 0  
+B - Processing Station 
+      Process quantity = 4 
+ 
+ 
+ 
+C - Leaving Status 
+      Panel status = Pass 
+      Pass quantity = 3 
+      Scrap quantity = 1 
+      Fail quantity = 0 
+A - Arrival Status 
+      Panel status = Pass 
+      Pass quantity = 3 
+      Scrap quantity = 1 
+      Fail quantity = 0  
+B - Processing Station 
+      Process quantity = 3 
+ 
+ 
+ 
+C - Leaving Status 
+      Panel status = Fail 
+      Pass quantity = 2 
+      Scrap quantity = 1 
+      Fail quantity = 1 
+
+===== PAGE 23 =====
+February 2025                  IPC-2591-
+Version 2.0 
+23 
+  
+Figure 5-9 Panel Review/Repair Example - One Production Unit Repaired 
+ 
+5.3.4.5 Review/Repair Station Scrapping Failed Production Unit This example illustrates the alternate scenario at the 
+Review /Repair Station, in which the determination is production unit #2 is scrapped. In this specific case, the Review/Repair 
+process has decided to scrap the whole Panel, even though the two remaining production units were recorded as passes. See 
+Figure 5-10. 
+  
+Figure 5-10 Panel Review/Repair Example - Whole Panel Scrapped 
+ 
+5.4 Production Station Process Model CFX messages are used to indicate the various elements of processing of a production 
+unit within a station. The stages are defined as shown in Figure 5-11. 
+  
+Figure 5-11 CFX Production Station Process Model 
+A - Arrival Status 
+      Panel status = Fail 
+      Pass quantity = 2 
+      Scrap quantity = 1 
+      Fail quantity = 1  
+B - Processing Station 
+      Process quantity = 1 
+ 
+ 
+ 
+C - Leaving Status 
+      Panel status = Pass 
+      Pass quantity = 3 
+      Scrap quantity = 1 
+      Fail quantity = 0 
+A - Arrival Status 
+      Panel status = Fail 
+      Pass quantity = 2 
+      Scrap quantity = 1 
+      Fail quantity = 1  
+B - Processing Station 
+      Process quantity = 1 
+ 
+ 
+ 
+C - Leaving Status 
+      Panel status = Scrap 
+      Pass quantity = 0 
+      Scrap quantity = 4 
+      Fail quantity = 0 
+
+===== PAGE 24 =====
+February 2025                  IPC-2591-
+Version 2.0 
+24 
+The breakdown of the elements is as follows: 
+ㆍArrival: The position to which the production unit arrives to be processed. 
+ㆍDepart: The position to which the production unit is taken after all processing by the station has been completed. 
+ㆍLane: The number of processing paths that can be performed by the station simultaneously, either synchronously or 
+asynchronously. Each lane represents a flow of the production unit through the various stages of processing. Most simple 
+stations will have just one lane, though there can be two or even three in the case, for example, of SMT placement equipment. 
+Events can be specifically designated as being applicable to a specific lane or all lanes. 
+ㆍStage:  The number of added-value operational working processes that each production unit will go through within the  
+station. There is a transfer operation, which is usually a physical movement of the production unit between stages. Most     
+simple stations will have just one stage, though there can be two or more. Events can be specifically designated as being 
+applicable to a specific stage or all stages. Different activities can be performed within each stage, details of which can also      
+be individually reported. 
+For each machine, the number of stages shall be fixed according to the machine core configuration. Because stages may not     
+be used in all cases of production, unused stages shall be reported as pass-through. It is not necessary to create a stage for    
+every position where a product may stop within the machine; rather, it is related to the associated task and tools. 
+ㆍTransfer: The physical movement of a production unit from one stage to another. A production unit can be waiting during      
+a transfer. The transfer itself is not a defined stage of the process model but represents the time/motion needed to transition 
+between stages.  
+This station model applies to all forms of production processing, whether by automated, semiautomated or manual operations  
+for all types of operations including assembly, inspection and test. 
+ 
+6 CFX TOPICS AND DYNAMIC STRUCTURES 
+There are a multitude of different processes that make up the complete manufacturing operation. These consist of automated, 
+semiautomated and manual operations of many different types, performing many different functions, from many different 
+vendors, including homegrown machine processes, which are common, for example, in the areas of functional test (FCT). Each 
+type of production process performs operations, creating different kinds of data, with some machines operating as hybrids, 
+performing two or more different types of operations (i.e., SMT placement with built-in automated optical inspection (AOI)). 
+Looking across the entire gamut of processes, there are commonalities of technologies and functions, as well as natural 
+groupings of information that need to be communicated. The approach taken with CFX is to create a structure of messaging 
+based on logical topics, each with subtopics that define increasing levels of detail. These topics and level combinations are 
+analogous to a set of building blocks, such that the complete communication requirement of any type or model of machine can 
+be constructed using an appropriate combination of CFX topic building blocks. 
+Processes that receive CFX data can then easily filter messages that are relevant using the building block topic methodology.  
+For example, quality management software may wish to access results from AOI technology. This data may come not only   
+from an AOI machine, but it may also be a part of an SMT placer hybrid combination. The quality management software does 
+not need to care about any complex understanding of the machine configuration itself; it simply receives messages that belong  
+to the specified building block. These building blocks allow the gathering and usage of data across disparate machines and 
+platforms with relative ease. The definition of new machines and processes, as automation continues to evolve, can be created 
+using existing standard building blocks, bringing a high degree of future proofing. 
+6.1 Hierarchy of CFX Topics CFX topics are organized into a hierarchical structure. A set of defined messages are defined as 
+part of each topic. The list of topics and their relationship are provided below, which all exist beneath the CFX Root Level: 
+CFX (Root Level) 
+ㆍCFX.InformationSystem (Level 1) 
+     - CFX.InformationSystem.DataTransfer (Level 2) - Added v1.4 
+     - CFX.InformationSystem.ProductionScheduling(Level 2) 
+     - CFX.InformationSystem.UnitValidation(Level 2) 
+     - CFX.InformationSystem.WorkOrderManagement (Level 2) 
+     - CFX.InformationSystem.OperatorValidation (Level 2) - Added v1.7 
+
+===== PAGE 25 =====
+February 2025                  IPC-2591-
+Version 2.0 
+25 
+ㆍCFX.Maintenance (Level 1) - Addedv1.3 
+ㆍCFX.Materials(Level 1) 
+     - CFX.Materials.Management (Level 2) 
+ 。CFX.Materials.Management.MSDManagement (Level 3) 
+     - CFX.Materials.Storage (Level 2) 
+     - CFX.Materials.Transport (Level 2) 
+ㆍCFX.Production (Level 1) 
+     - CFX.Production.Application (Level 2) 
+ 。CFX.Production.Application.Solder(Level 3) – Removed v1.1 
+     - CFX.Production.Assembly (Level 2) 
+     - CFX.Production.Hermes (Level 2) – Added v1.3 
+     - CFX.Production.LoadingAndUnloading (Level 2) - Added v1.2 
+     - CFX.Production.Processing (Level 2) 
+     - CFX.Production.ReworkAndRepair (Level 2) - Addedv1.4 
+     - CFX.Production.TestAndInspection (Level 2) 
+ㆍCFX.ResourcePerformance (Level 1) 
+     - CFX.ResourcePerformance.PressInsertion (Level 2) 
+     - CFX.ResourcePerformance.SMTPlacement (Level 2) 
+     - CFX.ResourcePerformance.SolderPastePrinting (Level 2) 
+     - CFX.ResourcePerformance.THTInsertion (Level 2) 
+ㆍCFX.Sensor (Level 1) 
+     - CFX.Sensor.Identification (Level 2) 
+Messages in the Root Level are used for infrastructure management and discovery. Level 1 topics separate messages out by 
+generic content category, containing more generic messages. Level 2 messages contain messages with a higher degree of 
+specificity and detail. Level 3 topics represent a very specific technology. When an endpoint supports a topic, support shall be 
+made for any higher-level topics from which that topic is descended. Levels below selected topics to be supported may not be 
+required where applications do not require the fine details of events. Endpoint applications in most cases will need to use just 
+one or a small selection of topics, especially for applications that are narrow in scope. 
+6.2 CFX Message Names Names of CFX messages within each topic are structured to include the hierarchy of topic names, 
+separated by a period. 
+6.3 CFX Structures Most CFX messages include parameters of data. As many sets of parameters are common to two or more 
+messages, a structure for the common parameters is created so two or more messages can use the same structures. 
+6.4 CFX Dynamic Structures  There are several cases in which a set of parameters in a structure may need to be different 
+depending on the context of the message. For example, material carriers of SMT materials have different key attributes, such    
+as feeders, sticks and trays, as compared to manually delivered materials, which may be in a box or bag. The use of dynamic 
+structures in CFX means that in a single message, there are options for different named parameter sets, such that a single 
+message can work in all cases, with just the alteration of internal structures as required. This also applies in many cases where    
+a single message will describe events of many different machine types. 
+In cases when using dynamic structures, there is usually a default or generic set of parameters or named structure which  
+contains parameters that are general in any condition. Additional types of structures can also be added within the same message 
+to represent specific parameter sets as required. 
+  
+
+===== PAGE 26 =====
+February 2025                  IPC-2591-
+Version 2.0 
+26 
+6.5 CFX Messaging Requirements Equipment shall meet the mandatory CFX capabilities in Table6-1 according to the 
+capability indicators: 
+ㆍM - Required for all machines in class 
+ㆍMR - Required if equipped with a barcode/RFID reader 
+ㆍO - Optional capability 
+ㆍBlank - Not applicable to machine class 
+6.6 CFX Qualification Equipment shall meet the messaging requirements in Table 6-2 for the capabilities shown in Table 6-1  
+to be listed on the IPC-CFX-2591 Qualified Products List (QPL). Upon successful qualification, the IPC-CFX-2591 QPL lists 
+the qualified model, date of qualification and the vendor’s software version. 
+Gateway solutions shall meet the messaging requirement in Table 6-2 for the capabilities shown in Table 6-1 to be listed on the 
+IPC-CFX-2591 QOL for  the applicable equipment Endpoint Class (e.g., Stencil Printer, Solder, Reflow Oven, Solder Paste 
+Inspection(SPI)). Upon successful qualification, the IPC-CFX-2591 QPL lists the qualified gateway solution device, date of  
+qualification, vendor and model of equipment used for qualification and the software version for the qualified gateway and 
+equipment. 
+6.6.1 Declaration of Responsibility for Implementation For each qualified model  and version of a CFX-producing device or 
+software endpoint on the IPC-CFX-2591 QPL, the equipment model supplier shall provide a valid and accurate declaration of 
+technical diagnostic, support and troubleshooting responsibility (hereafter referred to as support) for the IPC-CFX 
+implementation, declaring one of the following: 
+ㆍThe equipment model supplier  accepts full responsibility for support. 
+The IPC-CFX implementation being qualified generates CFX entirely natively by the equipment model supplier’s software code 
+or  a host controller’s code developed by and owned by the equipment model supplier, without the use of products, components 
+or technology from a third party at any point. 
+ㆍThe equipment model supplier accepts full responsibility for support. 
+The IPC-CFX implementation being qualified generates CFX by use of technology provided by a business entity (third party) 
+other than the equipment model supplier at one or more point(s) in the path from the CFX-producing device or software endpoint 
+to the CFX validation website. 
+ㆍThe third party accepts full responsibility for support. 
+The IPC-CFX implementation being qualified generates CFX by use of technology provided by a business entity (third party) 
+other than the equipment model supplier at one or more point(s) in the path from the CFX-producing device or software endpoint 
+to the CFX validation website. 
+A false or misleading declaration of responsibility shall result in the model(s) being removed from the IPC-CFX-2591 QPL.  
+
+===== PAGE 27 =====
+February 2025                  IPC-2591-
+Version 2.0 
+27 
+Table 6-1 CFX Capability Requirements by Equipment Type 
+Category Capability 
+Endpoint Class 
+Generic 
+Equipment 
+Endpoint 
+Automated 
+Labeler/ 
+Laser 
+Marker 
+Stencil 
+Printer 
+Solder  
+Paste 
+Inspection 
+(SPI) 
+SMT 
+Mounter 
+(Pick   
+and 
+Place) 
+Automated 
+Optical 
+Inspection 
+(AOI/AXI) 
+Solder 
+Reflow 
+Oven 
+Reflow 
+Profiling 
+Selective 
+Solder 
+Through-
+Hole 
+Component 
+Insertion 
+(THT) 
+Test 
+Equipment 
+Conformal 
+Coating Cleaning 
+Hand 
+Soldering 
+Wave 
+Soldering 
+CFX Core Core 
+Communications M M M M M M M M M M M M M M M 
+Track and 
+Trace 
+WIP Tracking M M M M M M M M M M M M M M M 
+WIP Identification MR M MR MR MR MR MR MR MR MR MR MR MR MR MR 
+Unit Initialization ○ M ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○  ○ 
+Panelized Unit 
+Initialization ○ M ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○  ○ 
+Operator  
+Tracking ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Equipment Data 
+Tracking ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○  ○ 
+Unit 
+Disqualification/ 
+Scrapping 
+○ ○              
+Detailed Activity 
+Tracking ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Material Trace 
+with Internal 
+Setup 
+○ ○ ○  ○  ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Exact Material 
+Trace with 
+Internal Setup 
+○    MR     MR      
+Exact Material 
+Trace with 
+External Setup 
+○    M     M      
+Tool Trace MR ○ MR  ○   ○ ○ ○ ○ ○ ○ ○ ○ 
+Process 
+Interlocking 
+Process Route 
+Validation ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Unit Status 
+Validation ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Unit Trace 
+Validation ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Recipes 
+Basic Recipe 
+Visibility M M M M M M M M M M M M M M M 
+Remote Recipe 
+Selection ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Remote Recipe 
+Management ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Setup 
+Validation 
+Internal Setup 
+Validation ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Online Setup     ○     ○      
+External Setup 
+Validation ○ ○ ○  ○     ○      
+ 
+  
+
+===== PAGE 28 =====
+February 2025                  IPC-2591-
+Version 2.0 
+28 
+Table 6-1 CFX Capability Requirements by Equipment Type (cont.) 
+Category Capability 
+Endpoint Class 
+Generic 
+Equipment 
+Endpoint 
+Automated 
+Labeler/ 
+Laser 
+Marker 
+Stencil 
+Printer 
+Solder  
+Paste 
+Inspection 
+(SPI) 
+SMT 
+Mounter 
+(Pick   
+and 
+Place) 
+Automated 
+Optical 
+Inspection 
+(AOI/AXI) 
+Solder 
+Reflow 
+Oven 
+Reflow 
+Profiling 
+Selective 
+Solder 
+Through-
+Hole 
+Component 
+Insertion 
+(THT) 
+Test 
+Equipment 
+Conformal 
+Coating Cleaning 
+Hand 
+Soldering 
+Wave 
+Soldering 
+Blocking       
+and Locking 
+Material Blocking 
+for External     
+Setup 
+○ ○ ○  ○     ○    
+  
+Material Blocking 
+for Internal       
+Setup 
+○ ○ ○  ○     ○    
+  
+Station Locking ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Personalization Unit  
+Personalization     ○     ○ ○     
+Station 
+Information 
+Station  
+Performance 
+Reporting 
+M M M M M M M M M M M M M M M 
+Advanced      
+Station  
+Performance 
+Reporting 
+○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Station 
+Configuration 
+Management 
+○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Station  
+Maintenance 
+Tracking 
+○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Energy 
+Consumption 
+Tracking 
+○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ 
+Test and 
+Inspection 
+Production Unit 
+Inspection    M  M          
+Automated    
+Optical     
+Inspection (AOI/ 
+AXI) 
+     M        
+  
+AOI Component 
+Offset  
+Measurement 
+     ○        
+  
+Solder Paste 
+Inspection    M            
+Production Unit  
+Test           M     
+Specialized 
+Processing 
+Solder Paste  
+Reflow     
+Processing 
+      M       
+  
+Solder Paste  
+Reflow Profiling        M        
+Selective Solder 
+Processing         M       
+Solder Paste 
+Printing   M             
+Conformal    
+Coating            M    
+Cleaning             M   
+Automated 
+Labeler/Laser 
+Marker 
+ M            
+  
+Hand Soldering 
+Processing              M  
+Wave Soldering               M 
+ 
+  
+
+===== PAGE 29 =====
+February 2025                  IPC-2591-
+Version 2.0 
+29 
+Table 6-2 Required Messages by Capability 
+Capability Topic(s) Relevant Messages Notes 
+Core 
+Communications 
+CFX Root Level Message 
+See 7.1 
+AreYouThereRequest/Response  
+EndpointConnected  
+EndpointShuttingDown  
+GetEndpointinformationRequest/ 
+Response  
+WholsThereRequest/Response  
+WIP Tracking CFX.Production 
+See 7.5 
+UnitsArrived  
+WorkStarted  
+WorkStageStarted  
+WorkStageCompleted  
+WorkStagePaused This message is only required if the 
+endpoint/machine supports pausing and 
+resuming midproduction. For endpoints 
+that do not support pausing and   
+resuming, this message is optional. 
+WorkStageResumed This message is only required if the 
+endpoint/machine supports pausing and 
+resuming midproduction. For endpoints 
+that do not support pausing and   
+resuming, this message is optional. 
+Work Completed  
+UnitsDeparted  
+WIP Identification CFX.Production 
+See 7.5 
+WorkStarted OR WorkCompleted Unit Position structure shall definitively 
+identify the barcode/ ID of each individual 
+unit in the transaction or the barcode/ID  
+of the carrier/panel and a numeric ID for 
+each individual unit in the transaction 
+based on the CFX sorting convention. 
+Unit Initialization CFX.Producion 
+See 7.5 
+UnitsInitialized 
+ 
+Panelized Unit 
+Initialization 
+CFX.Production 
+See 7.5 
+Unitsinitialized For panelized assemblies and carriers, 
+message shall indlude identifier of 
+carrier/panel, as well as identifiers of all 
+units within the carrier/panel. 
+Operator Tracking CFX.Production 
+See 7.5 
+OperatorActivated  
+OperatorDeactivated  
+Equipment Data 
+Tracking 
+CFX.Production 
+See 7.5 
+ReadingsRecorded 
+ 
+Unit Disqualification/ 
+Scrapping 
+CFX.Production 
+See 7.5 
+UnitsDisqualified 
+ 
+Detailed Activity 
+Tracking 
+CFX.Producion 
+See 7.5 
+ActivitiesExecuted All Equipment should support Activity 
+derived classes in CFX.Structures. 
+SMT Placement Equipment should  
+support Activity derived classes in 
+CFX.Structures.SMTPlacement. 
+Selective Solder Equipment should  
+support Activity derived classes in 
+CFX.Structures.SolderApplication. 
+Material Trace with 
+Internal Setup 
+CFX.Production.Assembly 
+See 7.5.2 
+Materialsinstalled Uniqueldentifier and InternalPartNumber 
+properties of Material property shall       
+be populated with actual/real material 
+package identifiers. 
+CFX.Production.Application 
+See 7.5.1 
+MaterialsApplied Uniqueldentifier and InternalPartNumber 
+properties of Material property shall       
+be populated with actual/real material 
+package identifiers. 
+
+===== PAGE 30 =====
+February 2025                  IPC-2591-
+Version 2.0 
+30 
+Table 6-2 Required Messages by Capability (cont.) 
+Capability Topic(s) Relevant Messages Notes 
+Exact Material Trace 
+with Internal Setup 
+CFX.Production.Assembly 
+See 7.5.2 
+Materialsinstalled Each unit in transaction shall have its 
+particular materials uniquely identified 
+using UnitPosition structure.  
+For printed board assembly, 
+InstalledComponents structure shall 
+include ReferenceDesignator property 
+and represent the exact material lot 
+(MaterialPackage) used for each and 
+every component position on the     
+printed board (identified by reference 
+designator). 
+Exact Material Trace 
+with External Setup 
+CFX.Production.Assembly 
+See 7.5.2 
+Materialsinstalled Allows for material trace when a third-
+party/external material setup system is  
+in use (independent of machine software 
+ecosystem). 
+Uniqueldentifier field of Material 
+property may be left blank. 
+InternalPartNumber field of Material 
+property shall be populated.  
+LocationName property of 
+CarrierLocation property shall be 
+populated. 
+Allows for exact material trace when       
+a third-party/external-material setup 
+system is in use (independent of   
+machine software ecosystem). 
+For printed board assembly, 
+InstalledComponents structure shall 
+include ReferenceDesignator property 
+and InstallationTime precisely   
+populated. 
+InstallationTime shall be accurate to the 
+second because a feeder change could 
+occur in the third-party system at any 
+time, and it is necessary to know which 
+components were populated before and 
+after that feeder change. 
+Tool Trace CFX.Production See 7.5 ToolsUsed  
+Process Route 
+Validation 
+CFX.InformationSystem.UnitValidation 
+See 7.2.4 
+ValidateUnitsRequest Initiate Request and process Response. 
+ValidationType property determines 
+type  
+of validation. 
+Unit Status 
+Validation 
+CFX.InformationSystem.UnitValidation 
+See 7.2.4 
+ValidateUnitsRequest Initiate Request and process Response. 
+ValidationType property determines 
+type of validation. 
+Unit Trace Validation CFX.InformationSystem.UnitValidation 
+See 7.2.4 
+ValidateUnitsRequest Initiate Request and process Response. 
+ValidationType property determines type 
+of validation. 
+This validates that material trace data   
+has been received and processed by an 
+upper level control system without error. 
+Basic Recipe 
+Visibility 
+CFX.Production 
+See 7.5 
+RecipeActivated  
+RecipeModified  
+GetActiveRecipeRequest Respond to incoming request. 
+Remote Recipe 
+Selection 
+CFX.Production 
+See 7.5 
+ActivateRecipeRequest/Response Respond to incoming request. 
+Remote Recipe 
+Management 
+CFX.Production 
+See 7.5 
+UpdateRecipeRequest/Response Respond to incoming request. 
+GetRecipeRequest/Response Respond to incoming request. 
+ 
+  
+
+===== PAGE 31 =====
+February 2025                  IPC-2591-
+Version 2.0 
+31 
+Table 6-2 Required Messages by Capability (cont.) 
+Capability Topic(s) Relevant Messages Notes 
+Internal Setup 
+Validation 
+CFX.Materials.Storage 
+See 7.4.2 
+GetLoadedMaterialsRequest/ 
+Response 
+Respond to incoming request. 
+MaterialsLoaded  
+MaterialsUnloaded  
+ValidateStationSetupRequest/ 
+Response 
+Respond to incoming request. 
+Offline Setup CFX.Materials.Storage 
+See 7.4.2 
+MaterialCarriersLoaded  
+MaterialCarriersUnloaded  
+External Setup 
+Validation 
+CFX.Production 
+See 7.5 
+GetRequiredSetupRequest/Response Respond to incoming request. 
+SetupRequirementsChanged  
+LockStationRequest/Response Respond to incoming request. 
+UnlockStationRequest/Response Respond to incoming request. 
+Material Blocking    
+for External Setup 
+Validation 
+CFX.Production 
+See 7.5 
+BlockMaterialLocationsRequest/ 
+Response 
+Respond to incoming request. 
+UnblockMaterialLocationsRequest/ 
+Response 
+Respond to incoming request. 
+Material Blocking    
+for Internal Setup 
+Validation 
+CFX.Materials 
+See 7.4 
+BlockMaterialsRequest/Response Respond to incoming request. 
+UnblockMaterialsRequest/Response Respond to incoming request. 
+Station Locking CFX.Production 
+See 7.5 
+LockStationRequest/Response Respond to incoming request. 
+UnlockStationRequest/Response Respond to incoming request. 
+Unit Personalization CFX.Production.Assembly 
+See 7.5.2 
+UnitsPersonalized  
+Station Performance 
+Reporting 
+CFX.ResourcePerformance 
+See 7.6 
+FaultOccurred SMT Placement Machines should 
+support SMTPlacementFault dynamic 
+type. 
+Solder Paste Printers should support 
+SMTSolderPastePrintingFault dynamic 
+type. 
+Reflow ovens should support 
+ReflowOvenFault dynamic type. 
+THT Insertion machines should support 
+THTInsertionFault dynamic type. 
+FaultAcknowledged  
+FaultCleared  
+HandleFaultRequest/Response Respond to incoming request. 
+GetActiveFaultsRequest/Response Respond to incoming request. 
+LogEntryRecorded  
+StationOffline  
+StationOnline  
+StationStateChanged  
+Advanced Station 
+Performance 
+Reporting 
+CFX.ResourcePerformance 
+See 7.6 
+ 
+CalibrationPerformed  
+StageStateChanged  
+ToolChanged  
+Station Configuration 
+Management 
+CFX.ResourcePerformance 
+See 7.6 
+StationParametersModified  
+ModifyStationParametersRequest/ 
+Response 
+Respond to incoming request. 
+Station Maintenance 
+Tracking 
+CFX.ResourcePerformance 
+See 7.6 
+MaintenancePerformed  
+Energy Consumption 
+Tracking 
+CFX.ResourcePerformance 
+See 7.6 
+EnergyConsumed  
+ 
+
+===== PAGE 32 =====
+February 2025                  IPC-2591-
+Version 2.0 
+32 
+Table 6-2 Required Messages by Capability (cont.) 
+Capability Topic(s) Relevant Messages Notes 
+Production Unit 
+Inspection 
+CFX.Production. 
+TestAndInspection 
+See 7.5.7 
+UnitsInspected  
+Automated Optical 
+Inspection (AOI/AXI) 
+CFX.Production. 
+TestAndInspection 
+See 7.5.7 
+Unitsinspected Inspection results should have 
+ReferenceDesignator, UnitPosition,  and 
+PartNumber fields populated on 
+ComponentOfInterest. 
+AOI Component Offset 
+Measurement 
+CFX.Production. 
+TestAndInspection 
+See 7.5.7 
+UnitsInspected Including OffsetMeasurment dynamic 
+class for each component inspected. 
+Solder Paste Inspection CFX.Production. 
+TestAndInspection 
+See 7.5.7 
+UnitsInspected Including SolderPasteMeasurement 
+dynamic class. 
+Production Unit Test CFX.Production. 
+TestAndInspection 
+See 7.5.7 
+UnitsTested Should include Symptoms for failed tests, 
+as well as Measurements for all tests. 
+Solder Paste Reflow 
+Processing 
+CFX.Production.Processing 
+See 7.5.5 
+UnitsProcessed Including ReflowProcessData dynamic 
+structure. 
+Solder Paste Reflow 
+Profiling 
+CFX.Production.Processing 
+See 7.5.5 
+UnitsProcessed Including ReflowProfilingProcessData 
+dynamic structure. 
+Selective Solder 
+Processing 
+CFX.Production.Processing 
+See 7.5.5 
+UnitsProcessed Including SelectiveSolderProcessData 
+dynamic structure. 
+Solder Paste Printing CFX.ResourcePerformance. 
+SolderPastePrinting 
+See 7.6.3 
+StencilCleaned  
+Conformal Coating CFX.Production.Processing 
+See 7.5.5 
+UnitsProcessed Including CoatingProcessData dynamic 
+structure. 
+Cleaning CFX.Production.Processing 
+See 7.5.5 
+UnitsProcessed Including CleaningProcessData dynamic 
+structure. 
+Labeling CFX.Production.Processing 
+See 7.5.5 
+UnitsProcessed Including LaserMarkingProcessData 
+dynamic structure. 
+Wave Soldering CFX.Production.Processing 
+See 7.5.5 
+UnitsProcessed Including WaveProcessData dynamic 
+structure. 
+Hand Soldering CFX.Production.Processing 
+See 7.5.5 
+UnitsProcessed Including HandSolderingProcessData 
+dynamic structure. 
+ 
+7 CFX MESSAGES 
+This section details CFX messages, structured by topic and level. For readability, the following abbreviations are used: 
+ㆍE = Event 
+ㆍRR = Request/Response message type 
+ㆍBRR = Broadcast Request/Response message type 
+7.1 Root Level Messages These messages relate to things such as network infrastructure, discovery, etc. 
+Full message name format: “CFX.name” 
+The messages in Table 7-1 belong to this topic. 
+  
+
+===== PAGE 33 =====
+February 2025                  IPC-2591-
+Version 2.0 
+33 
+Table 7-1 CFX.Root Messages 
+Name Type Description 
+AreYouThere RR Allows any CFX endpoint to determine if another particular CFX endpoint is present on 
+a CFX network. 
+EndpointConnected E Sent when an Endpoint joins a CFX network after it has been established. 
+EndpointShuttingDown E Sent when an endpoint is about to shut down and disconnect from a CFX network. 
+GetEndpointlnformation RR Requests detailed information about a single specified endpoint. 
+Heartbeat E 
+Sent periodically by an endpoint as a keep alive and endpoint status mechanism. This 
+message is normally generated automatically when using the CFX SDK, with facility to 
+change the default message frequency of one-minute intervals. – Added v1.2 
+Optionally, the active fault and recipe information is sent to facilitate systems gathering   
+this information without having to wait for the values to change. – Added v1.7 
+WholsThere BRR Allows any CFX endpoint to discover all the other endpoints participating in this CFX 
+network and their capabilities. 
+NotSupportedResponse RR A response that allows a CFX endpoint to indicate to the sender of a request that it is not  
+able to answer to a particular request that has been made – Added v1.3 
+7.2 CFX.InformationSystem (Level 1) Messages related to factory control and management, such as routing, quality operations, etc. 
+There are no Level 1 messages. 
+7.2.1 CFX.InformationSystem.DataTransfer (Level 2) Messages related to enterprise information systems (e.g., MES or ERP 
+system) and other types of endpoint capable of performing secure data transfer (i.e., endpoints capable of exchanging            
+IPC-2581(DPMX) design data would implement messages of this topic). 
+Full message name format: “CFX.InformationSystem.DataTransfer.name” 
+The message in Table 7-2 belong to this topic. 
+Table 7-2 CFX.InformationSystem.DataTransfer Messages 
+Name Type Description 
+FileTransfer RR Request to an endpoint to initate a file transfer. – Added v1.4 
+7.2.2 CFX.InformationSystem.OperatorValidation(Level 2) Messages related to validation of operators in the factory.       
+Full message name format: “CFX.InformationSystem.OperatorValidation.name” 
+The message in Table 7-3 belong to this topic. 
+Table 7-3 CFX.InformationSystem.OperatorValidation Messages 
+Name Type Description 
+ValidateOperator RR Request to an operator take action now or be responsible for a 
+Process endpoint. – Added v1.7 
+7.2.3 CFX.InformationSystem.ProductionScheduling (Level 2) Messages related to the creation and management of factory 
+production schedules. 
+Full message name format: “CFX.InformationSystem.ProductionScheduling.name” 
+The messages in Table 7-4 belong to this topic. 
+  
+
+===== PAGE 34 =====
+February 2025                  IPC-2591-
+Version 2.0 
+34 
+Table 7-4 CFX.InformationSystem.ProductionScheduling Messages 
+Name Type Description 
+WorkOrdersScheduled E Indicates that one or more work order(s) have been created, scheduled for production 
+or changed. 
+WorkOrdersUnscheduled E Indicating that one or more work order(s) have been removed from the production 
+schedule. 
+7.2.4 CFX.InformationSystem.TopicValidation (Level 2) Messages related to the validation of certain topics in SMT 
+production. 
+Full message name format: “CFX.InformationSystem.TopicValidation.name” 
+The messages in Table 7-5 belong to this topic. 
+Table 7-5 CFX.InformationSystem.TopicValidation Messages 
+Name Type Description 
+ValidateTopic RR Message requesting the validation of certain topics in SMT production. – Added 
+v2.0  
+7.2.5 CFX.InformationSystem.UnitValidation (Level 2) Messages related to performing process-level unit route validation and 
+process interlocking. 
+Full message name format: “CFX.InformationSystem.UnitValidation.name” 
+The messages in Table 7-6 belong to this topic. 
+Table 7-6 CFX.InformationSystem.UnitValidation Messages 
+Name Type Description 
+ValidateUnits RR Message requesting the validation of production unit unique IDs. 
+7.2.6 CFX.InformationSystem.WorkOrderManagement (Level 2) Messages related to the creation and management of factory  
+work orders. 
+Full message name format: “CFX.InformationSystem.WorkOrderManagement.name” 
+The messages in Table 7-7 belong to this topic. 
+Table 7-7 CFX.InformationSystem.WorkOrderManagement Messages 
+Name Type Description 
+WorkOrdersCreated E Indicates that a new work order has been created. 
+WorkOrdersDeleted E Indicates that a work order has been deleted. 
+WorkOrderQuantityUpdated E Indicates that the quantity of production units belonging to a work order has 
+changed. 
+WorkOrderStatusUpdated E Indicates that the status of a work order has changed. 
+WorkOrdersUpdated E Indicates that information about a work order has been updated or changed. 
+7.3 CFX.Maintenance (Level 1) Messages related to Maintenance. 
+Full message name format: “CFX.Maintenance.name” 
+The messages in Table 7-8 belong to this topic. 
+  
+
+===== PAGE 35 =====
+February 2025                  IPC-2591-
+Version 2.0 
+35 
+Table 7-8 CFX.Maintenance Messages 
+Name Type Description 
+GetResourcelnformation RR 
+This Request message requests detailed resource information about a 
+single endpoint, as specified by its CFX handle. 
+The response includes information regarding the endpoint's resource 
+and subresources that may undergo maintenance operations. 
+ – Added v1.3 
+GetResourceMaintenanceAndService RR 
+This Request message requests detailed resource maintenance 
+information about a single endpoint, as specified by its CFX handle. 
+The response includes information regarding the endpoint's 
+maintenance, counters, errors and verification that are relevant for the 
+decisions around the execution of the maintenance operations. 
+ – Added v1.3 
+GetResourceMaintenanceStatus RR 
+Dynamic response from external systems with detailed information 
+about a resource maintenance status. This is typically used for resource 
+that may undergo maintenance operations  
+(e.g., SMTTapeFeederlnformation). 
+– Added v1.3 
+GetResourceSetup RR 
+This Request message requests detailed resource setup information 
+about a single endpoint, as specified by its CFX handle. The     
+response includes information regarding the endpoint's resource and 
+subresources setup that may undergo maintenance operations).  
+– Added v1.3 
+ResourcelnformationEvent E 
+Allows any CFX endpoint to send the resource and subresources of a 
+specified single endpoint. The event can be sent “on change” or “time”  
+base. – Added v1.3 
+ResourceMaintenanceAndServiceEvent E 
+Allows any CFX endpoint to send the resource and sub-resources 
+maintenance and services of a specified single endpoint. The event can 
+be sent “on change” or “time” base. – Added v1.3 
+ResourceMaintenanceStatusEvent E 
+Dynamic event from external systems with detailed information about  
+a resource maintenance status. The event can be sent “on change” or 
+“time” base. – Added v1.3 
+ResourceSetupEvent E 
+Allows any CFX endpoint to send data about the resource and sub-
+resources setup. The event can be sent “on change” or “time” base.  
+– Added v1.3 
+7.4 CFX.Materials (Level 1) Messages related to the management of raw materials, including definition, consumption, spoilage, 
+setup, location management, logistics, etc. 
+There are no level 1 messages. 
+7.4.1 CFX.Materials.Management (Level 2) Messages related to the management of raw materials. 
+Full message name format: “ CFX.Materials.Management.name” 
+The messages in Table 7-9 belong to this topic. 
+  
+
+===== PAGE 36 =====
+February 2025                  IPC-2591-
+Version 2.0 
+36 
+Table 7-9 CFX.Materials.Management Messages 
+Name Type Description 
+BlockMaterials RR Specify that a particular material should not be used for any reason. 
+GetMaterialInformation RR 
+A request (typically, to a factory-level software system) to obtain detailed 
+information about a particular material package (or collection of material 
+packages). – Added v1.1 
+MaterialsChainSplit E 
+Sent when a certain material package chain has been modified by opening    
+the splice plate and therefore creates two material chains out of one. No new 
+material ID will be created during this use case. This use case is operated on 
+the station. – Added v1.1 
+MaterialsConsumed E Information about material consumption and spoilage. 
+MaterialsInitialized E Indicates that a new material unit has been created, usually as part of the 
+material receiving process. 
+MaterialsJoined E Indicates that two identical or near identical materials have been joined, 
+connected or combined together. 
+MaterialsModified E Indicates that information about materials according to the unique ID for them 
+or their carrier has been modified. 
+MaterialsRetired E Indicates that materials have been retired (scrapped), due for example to shelf-
+life limitation or obsolescence. 
+MaterialsSplit E Indicates that a material has been split into two or more parts, creating new 
+material instances as a result. 
+UnblockMaterials RR Sent to a station to unblock material that has previously been blocked, as 
+described above. 
+7.4.1.1 CFX.Materials.Management.MSDManagement (Level 3) Message relating to the handling and management of 
+moisture-sensitive materials. 
+Full message name format: “CFX.Materials.Management.MSDManagement.name” 
+The messages in Table 7-10 belong to this topic. 
+Table 7-10 CFX.Materials.Management.MSDManagement Messages 
+Name Type Description 
+MaterialsExpired E Indicates that one or more materials have expired due to moisture 
+contamination. 
+MaterialsOpened E Indicates that one or more MSD materials have been opened and are now 
+exposed to the atmosphere. 
+MaterialsPlacedInDryStorage E Indicates that one or more MSD materials have been placed in dry storage. 
+MaterialsRemovedFromDryStorage E Indicates that one or more MSD materials have been removed from dry 
+storage. 
+MaterialsRestored E Indicates that one or more MSD materials have been restored, typically 
+through the process of baking. 
+7.4.2 CFX.Materials.Storage (Level 2) These are messages related to events that occur when materials are stored, including 
+consumption. This includes not only stock areas, but also point-of-use workstations, where materials are loaded during 
+production, and automated storage, such as line-side or warehouse towers. 
+Full message name format: “CFX.Materials.Storage.name” 
+The messages in Table 7-11 belong to this topic. 
+  
+
+===== PAGE 37 =====
+February 2025                  IPC-2591-
+Version 2.0 
+37 
+Table 7-11 CFX.Materials.Storage Messages 
+Name Type Description 
+GetLoadedMaterials RR Requests a comprehensive listing of all the materials currently loaded at an 
+endpoint. 
+MaterialCarriersLoaded E Sent when one or more material carriers are loaded into a designated location. 
+MaterialCarriersUnloaded E Sent when one or more material carriers are unloaded from an endpoint. 
+MaterialsEmpty E Sent when one or more material packages at a particular location become fully 
+exhausted/depleted. 
+MaterialsLoaded E 
+Sent when one or more material instances are loaded into a designated location. 
+Such locations include storage (stock) locations, including warehouses, sub-stores, 
+etc., as well as locations associated with stations, such as machines. This message 
+can be used as a material location (setup) verification event. 
+MaterialsUnloaded E Sent when one or more material instances are unloaded from an endpoint. 
+SplicePointDetected E Sent when one or more material instances reach a point at which a splice is detected 
+from one material to another. 
+ValidateStationSetup RR Sent to a station as a request to validate that the material currently loaded at the 
+workstation complies with the required material setup for the active recipe. 
+7.4.3 CFX.Materials.Transport (Level 2) Messages used for the transportation of raw materials from one location in the factory   
+to another location. 
+Full message name format:"CFX.Materials.Transport.name" 
+The messages in Table 7-12 belong to this topic. 
+Table 7-12 CFX.Materials.Transport Messages 
+Name Type Description 
+CheckpointReached E Indicates that a transport order of materials has reached a checkpoint (waypoint) 
+along its journey to an assigned destination. 
+CreateTransportOrder RR Requests to create a transport order with a SVS Transport Prder ID, Fleet Manager 
+replies with a Fleet Manager Transport Order ID. – Added v2.0 
+GetTransportOrderStatus RR Requests the status of one or more transport orders. 
+StartTransfer RR Requests an endpoint to start transfer of materials from/to an autonomous mobile 
+robot (AMR). – Added v2.0 
+TransportOrderCompleted E Indicates that a transport order of materials has completed its journey to a 
+destination. 
+TransportOrderStarted E Indicates that a transport order (group) of materials has begun its journey to an 
+assigned destination. 
+TransportOrderStatusChanged E Indicates that the status of a transport order has changed. 
+7.5 CFX.Production (Level 1) Messages related to events that affect or impact production units as part of the production process. 
+Full message name format:"CFX.Production.name" 
+The messages in Table 7-13 belong to this topic. 
+  
+
+===== PAGE 38 =====
+February 2025                  IPC-2591-
+Version 2.0 
+38 
+Table 7-13 CFX.Production Messages 
+Name Type Description 
+ActivateRecipe RR Used to activate a named recipe at the station. 
+ActivitiesExecuted E 
+Indicates that one or more activities have been performed in the course of    processing one or more production 
+units. The activities may or may not be value added. Activities are dynamic structures and may vary 
+depending upon the nature  and purpose of the endpoint. 
+BlockMaterialLocations RR Sent to a station to block or disable a particular material setup location.  
+GetActiveRecipe RR Used to request the name of the recipe that is activated at a station . 
+GetAvailableRecipes RR Requests a list of recipes that are available on an endpoint; wildcards may be used   for selection. The response 
+includes a list of recipes that are available for execution on an endpoint. - Added v1.4 
+GetRecipe RR Used to request a station for the details of a named recipe. 
+GetRequiredSetup RR Requests the setup requirements of the active recipe. 
+GetUnitlnfo RR 
+Requests detailed information about the subunits of a given Unit, which is identified  by its HermesIdentifier or 
+PrimaryIdentifier or UnitIdentifier. The Response includes information concerning bad marks, fiducial 
+position, barcode, etc. - Added v1.4 
+LockStation RR Request that the endpoint cease active operation (locked) as soon as practically  possible at a station. 
+OperatorActivated E Indicates that an operator is now active at or responsible for a station.  
+OperatorDeactivated E Indicates that an activated operator is no longer active or responsible at a station.  
+ReadingsRecorded E 
+Used to send a data object that has been acquired; for example, from a sensor           or a reading taken during 
+processing of the unit. This data is typically used as a  traceability record.Where no unit ID is provided, the 
+measurement is applicable to the process in terms of time only. 
+RecipeActivated E Sent by a station to indicate the activation of a recipe by its name.  
+RecipeDeactivated E Sent by a station to indicate that a recipe is no longer active on a production    resource – Added v1.2 
+RecipeModified E Sent by a station to indicate that a change has been made to a specified named  recipe. 
+SetupRequirementsChanged E Sent whenever the setup requirement of materials, tools, etc., are changed for any  reason at a station. 
+ToolsCleaned E Sent by a process endpoint when a tools clean operation has been performed.              - Added v1.5 
+ToolsLoaded E Sent by a process endpoint when tools physically are loaded at a process endpoint,  prior to any work or other 
+activity commencing. - Added v1.5 
+ToolsUnloaded E Sent by a process endpoint when tools physically are unloaded from a process  endpoint. This does not imply 
+any information about any activity that may have  taken place. - Added v1.5 
+ToolsUsed E Sent by a station to indicate one or more tools being used in the course of performing  an assembly operation. 
+UnblockMaterialLocations RR Sent to a station to release the material locations block. 
+UnitsArrived E Sent when production units physically arrive at a station. 
+UnitsDeparted E Sent when units physically depart from a station. 
+UnitsDisqualified E Indicates that a specific production unit is disqualified or scrapped.  
+UnitsInitialized E 
+Sent when one or more production units are first introduced into the production process flow. Unit 
+initialization most often occurs when new production units are  first labeled with unique identifiers (or laser 
+marked). 
+UnlockStation RR Request that a station resume production, following a previous lock.  
+UpdateRecipe RR Sends a named recipe to a station. 
+WorkCompleted E Sent by a station when all work has been completed.  
+ 
+  
+
+===== PAGE 39 =====
+February 2025                  IPC-2591-
+Version 2.0 
+39 
+Table 7-13 CFX.Production Messages (cont.) 
+Name Type Description 
+WorkOrderActionExecuted E Sent when a non-added-value action (out of production) relative to a work order is 
+started, aborted or completed by a process endpoint. – Added v1.2 
+WorkStageCompleted E Sent by a station to indicate that a stage has been completed. 
+WorkStagePaused E Sent when activity pauses for some reason at a stage within the station. 
+WorkStageResumed E Sent when activity recommences at a stage within a station, following a WorkStage 
+Paused message. 
+WorkStageStarted E Sent by a station when the work-stage for a production unit starts. 
+WorkStarted E Sent by a station when the work-cycle for a production unit is started. 
+7.5.1 CFX.Production.Application (Level 2) Messages used for dispensing fluids or other types of consumable materials into 
+or onto production units. Several Level 3 topics exist, related to this Level 2. 
+Full message name format: “ CFX.Production.Application.name” 
+The messages in Table 7-14 belong to this topic. 
+Table 7-14 CFX.Production.Application Messages 
+Name Type Description 
+MaterialApplied E Sent by a station when one or more materials are applied to a production unit. 
+MaterialsUnapplied E Sent by a station when a material that was previously applied to a production unit is 
+removed (wiped away, dissolved, etc.). 
+Note: CFX.Production.Application.Solder (Level 3) and message have been removed for v1.1 and future versions. These  topics 
+and message should not be supported. The data associated with the message is moved to be included within the UnitsProcessed 
+message. 
+7.5.2 CFX.Production.Assembly (Level 2) These messages are used by a production resource performing any form of assembly    
+of production units. This includes automated, semimanual and manual assembly operations and covers the installation and 
+removal of components to production units, which is distinct from the application of materials, such as glue, paste, epoxy, etc., 
+which is a different topic. 
+Full message name format: “ CFX.Production.Assembly.name” 
+The messages in Table 7-15 belong to this topic. 
+Table 7-15 CFX.Production.Assembly Messages 
+Name Type Description 
+MaterialsInstalled E Sent by a station when one or more materials are installed onto a production unit. 
+MaterialsUninstalled E Sent by a station when one or more materials are removed from a production unit. 
+UnitsPersonalized E Sent by a station when a configuration or assignment is made                               
+(e.g., MAC Address). 
+7.5.2.1 CFX.Production.Assembly.PressInsertion (Level 3) Messages used for the press insertion of materials onto 
+production units. 
+Full message name format: “CFX.Production.Assembly.PressInsertion.name” 
+The messages in Table 7-16 belong to this topic. 
+  
+
+===== PAGE 40 =====
+February 2025                  IPC-2591-
+Version 2.0 
+40 
+Table 7-16 CFX.Production.Assembly.PressInsertion Messages 
+Name Type Description 
+ConditionCompleted E Sent by a station upon completion of the press insertion process. 
+GetConditionPermission RR Sent by a station to grant or reject permission for a station to proceed with the   
+recipe based on the results of a condition sequence action. 
+7.5.3 CFX.Production.Hermes (Level 2) This topic is for messages related to the interaction between CFX and Hermes. 
+Full message name format: “CFX.Production.Hemes.name” 
+The messages in Table 7-17 belong to this topic. 
+Table 7-17 CFX.Production.Hermes Messages 
+Name Type Description 
+GetMagazineData RR This Request message allows a Hermes-enabled endpoint to acquire Hermes-   
+related information about the content of a magazine. – Added v1.3 
+GetWorkOrderData RR 
+This Request message allows a Hermes-enabled endpoint to acquire Hermes-   
+related information of a work order. This information would typically then be   
+passed down the line through the Hermes protocol. – Added v1.1 
+MagazineArrived E Sent by a Hermes-enabled endpoint upon arrival of a magazine. – Added v1.3 
+MagazineDeparted E Sent by a Hermes-enabled endpoint upon departure of a magazine. – Added v1.3 
+7.5.4 CFX.Production.LoadingAndUnloading (Level 2) Messages relating to the management of production units within any 
+kind of carrier or fixture. 
+Full message name format: “CFX.Production.LoadingAndUnloading.name” 
+The messages in Table 7-18 belong to this topic. 
+Table 7-18 CFX.Production.LoadingAndUnloading Messages 
+Name Type Description 
+UnitsLoaded E Sent by an endpoint to indicate that it has loaded one or more production units     
+into any type of carrier or fixture. – Added v1.2 
+UnitsUnloaded E 
+Sent by an endpoint to indicate that it has unloaded one or more production        
+units from any type of carrier or fixture, including the case of printed board 
+depanelization. – Added v1.2 
+7.5.5 CFX.Production.Processing (Level 2) Messages relating to the environmental processing of production units, including  
+thermal processing, pressure chambers, UV exposure, etc. For example, SMT reflow ovens or profilers send these messages to  
+indicate the temperatures experienced by a production unit as it was processed. 
+Full message name format: “CFX.Production.Processing.name” 
+The messages in Table 7-19 belong to this topic. 
+Table 7-19 CFX.Production.Processing Messages 
+Name Type Description 
+UnitsProcessed E 
+Sent by a station when a unit is processed at a station, such as UV exposure, 
+environmental processing, repair, etc. Provides information regarding the 
+experience of the unit during the processing. 
+ 
+  
+
+===== PAGE 41 =====
+February 2025                  IPC-2591-
+Version 2.0 
+41 
+7.5.6 CFX.Production.ReworkAndRepair (Level 2) Messages sent by a process endpoint when one or more units have been 
+reworked or repaired, including outcome information and a detailed report of the repair(s) performed. If defects or faulty test 
+results (symptoms) were previously reported for these production unit(s), this message also relates the repairs performed back   
+to these inspection/test results. 
+Full message name format: “CFX.Production.ReworkAndRepair.name” 
+The messages in Table 7-20 belong to this topic. 
+Table 7-20 CFX.Production.ReworkAndRepair Messages 
+Name Type Description 
+UnitsRepaired E Sent by a station when one or more units have been reworked or repaired. 
+– Added v1.4 
+7.5.7 CFX.Production.TestAndInspection (Level 2) Messages used when a production resource is performing any form of 
+test or inspection of production units of all kinds, including automated and manual inspections. 
+CFX.Production.TestAndInspection.UnitsInspected contains a list of inspected units and for each inspected unit the 
+Unitldentifier and inspection results. TransactionID in CFX.Production.TestAndInspection.UnitsInspected links to CFX. 
+Production.WorkStarted, which contains the related PANELID in PrimaryIdentifier. 
+Full message name format: “CFX.Production.TestAndInspection.name” 
+The messages in Table 7-21 belong to this topic. 
+Table 7-21 CFX.Production.TestAndInspection Messages 
+Name Type Description 
+GetInspectionInfo RR This message requests from an endpoint solder paste inspection results for a list of 
+reference designators. – Added v1.7 
+UnitsInspected E Sent by a station when one or more units have been inspected. 
+UnitsTested E Sent by a station when one or more units undergo a series of tests. 
+7.6 CFX.ResourcePerformance (Level 1) Messages related to the activity of the production resource/production process, 
+usually as a unit of production being made, but not exclusively. These messages typically refer to the operation and 
+performance of a production resource. Messages within this topic relate to the overall performance of the resource, including 
+utilization, faults, processing rates, etc. Processes include automated, semiautomated and manual. 
+Full message name format: “CFX.ResourcePerformance.name” 
+The messages in Table 7-22 belong to this topic. 
+Table 7-22 CFX.ResourcePerformance Messages 
+Name Type Description 
+CalibrationPerformed E Sends details of a calibration event that was performed. 
+ChangeSleepState RR This Request message allows an external source to change the sleep state of a stage or 
+Station, with the Response message sent back to the requester. – Added v1.3 
+EnergyConsumed E Sent by a station on a sampled interval of between one minute and one hour to indicate 
+the energy usage and power consumption. 
+EnergyConsumption RR 
+This Request message allows an external source to inquire data regarding energy 
+consumption of the endpoint at the time of request, together with accumulation of energy 
+consumed from the time the last EnergyConsumed message was sent. The Response 
+message sends the requested data back to the requester. – Added v1.3 
+FaultAcknowledged E Sent to indicate that a fault state has triggered some form of action as a response. 
+FaultCleared E Sent by a station when a fault is cleared as described in a FaultOccurred message. 
+FaultOccurred E Sent by a station whenever a fault is encountered. 
+
+===== PAGE 42 =====
+February 2025                  IPC-2591-
+Version 2.0 
+42 
+GetActiveFaults RR Request allows an external source to query the equipment for a list of active faults. 
+GetActiveFaults Response message that it sends back to the requester. 
+HandleFault RR 
+Request allows an external source to modify the behavior for a specified fault in such a 
+way, for example, that the equipment is not indicating the operator should respond to this 
+fault. 
+LogEntryRecorded E An informational message sent by a station indicating that “something” has occurred at 
+the station. 
+MaintenancePerformed E Sent by a station to indicate that a maintenance event has taken place. 
+ModifyStationParameters RR Allows an external source to modify a configuration parameter of a station. 
+ProcessDataRecorded E Sent by a process endpoint to report the status of a process (i.e ., status of the cleaning 
+liquid concentration management), - Addedv1.5 
+SleepStateChanged E Sent by a process endpoint when the sleep state transitions from one state to another.        
+– Added v1.3 
+StageStateChanged E Sent by a station when a stage transitions from one state to another. 
+StationOffline E Sent by a station when it is about to transition to a state where it is not possible for further 
+communication. 
+StationOnline E Sent by a station when it is ready for communication to resume. 
+StationParametersModified E Sent by a station to indicate that an operator has modified a parameter or configuration 
+setting. 
+StationStateChanged E Sent by a station when its production state transitions from one state to another per its 
+state model. 
+ToolChanged E Sent by a station to report that a tool has been changed or exchanged. 
+7.6.1 CFX.ResourcePerformance.PressInsertion (Level 2) Messages related to the performance of resources where press 
+insertion of materials has been performed. This includes specialized faults, placement rates and other information related to the 
+performance of a press insertion machine. 
+Full message name format: “CFX.ResourcePerformance.PressInsertion.name” 
+The messages in Table 7-23 belong to this topic. 
+Table 7-23 CFX.ResourcePerformance.PressInsertion Messages 
+Name Type Description 
+ComponentsPressed E Sent periodically by a press insertion machine to indicate the number of 
+insertions which were successfully or unsuccessfully completed. 
+7.6.2 CFX.ResourcePerformance.SMTPlacement (Level 2) Messages related to the performance of resources in which SMT 
+placement takes place. This includes specialized faults, placement rates and other information related to the performance of an 
+SMT placement machine. 
+Full message name format: “CFX.ResourcePerformance.SMTPlacement.name” 
+The messages in Table 7-24 belong to this topic. 
+Table 7-24 CFX.ResourcePerformance.SMTPlacement Messages 
+Name Type Description 
+ComponentsPlaced E 
+Sent periodically by an SMT placement machine to indicate the number of 
+placements which were successfully or unsuccessfully completed during the 
+sample time window. 
+ 
+  
+
+===== PAGE 43 =====
+February 2025                  IPC-2591-
+Version 2.0 
+43 
+7.6.3 CFX.ResourcePerformance.SolderPastePrinting (Level 2) Specialized messages related to the performance of solder 
+paste printers. This might include information related to stencil or squeegee cleaning rates, etc. 
+Full message name format: “CFX.ResourcePerformance.SolderPastePrinting.name” 
+The messages in Table 7-25 belong to this topic. 
+Table 7-25 CFX.ResourcePerformance.SolderPastePrinting Messages 
+Name Type Description 
+CleanSqueegee RR Request the cleaning of the squeegee. 
+CleanStencil RR Request the cleaning of the stencil. 
+SqueegeeCleaned E Sent to indicate that the squeegee in use has been cleaned. 
+StencilCleaned E Sent to indicate that the stencil in use has been cleaned. 
+7.6.4 CFX.ResourcePerformance.THTPlacement (Level 2) Messages related to the performance of resources where pin-through-
+hole insertion takes place. This includes specialized faults, placement rates and other information related to the performance of  
+a through-hole technology (THT) machine. 
+Full message name format: “CFX.ResourcePerformance.THTPlacement.name” 
+The messages in Table 7-26 belong to this topic. 
+Table 7-26 CFX.ResourcePerformance.THTPlacement Messages 
+Name Type Description 
+ComponentsInserted E 
+Sent periodically by a THT placement machine to indicate the number of 
+placements which were successfully or unsuccessfully completed during the 
+sample time window. 
+7.7 CFX.Sensor (Level 1) Messages related to measurement devices that are not directly associated with the production 
+process, such as ambient temperature or humidity sensors. Includes devices that read unique product IDs. 
+Full message name format: “CFX.Sensor.name” 
+There are no level 1 messages. 
+7.7.1 CFX.Sensor.Identification (Level 2) Messages for devices that are responsible for reading or scanning identification 
+labels or tags (barcodes, RFIDs, machine vision systems, etc.). 
+Full message name format: “CFX.Sensor.Identification.name” 
+The messages in Table 7-27 belong to this topic. 
+Table 7-27 CFX.Sensor.Identification Messages 
+Name Type Description 
+IdentifiersRead E Sent when one or more identifiers have been acquired by an identification 
+device (barcode scanner, RFID reader, vision system, etc.). 
+IdentifiersNotRead E Sent by an identification device (barcode scanner, RFID reader, etc.) when the 
+device attempts to read or interpret an identifier but is unable to do so. 
+IdentifyUnits RR Sent from a station to discover the identifier of the next production unit. 
+7.8 CFX Message Flow The following are examples of the exchange of messages. Other than where explicitly mentioned, all 
+messages are sent from endpoints to the AMQP v1.0 broker, which is responsible to get the messages to reach their intended 
+destination(s). 
+7.8.1 Production Endpoint (Station) Connection The example in Figure 7-1 illustrates the connection and initial introduction 
+phase of a station endpoint into a CFX network. 
+
+===== PAGE 44 =====
+February 2025                  IPC-2591-
+Version 2.0 
+44 
+ 
+Figure 7-1 CFX Station Connection Example Message Flow 
+ 
+The message flow is as follows: 
+1) As soon as the CFX application at the endpoint is running, it sends the CFX.EndPointConnected message. This allows all   
+the connected endpoints the opportunity to know that the endpoint has connected, and the broker will allow it to send and 
+receive messages. 
+2) In the case when an application endpoint has connected to the CFX network, it may want to find out about all other endpoints 
+currently connected, and so in this example it sends the CFX.WholsThereRequest, which is a broadcast message sent to all 
+endpoints. Each endpoint should respond with the CFX.WhoIsThereResponse message. 
+3) Applications that are running on the CFX network when a new endpoint connection is made are likely to want to know 
+information about the endpoint, and so it sends the CFX.WholsThere message specifically to the endpoint(s), and then the 
+endpoint responds with the relevant information. 
+4) After this initial introduction phase, many CFX messages can be exchanged between endpoints of any type. 
+5) Should an endpoint need to be turned off for any reason, it should send the CFX.EndPointShuttingDown message to let all 
+other endpoints know it is disconnecting. 
+7.8.2 Station State Transition The example in Figure 7-2 shows the typical messages sent when a station prepares to start 
+production. This assumes that the station is already connected to the CFX network and the process was previously idle, a state   
+to which it will return. 
+
+
+===== PAGE 45 =====
+February 2025                  IPC-2591-
+Version 2.0 
+45 
+ 
+Figure 7-2 CFX Station State Transition Example Message Flow 
+The message flow is as follows: 
+1) The station sends the CFX.ResourcePerformance.StationStateChanged message with a parameter of “Setup” to indicate       
+the machine setup state is being entered. 
+2) The stations sends the CFX.Production.OperatorActivated message to indicate the responsibility for the operation of the 
+machine. 
+3) The station sends the CFX.Production.RecipeActivated message to indicate a recipe has been activated on the machine. 
+4) The station sends one or more CFX.Materials.MaterialsLoaded messages to indicate the loading of materials to the station    
+as required by the recipe. 
+5) The station sends the CFX.ResourcePerformance.StationStateChanged message, with a parameter of “Ready” to indicate     
+the machine setup state is complete and that the machine is ready for production. 
+6) Once in the ready state, production will take place, with many CFX activity messages exchanged. 
+7) At the end of the run of production, the CFX.ResourcePerformance.StationStateChanged message is sent with a parameter    
+of “On” to indicate the production and all other activity has been completed. 
+This example is a simplified case. Additional messages may be required; for example, to validate the material setup and     
+recipe loaded. 
+7.8.3 Station Processing The example in Figure 7-3 shows a set of CFX messages that may be exchanged during the execution 
+of a production unit. This example assumes the station is in the Ready state. 
+
+
+===== PAGE 46 =====
+February 2025                  IPC-2591-
+Version 2.0 
+46 
+ 
+Figure 7-3 CFX Station Processing Example Message Flow 
+The message flow is as follows: 
+1) The station sends a CFX.Production.UnitsArrived message as a production unit arriving is detected. 
+2) A CFX.InformationSystem.UnitValidation.ValidateUnitRequest is sent to the MES host to confirm the production unit is 
+eligible for processing. The response is sent. This example assumes the response was OK. Other messages may be required  
+prior to this point to interrogate the production unit ID from, for example, a bar code reader. 
+3) The station sends the CFX.Production.WorkStarted message to indicate the processing of the production unit has started. 
+4) Optionally, CFX.ResourcePerformance.WorkExecuted messages can be used to inform the progress of individual operations 
+during the course of execution. 
+5) Should any issues occur during processing, the CFX.ResourcePerformance.FaultOccurred and Cleared messages can be    
+used to communicate the issues. 
+6) Additional messages to show the start and completion of processing where the station has multiple stages can be included. 
+7) Once the processing is done, the CFX.Production.WorkCompleted messages is sent. 
+8) After completion, where materials, etc., have been used, a CFX.Materials.MaterialsInstalled message or similar can be sent. 
+9) For a test or inspection process, for example, an optional CFX.Production.TestAndInspection.UnitsInspected/UnitTested 
+message can be sent, which contains specific information related to the inspection or testing, which can be used in closed       
+loop environments. This can be sent to the broker as with other messages, or it can be targeted to a specific endpoint that is 
+defined to be responsible for closed loop data  processing. 
+ 
+8 CFX TECHNICAL REFERENCE 
+An accompanying part of this standard is the CFX SDK. As part of the requirement to ensure CFX supports the latest machine 
+and production technology requirements, the latest technical information related to CFX is contained within the online SDK 
+documentation area, which can be accessed at http://www.connectedfactoryexchange.com/CFXDemo/sdk. 
+This resource provides details on message data content and formatting as well as details on data types used. This SDK is 
+intended to be updated periodically. 
+
+
+===== PAGE 47 =====
+February 2025                  IPC-2591-
+Version 2.0 
+47 
+APPENDIX A  
+Version Updates 
+As updated versions of IPC-2591 are published, this appendix indicates the changes that occurred between each version update, 
+following the original IPC-2591, Version 1.0 release. Changes to topics of message names are recorded in line in this document, 
+as well as which changes in specific data fields are made in the CFX SDK. This section is intended as a quick reference for all 
+changes. 
+A.1 IPC-2591, Version 1.1 Changes 
+Topics: 
+ㆍNo Changes 
+Messages: 
+ㆍCFX.InformationSystem.UnitV alidation: 
+     - Added Primary Identifier and HermesIdentifier properties to ValidateUnitsRequest message in support of Hermes 
+compatibility. 
+     - Added these properties to CFX.Production.UnitsArrived, CFX.Production.UnitsDeparted, 
+ㆍCFX.Production.UnitsDisqualified, CFX.Production.UnitsInitialized, CFX.Production.WorkStarted, 
+CFX.Sensor.Identification.IdentifiersRead, CFX.Sensor.Identification.IdentifyUnitsResponse and ConditionResult structure. 
+ㆍCFX.Materials.Management.GetMaterialInformationRequest/Response: 
+     - Added messages. 
+ㆍCFX.Materials.Management.MaterialsChainSplit: 
+     - Added message. 
+ㆍCFX.Production.Assembly.MaterialsInstalled: 
+     - Added NonInstalledMaterials property. This allows assembly machines to account for materials that were intentionally     
+not installed during an assembly operation. 
+ㆍCFX.Production.Processing.UnitsProcessed: 
+     - Added structure for Selective Soldering, SelectiveActivity. 
+ㆍCFX.Production.TestAndInspection.UnitsInspected: 
+     - Added additional inspection method, automated X-ray inspection (AXI). 
+     - Added additional test methods, in-circuit test (ICT), flying probe test (FPT), FCT, basic systems test (BST). 
+     - Added RecipeName and RecipeRevision properties so subscribers may know the specific revision of the Recipe in use        
+at the time of inspection. 
+ㆍCFX.Production.TestAndInspection.Unitsested: 
+     - Added additional test methods; now supports, boundary scan, burn-in, printed board flying probe, FCT and ICT. 
+ㆍCFX.Production.WorkStagePaused: 
+     - New parameter added to indicate the reason why the pause has occurred. 
+ㆍCFX.Production.Application.Solder: 
+     - Topic removed - should not be supported. 
+ㆍ CFX.Production.Application.Solder.PCBSelectiveSoldered: 
+     - Message removed - should not be supported. The CFX.Production.Processing.UnitsProcessed should be used in all cases. 
+  
+
+===== PAGE 48 =====
+February 2025                  IPC-2591-
+Version 2.0 
+48 
+ㆍ CFX.Production.Assembly.MaterialsInstalled: 
+     - Now includes a parameter set that lists noninstalled materials (i.e., those that should have been installed but for some  
+reason were not). 
+ㆍCFX.Production.RecipeActivated: 
+     - Updated this message and Recipe structure to include expected cycle time and panel size (units/cycle) in support of     
+overall equipment effectiveness (OEE) calculations. 
+     - Added new parameter NumberOfComponentsPerUnit property in support of components per hour (CPH) calculations. 
+ㆍCFX.Production.UnitsArrived/CFX.Production.UnitsDeparted: 
+     - Added new property Lane. 
+ㆍCFX.Production.UnitsInitialized: 
+     - Added new property TransactionID. 
+ㆍCFX.Production.WorkCompleted: 
+     - Added new properties PrimaryIdentifier, HemesIdentifier and Units collection. 
+Message Structures: 
+ㆍ ActivityState enumeration: 
+     - Added additional activity states On and Off. 
+ㆍ FaultCause enumeration: 
+     - Added additional fault states ElectricalFailure and ServicesFailure. 
+ㆍInspectedUnits/Inspection/Measurement structures: 
+     - Added VerificationResult enumeration. 
+ㆍ MaterialModify Reason enumeration: 
+     - Added additional SensorTriggeredCorrection. 
+ㆍ MaterialPackage data structure: 
+     - Added LeadingMaterialPackage, BatchID, BatchMaterialPackage, and GreyZone properties. 
+ㆍMaterialPackageDetail data structure: 
+     - Added ExpiryDate property. 
+ㆍPCBInspectionRecipe: 
+     - Dynamic structure added, derived from existing Recipe structure. This new structure provides detailed geometric 
+information about the printed board and the components being inspected, so that pick-and-place equipment (and others)         
+may correlate inspection results to printed board layout dynamically. 
+ㆍResourceState enumeration: 
+     - Added additional states SBY NoProductBlocked and SBY NoProductStarved. 
+ㆍSelective Activity: 
+     - New structure created for CFX.ProductionProcessing.UnitsProcessed. 
+ㆍ ValidationType enumeration: 
+     - Added UnitTraceValidation property, used by CFX.InformationSystem.UnitValidation.ValidateUnitsRequest/Response 
+message. 
+  
+
+===== PAGE 49 =====
+February 2025                  IPC-2591-
+Version 2.0 
+49 
+A.2 IPC-2591, Version 1.2 Changes 
+Transport: 
+ㆍStandardized AMQP envelope properties for CFX messages. The content of AMQP 1.0 message properties and application 
+properties is now defined by IPC-2591, allowing for advanced message routing and delivery by compatible brokers and   
+message routing systems. 
+ㆍCompressed message encoding support. CFX messages may now be compressed for transmission viagzip compression, 
+materially reducing the bandwidth requirements. The AMQP message envelope indicates whether the message payload is 
+compressed. 
+Topics: 
+ㆍAdded Topic CFX.Production.LoadingAndUnloading, which is implemented when a production resource is capable of  
+loading or unloading production units into any type of fixture or carrier. This includes depanelization equipment, for       
+example. 
+Messages: 
+ㆍCFX.Heartbeat: 
+     - Added new message Heartbeat, sent periodically by an endpoint as a keep alive and endpoint status mechanism. 
+ㆍCFX.GetEndpointInformationResponse: 
+     - Added new properties SoftwareVersion, Firmware Version, OperatingSystem, OperatingSystemPlatform, and 
+OperatingSystem Version to Endpoint structure. 
+ㆍCFX.InformationSystem.UnitV alidation.ValidateUnitsRequest: 
+     - Added new property Lane to ValidateUnitsRequest, which indicates the production Lane on the endpoint through         
+which the production unit is about to travel. 
+ㆍCFX.Production.ActivitiesExecuted: 
+     - Changed SMTPlacementActivity dynamic structure. 
+     - Changed singular Head property to plural Heads and restructured as a list to reference multiple placement heads in one 
+single activity. 
+ㆍCFX.Production.GetRecipeResponse and CFX.Production.UpdateRecipeRequest: 
+     - Added new UnitLength, Unit Width, and UnitHeight properties to Recipe structure. 
+     - Added new dynan ic structure SolderPastePrintingRecipe, which represents a specialized type of Recipe related to        
+solder paste printing processes. 
+ㆍCFX.Production.ReadingsRecorded: 
+     - Added new dynamic structure C.Structures. VaccumDeposition. CoatingProcessReading, which is a specialized type           
+of Reading sent by endpoints which perform vacuum deposition coating processes. 
+ㆍ CFX.Production.RecipeActivated: 
+     - Added new property RecipeStagesInformation, which indicates the expected cycle time and component count     
+breakdowns for each Stage of the Recipe. 
+ㆍ CFX.Production.RecipeDeactivated: 
+     - Added new message RecipeDeactivated, sent when a recipe is no longer active on a production resource. 
+ㆍCFX.Production.RecipeModified: 
+     - Added new Reason enumeration Deleted to indicate that the recipe has been deleted at the endpoint. 
+ㆍCFX.Production.WorkOrderActionExecuted: 
+     - Added new message WorkOrderActionExecuted to record activities performed on a WorkOrder not directly related to 
+production work transactions. 
+
+===== PAGE 50 =====
+February 2025                  IPC-2591-
+Version 2.0 
+50 
+ㆍCFX.Production.WorkStagePaused: 
+     - Added new PauseReason StoppedByOperator to WorkStagePauseReason enumeration. 
+ㆍCFX.Production.LoadingAndUnloading.UnitsLoaded: 
+     - Added new message UnitsLoaded which indicates when an endpoint loads production units into any type of carrier or 
+fixture. 
+ㆍCFX.Production.LoadingAndUnloading.UnitsUnloaded: 
+     - Added new message UnitsUnloaded which indicates when an endpoint unloads production units from any type of        
+carrier or fixture, such as in the case of depanelization. 
+ㆍCFX.Production.Processing.UnitsProcessed: 
+     - Added new dynamic structure SolderPastePrintingPCBProcessData, which is used to provide detailed trace information 
+related to solder paste printing. 
+ㆍ CFX.Production.TestAndInspection.UnitsTested: 
+     - Added new dynamic structure CFX.Structures.VaccumDeposition.CoatingThicknessMeasurement, which is a       
+specialized type of Measurement sent by endpoints which perform vacuum deposition coating processes. 
+ㆍ CFX.ResourcePerformance.FaultOccurred: 
+     - Added new property Transactionld to Fault structure, which may be used to relate a specific Fault to a particular work 
+transaction established by a WorkStarted message. 
+    - Added new enumeration type ProcessError to FaultCause enumeration. 
+A.3 IPC-2591, Version 1.3 Changes 
+Topics: 
+ㆍAdded Topic CFX.Maintenance, which is implemented when a resource is capable of exposing maintenance information     
+and responding to maintenance requests. 
+ㆍ Added Topic CFX.Production.Hermes, which is implemented by endpoints that support the HERMES standard. 
+Messages: 
+ㆍCFX.GetEndpointInformationResponse: 
+     - Added new property SupportedPCBDimensions to Endpoint structure which defines the maximum and minimum 
+dimensions to which a PCB panel or fixture must conform. 
+     - Added new property SleepStates to Endpoint structure which identifies the energy conservation modes supported by         
+the endpoint. 
+ㆍ CFX.NotSupportedResponse: 
+     - Added new response type message that may be sent in response to any request type message indicating that the         
+endpoint does not support the request that was made by another endpoint. 
+ㆍ CFX.Maintenance.GetResourceInformationRequest/GetResourcelnformationResponse: 
+     - Added new request/response messages to obtain detailed information about the resources and sub-resources contained 
+within an endpoint that main require maintenance. 
+ㆍ CFX.Maintenance.GetResourceMaintenanceAndServiceRequest/GetResourceMaintenanceAndServiceResponse: 
+     - Added new request/response messages to obtain detailed maintenance related information regarding the resources and   
+sub-resources contained within an endpoint. 
+ㆍCFX.Maintenance.GetResourceMaintenanceStatusRequest/GetResourceMaintenanceStatusResponse: 
+     - Added new request/response messages to obtain detailed information regarding the status of the resources and sub- 
+resources contained within an endpoint. 
+  
+
+===== PAGE 51 =====
+February 2025                  IPC-2591-
+Version 2.0 
+51 
+ㆍ CFX.Maintenance.GetResourceSetupRequest/GetResourceSetupResponse: 
+     - Added new request/response messages to obtain detailed information regarding the status of removeable maintenance 
+resources and sub-resources currently attached to an endpoint. 
+ㆍ CFX.Maintenance.ResourcelnformationEvent: 
+     - Added new event type message that periodically reports the current resources and sub-resources contained within an 
+endpoint. 
+ㆍCFX.Maintenance.ResourceMaintenance AndServiceEvent: 
+     - Added new event type message that periodically reports maintenance and service information related to resources and    
+sub-resources contained within an endpoint. 
+ㆍCFX.Maintenance.ResourceMaintenanceStatusEvent: 
+     - Added new event type message that periodically reports status of resources and sub-resources contained within an   
+endpoint. 
+ㆍCFX.Maintenance.ResourceSetupEvent: 
+     - Added new event type message that periodically reports when detachable resources are setup at an endpoint. 
+ㆍCFX.Production.GetRecipeResponse: 
+     - Added new dynamic recipe structure for SPI equipment called SolderPasteInspectionRecipe. 
+     - Added new property UnitPositionNumber to Board structure used by dynamic PCBInspectionRecipe dynamic recipe 
+structure for AOI equipment. 
+     - Added new property PartNumber to Component structure used by dynamic PCBInspectionRecipe dynamic recipe    
+structure for AOI equipment. 
+ㆍ CFX.Production.RecipeActivated: 
+     - Added new property RelevantSurface that identifies the surface of the product to which the recipe applies. 
+     - Added new property TargetQuantity that reports the total number of production units intended to be produced by the         
+run associated with the newly activated recipe. 
+     - Added new property WorkOrderldentifier that identifies the Work Order and/or Batch that will be produced by the        
+newly activated recipe. 
+ㆍ CFX.Production.Assembly.MaterialsInstalled and CFX.Production.Assembly.MaterialsUninstalled: 
+     - Added new property Stage to InstalledComponent structure that identifies the stage within the endpoint that performed     
+the installation or uninstallation. 
+ㆍ CFX.Production.Hermes.GetMagazineDataRequest/GetMagazineDataResponse: 
+     - Added new request/response messages that allows an endpoint to request information about a Hermes magazine. 
+ㆍCFX.Production.Hermes.MagazineArrived: 
+     - Added new event type message that allows an endpoint to signal when it has received a Hermes-enabled magazine 
+containing production units. 
+ㆍ CFX.Production.Hermes.MagazineDeparted: 
+     - Added new event type message that allows an endpoint to signal when a Hermes-enabled magazine containing      
+production units has departed from the endpoint. 
+ㆍ CFX.Production.Hermes.GetWorkOrderDataRequest/GetWorkOrderDataResponse: 
+     - Added new request/response type messages that may be used by an endpoint to acquire information related to a       
+particular work order (typically at the beginning of a Hermes-enabled line). This information would typically then be          
+passed down the line through the Hermes protocol/mechanism. 
+  
+
+===== PAGE 52 =====
+February 2025                  IPC-2591-
+Version 2.0 
+52 
+ㆍ CFX.Production.TestAndInspection.UnitsInspected: 
+     - Added new property RefNo to the Inspection structure that identifies the part of the Recipe to which the Inspection    
+applies. 
+     - Added new properties A, AR, EA, PX, PY , and RXY to SolderPasteMeasurement dynamic structure. 
+ㆍCFX.ResourcePerformance.CalibrationPerformed: 
+     - Added new property Status to Calibration structure indicating the current status of the calibration effort. 
+     - Added new property Calibration Time to Calibration structure indicating when that particular calibration was        
+performed. 
+ㆍCFX.ResourcePerformance.EnergyConsumed: 
+     - Added new properties CurrentNow, CurrentNowRYB, FrequencyNow, MeanCurrent, MeanCurrentRYB,      
+MeanFrequency, MeanPower, MeanPowerRYB, MeanV oltage,MeanV oltageRYB, MinimumCurrent, 
+MinimumCurrentRYB,MinimumFrequency, MinimumPowerRYB, MinimumV oltage, MinimumV oltageRYB,     
+PeakCurrent, PeakCurrentRYB, PeakV oltage, PeakV oltageRYB,  PowerFactorNow,  PowerFactoryRYB,  PowerNow,  
+PowerNowRYB,  ThreePhaseNeutralCurrentNow, V oltageNow, and V oltageNowRYB to allow more detailed energy 
+consumption reporting. 
+A.4 IPC-2591, Version 1.4 Changes 
+Topics: 
+ㆍAdded Topic CFX.InformationSystem.DataTransfer, which is implemented when a resource is capable transferring data 
+packages (e.g., IPC-2581 design data) from one endpoint to another. 
+ㆍAdded Topic CFX.Production.ReworkAndRepair, which is implemented by endpoints involved in the repair and/or rework of 
+production units. 
+Messages: 
+ㆍCFX.InformationSystem.FileTransferequest/FileTransferesponse 
+     - Added new request/response message to allow an endpoint to initiate a file transfer between itself and another endpoint. File 
+transfers may proceed either from the initiator/requester to the recipient (PUSH Mode), or from recipient to initiator/requester 
+(PULL Mode). File transfers may also be In-Band, meaning the file data payload is included in the CFX message directly and  
+transferred via the AMQP protocol. They may also be Qut-of-Band, meaning a secure link to the data file is passed via the CFX 
+message over AMQP protocol, and a secondary protocol (such as HTTPS or SFTP) is then used to transfer the file data payload, 
+independent of the AMQP message stream. 
+ㆍ CFX.Production.GetAvailableRecipesRequest/GetAvailableRecipesResponse 
+     - Added new request/response messages that allow an endpoint to query another endpoint for a listing of all available recipes 
+that are resident on that endpoint (or at a specific folder or location on that endpoint). 
+ㆍCFX.Production.GetUnitInfoRequest/GetUnitInfoResponse 
+     - Added new request/response messages that allow an endpoint to query another endpoint for information related to a specific 
+production unit or grouping of production units (i.e., in the case of a printed board panel). For example, this new 
+request/response pairing enables an endpoint to obtain the bad-mark mapping of a particular panel from another endpoint that 
+has such knowledge. This could be used as an alternative to scanning the whole panel, searching for bad-marks, thereby saving 
+valuable production time. 
+ㆍCFX.Production.ReworkAndRepair.UnitsRepaired 
+     - Added new event type message that allows an endpoint to provide detailed information related to the repair and rework of 
+production units previously found to be defective. 
+ㆍ CFX.Production.Hermes.GetWorkOrderDataResponse 
+     - Added new property Route to existing message that enables routing information to be passed to downstream endpoints. 
+  
+
+===== PAGE 53 =====
+February 2025                  IPC-2591-
+Version 2.0 
+53 
+ㆍCFX.ResourcePerformance.LogEntryRecorded 
+     - Added new property Additionallnfo that enables an endpoint to provide additional detail related to the log entry. This       
+new property is a dynamic structure and may be overidden to provide different information for different types of           
+endpoints. 
+ㆍ CFX.Structures.Defect, CFX.Stuctures.Symptom, CFX.Structures.Image 
+     - Added new property Status to both structures. This new property  is an enumeration that permits the lifecycle of an        
+issue (a Defect or a Symptom) to be tracked. This is related to the new CFX.Production.ReworkAndRepair topic and    
+messages. 
+     - Added new properties ImageURL and TransferMode to the preexisting Image data structure used by the Defect data 
+tructure. These new properties enable images of the defects to be transferred Out-of-Band, similar to the new 
+FileDataTransferRequest/Response functionality. 
+ㆍCFX.Structures.ProcessingResult, CFX.Structures.TestResult, CFX.Structures.ValidationStatus, CFX.Structures.    
+WorkResult 
+     - Added new value Skipped to all of these preexisting enumerations to support bad-marks. 
+ㆍCFX.Structures.RejectionReason 
+     - Added new value BadVisionTestBeforePickup to this preexisting enumeration used by the 
+CFX.Production.Assembly.MaterialsInstalled message. 
+ㆍCFX.Structures.InspectedUnit 
+     - Added new property TotalInspectionCount to this preexisting data structure used by the 
+CFX.Production.TestAndInspection.UnitsInspected message. 
+ㆍCFX.Structures.InstalledMaterial 
+     - Added new property QuantityNonInstalled to this preexisting data structure used by the 
+CFX.Production.Assembly.MaterialsInstalled message. 
+A.5 IPC-2591, Version 1.5 Changes 
+Topics: 
+ㆍNo changes 
+Messages: 
+ㆍCFX.Production.ToolsCleaned 
+     - Added new event type message indicating that one or more Tools have been cleaned. 
+ㆍCFX.Production.ToolsLoaded 
+     - Added new event type message indicating that one or more Tools have been loaded at an endpoint. 
+ㆍCFX.Production.ToolsUnloaded 
+     - Added new event type message indicating that one or more Tools have been unloaded at an endpoint. 
+ㆍCFX.ResourcePerformance.ProcessDataRecorded 
+     - Added new event type message allowing an endpoint to indicate that processing of some kind has occurred outside of    
+main flow of production. This is complimentary to the UnitsProcessed message, which indicates that processing has        
+occurred within the main flow of production, involving production units. 
+ㆍCFX.Production.UnitsProcessed 
+     - Augmentedyamic strctures used by this message to include support for cleanig and depaneling (router) type           
+equipment (see details in Data Structures section). 
+  
+
+===== PAGE 54 =====
+February 2025                  IPC-2591-
+Version 2.0 
+54 
+Data Structures: 
+ㆍCFX.Structures.FaultCause 
+     - Added new value to this enumeration: RejectedComponent. 
+ㆍCFX.Structures.InstalledMaterial 
+     - New property ReferencePartNumber added to pre-existing InstalledMaterial structure. 
+ㆍCFX.Structures.MaterialPackageDetail 
+     - Added to property and dynamic structure PackagingInfo to MaterialPackageDetail structure. This new property/       
+dynamic structure allows endpoints to specify details, such as dimensions, related to the physical packaging of the            
+material (tape reel, tube, box, etc.). 
+     - Added new properties to the pre-existing MaterialPackageDetail data structure: BatchId, GreyZone,   
+InternalPackageName, PackagingInfo, PartPrice, PartPriceUnit. 
+ㆍCFX.Structures.PackagingInfo 
+     - Added to dynamic structure PackagingInfo. This new dynamic structure allows endpoints to specify details, such as 
+dimensions,  related to the physical packaging of a material (tape reel, tube, box, etc.). 
+ㆍCFX.Structures.UnitPosition 
+     - New property Status added to pre-existing UnitPosition structure, which is used to indicate the processing outcome of        
+an individual unit processed together with a group of units. 
+ㆍCFX.Structures.UnitStatus 
+     - Added new enumeration UnitStatus, which is used by the pre-existing UnitPosition structure to indicate the processing 
+outcome of an individual unit processed together with a group of units. 
+ㆍCFX.Structures.VerificationResult 
+     - Added new values to this enumeration: DefectAccepted, DefectClosed, DefectRepaired. This is used by the pre-        
+existing Defect data structure. 
+ㆍCFX.Structures.Cleaning.CleaningProcessData 
+     - Added new dynamic structure to support cleaning type equipment. This structure can be utilized by the UnitsProcessed    
+and ProcessDataRecorded messages to report detailed information specific to cleaning processes. 
+ㆍCFX.Structures.Cleaning.CleaningManagementData 
+     - Added new dynamic structure to support cleaning type equipment. This structure can be utilized by the UnitsProcessed    
+and ProcessDataRecorded messages to report detailed information specific to cleaning processes. 
+ㆍCFX.Structures.Coating.CoatingMeasurement 
+     - Added new properties to this pre-existing structure: Axis, FluidPressure, NozzleWidth. 
+ㆍCFX.Structures.Coating.CoatingMeasurementType 
+     - Added new values to this enumeration: Axis, Fluidweight, Heater, MaterialLevel, Monitor, NozzleWidth. 
+ㆍCFX.Structures.Coating.CoatingNozzle 
+     - Added new structure CoatingNozzle, used by CoatingProcessData dynamic structure. 
+ㆍCFX.Structures.Coating.CoatingNozzleData 
+     - Added new structure CoatingNozzleData, used by CoatingProcessData dynamic structure. 
+ㆍCFX.Structures.Coating.CoatingProcessData 
+     - Added new property Nozzle to this pre-existing dynamic structure. 
+  
+
+===== PAGE 55 =====
+February 2025                  IPC-2591-
+Version 2.0 
+55 
+ㆍCFX.Structures. Depaneling.RouterToolProcessData 
+     - Added new dynamic structure to support depaneling / router type equipment. This structure can be utilized by the 
+UnitsProcessed and ProcessDataRecorded messages to report detailed information specific to depaneling and routing    
+processes. 
+ㆍCFX.Structures.SMTPlacement.SMDBulkCaseFeeder 
+     - Added new dynamic structure SMDBulkCaseFeeder, a specific type of MaterialCarrier, that represents a bulk type    
+material feeder used by SMD equipment. 
+ㆍCFX.Structures. SMTPlacement.SMDTapePackagingInfo 
+     - Added new dynamic structure SMDTapePackagingInfo, a specific type of PackagingInfo, that represents a reel of taped 
+SMD parts. 
+ㆍCFX.Structures.SMTPlacement.SMDTubePackagingInfo 
+     - Added new dynamic structure SMDTubePackagingInfo, a specific type of PackagingInfo, that represents a tube of SMD 
+parts. 
+ㆍCFX.Structures.SMTPlacement.SMTPlacementFaultType 
+     - Added new values to this enumeration: FeederError, LowQuantity, PartsPartiallyExhaust. 
+ㆍCFX.Structures.SMTPlacement.SMTStageInformation 
+     - Added new dynamic structure SMTStagelnformation, a specific type of Stagelnformation, that represents a stage within 
+SMT type equipment. This is part of the schema used by the GetEndpointInformationRequest/Response messages. 
+ㆍCFX.Structures.SolderPastePrinting.SMTSqueegee 
+     - Added new property CleaningState to this pre-existing data structure. 
+ㆍCFX.Structures.SolderPastePrinting.SMTStencil 
+     - Added new property CleaningState to this pre-existing data structure.  
+A.6 IPC-2591, Version 1.6 Changes 
+Topics: 
+No changes 
+Messages: 
+ㆍ CFX.Production.RecipeActivated 
+     - Added new property ExpectedWork Time that represents the expected amount of time that the equipment will spend 
+processing each unit for this recipe. 
+ㆍ CFX.Production.RecipeDeactivated 
+     - Added new property WorkOrderldentifier that represents the work order that was just deactivated. 
+ㆍ CFX. Production.RecipeModified 
+     - Added new property WorkOrderldentifier that represents the work order associated with the recipe modification. 
+ㆍ CFX.Production.TestAndInspection.UnitsInspected 
+     - Added new property InspectedPanel, which is an optional field that represents a summary of inspections performed on         
+a printed board panel. 
+ㆍ CFX.Production.Processing.UnitsProcessed 
+     - Augmented dynamic structures used by this message to include support for U curing type equipment (see details in         
+Data Structures for this section). 
+  
+
+===== PAGE 56 =====
+February 2025                  IPC-2591-
+Version 2.0 
+56 
+ㆍ CFX.Production.WorkCompleted 
+     - Added new PerformanceImpacts property that summarizes a list of conditions that impacted the equipment's performance 
+during the processing of a given unit. 
+ㆍ CFX. Production. WorkOrderActionExecuted 
+     - Added new properties Recipe Name, RecipeRevision and RelevantSurface to identify details of a recipe associated to a 
+given work order. 
+ㆍ CFX.Production.WorkStageCompleted 
+     - Added new Performancelmpacts property that summarizes a list of conditions that impacted the equipment's       
+performance during the processing of a given unit within a particular equipment stage. 
+Data Structures: 
+ㆍ CFX.Structures.FiducialInfo 
+     - Added new property Uniqueldentifier, intended to distinctly identify a particular fiducial. 
+ㆍ CFX.Structures.MaterialCarrier 
+     - Added new property ParentCarrier to allow for subcarrier situations. 
+ㆍ CFX.Structures.OperatingSystem 
+     - Added new value to this enumeration: Windows11 
+ㆍ CFX.Structures.UnitStatus 
+     - Added new value to this enumeration: Skip 
+ㆍ CFX.Structures.Recipe 
+     - Added new property Expected Work Time, representing the expected amount of time the equipment will spend      
+processing each unit for this recipe. 
+ㆍ CFX.Structures.RecipeStagelnformation 
+     - Added new property Expected Work Time, representing the expected amount of time the equipment will spend      
+processing each unit for this recipe at a particular stage. 
+ㆍ CFX.Structures.SolderPasteInspection.SolderPasteInspectionRccipe 
+     - Added new property Fiducials to this data structure, indicating information about the fiducials associated with the        
+recipe. 
+ㆍ CFX.Structures.UVCuring.UVCuringProcessData 
+     - Added new dynamie structure derived from ProcessData, allowing UV Curing type equipment to report process data     
+using the UnitsProcessed CFX message. 
+ㆍ CFX.Structures.UVCuring.UVCuringGlassPlate 
+     - New data structure used by the UVCuringProcessData dynamic structure. 
+ㆍ CFX.Structures.UVCuring.UVCuringLampData 
+     - New data structure used by the UVCuringProcessData dynamic structure. 
+A.7 IPC-2591, Version 1.7 Changes 
+Topics: 
+ㆍ Added Topic CFX.InformationSystem.OperatorValidation, which is implemented by endpoints that need to validate 
+Activation of operator with an external system. 
+  
+
+===== PAGE 57 =====
+February 2025                  IPC-2591-
+Version 2.0 
+57 
+Messages: 
+ㆍ CFX.Production.TestAndInspection.GetInspectionInfoRequest/GetInspectionInfoResponse 
+     - Added new request/response message pair optionally implemented test and inspection systems, which allows other         
+CFX endpoints to query for a list of inspections and tests performed on a specific set of units. 
+ㆍ CFX.Heartbeat 
+     - Added new properties ActiveFaults and ActiveRecipes that indicate if there are any open (unaddressed faults) and the 
+currently active recipe at the endpoint, respectively. 
+ㆍ CFX.InformationSystem.OperatorValidation.ValidateOperatorRequest/ValidateOperatorResponse 
+     - Added new request/response message pair optionally implemented by factory software systems that allows equipment      
+and other endpoints validate that a given operator is qualified and permitted to operate a certain piece of equipment                    
+or perform a certain task. 
+ㆍ CFX.Materials.Storage.GetLoadedMaterialsRequest 
+     - Added new optional property ResourceUniqueIdentifier that allows the requestor to identify the specific resource in     
+which they are interested. 
+Data Structures: 
+ㆍ CFX.Structures.MaterialCarrierLocation 
+     - Added new property ResourceLocation that identifies the resource to which the MaterialCarrierLocation is associated. 
+ㆍ CFX.Structures.Resource 
+     - Added new property Type that indicates the type of material storage  resource (e.g., Shelf, Storage Tower, Machine). 
+ㆍ CFX.Structures.UnitInfo 
+     - Added new property CRDs, which is a list of specific component reference designators that are relevant to a particular 
+transaction. 
+A.8 IPC-2591, Version 2.0 Changes 
+Topics: 
+ㆍ Added Topic CFX.InformationSystem.TopicValidation, which is implemented by an endpoints which allows other endpoints 
+to discover the validation types supported by the responding endpoint. 
+Messages: 
+ㆍ CFX.Materials.Transport.CreateTransportOrderRequest/Response and CFX.Materials.Transport.StartTransferRequest/Response 
+     - Added new request/response messages to create transport orders and respond to order requests for managers and to      
+inform a machine than an AMR has arrived at its location and materials can be transferred from/to the AMR to/from the 
+machine. 
+ㆍ CFX.Production.LoadingAndUnloading.UnitsLoaded/Unloaded, CFX. Production.UnitsDisqualified, CFX.Production.UnitaInitialized 
+     - Added new property UnitCount to account for the number of individual production units. 
+ㆍ CFX.ResourcePerformance.CalibrationPerformed 
+     - Added new property UnitCount to account for the number of individual production units. 
+ㆍ CFX.Production.Processing.UnitsProcessed 
+     - Added support for wave solder equipment via new CFX.Structures.SolderWave.WaveProcessData data structure, and new 
+related sub-structures in CFX.Structures.SolderWave namespace. 
+     - Added support for hand solder operations via new CFX.Structures.HandSoldering.HandSolderingBoardProcessData data 
+structure, and new related sub-structures in CFX.Structures.HandSoldering namespace. 
+
+===== PAGE 58 =====
+February 2025                  IPC-2591-
+Version 2.0 
+58 
+Data Structures: 
+ㆍ CFX.Production.AppliedMaterial 
+     - Added new structure AppliedMaterial  to describe the quantity of the material that was applied to a production unit,         
+with defined units and thresholds. 
+ㆍ CFX.Structures.CalibrationMeasurement 
+     - Added new structure CalibrationMeasurement to provide a list of  measurements captured during a calibration process. 
+ㆍ CFX.Structures.SMTPlacement.SMDMultiTrayFeeder 
+     - Added new structure SMDMultiTrayFeeder to accommodate multiple trays. 
+ㆍ CFX.Structures.SMTPlacement.SMDTrayPackagingInfo 
+     - Added new structure SMDTrayPackagingInfo to support collection of packaging information for an SMD tape. 
+ㆍ CFX.Structures.TransportedMaterial 
+     - Added new structure TransportedMaterial, which contains lists of transported materials and provides a dedicated list by  
+type of material. 
+ㆍ CFX.Structures.ValidationData 
+     - Added new dynamic structure ValidationData which includes MaterialCarrierValidationTopicData to represent          
+Material Carriers that need to be identified, MaterialValidationTopicData to represent materials that need to be              
+identified, RecipeValidationTopicData to represent the information of a recipe that needs to be validated by 
+ValidateTopicRequest, and ToolV alidationTopicData to represent tools that need to be validated. 
+ㆍ CFX.Structures.TransportPriority 
+     - Added new enumeration TransportPriority to specify the priority (low, medium, high) of a transport. 
+ㆍ CFX.Structures.Conveyor 
+     - Added new properties CenterSupportHeightReadingPoint, CenterSupportHeightSetPoint, 
+CenterSupportPositionReadingPoint, CenterSupportPositionSetPoint, Sequence, SpeedReadingPoint, SpeedSetPoint, 
+WidthReadingPoint, WidthSetPoint. 
+ㆍ CFX.Structures.InspectedPanel 
+     - Added new property PCBVariant to provide the identification of the PCB variant. 
+ㆍ CFX.Structures.NumericValue 
+     - Added new properties MaximumAcceptableValueUnits and MinimumAcceptableValueUnits to provide maximum and 
+minimum acceptable values represent in valid SI units. 
+ㆍ CFX.Structures.SMTPlacement.SMTInstalledComponent 
+     - Added new properties InstallationSequence to provide the installation sequence within the corresponding placement      
+cycle for this material/part, PickingSequence to provide the picking sequence within the corresponding picking cycle                
+for this material/part and PickingTime to provide the specific time when the material/part was picked or attempted to                 
+be picked. 
+ㆍ CFX.Structures.SMTPlacement.SMTNonInstalledComponent 
+     - Added new properties PickingSequence to provide the picking sequence within the corresponding picking cycle for this 
+material/part and PickingTime to provide the specific time when the material/part was picked or attempted to be                 
+picked. 
+ㆍ CFX.Structures.SMTPlacement.SMTPlacementFault 
+     - Added new properties NumberOfTriesBeforeError to provide occurrences of errors that have resulted in this fault       
+(mostly relevant for PartExhaust, FeederError, NozzleError and HeadError types of placement faults) and   
+ReferencePartNumber which indicates the original part number if the material package is used as an alternate part. 
+  
+
+===== PAGE 59 =====
+February 2025                  IPC-2591-
+Version 2.0 
+59 
+ㆍ CFX.Structures.SolderPastePrinting.SolderPastePrintingPCBProcessData 
+     - Added new propertie PrePrintStretch and PostPrintStretch to provide the relative stretch ratio of a printed board before     
+and after printing. 
+ㆍ CFX.Structures.UnitPosition 
+     - Added new property Z to provide the z coordinate of a Production unit origin, as it is known to the endpoint, expressed       
+in mm. 
+  
+
+===== PAGE 60 =====
+February 2025                  IPC-2591-
+Version 2.0 
+60 
+APPENDIX B - Acronyms and Abbreviations 
+AMQP - Advanced Message Queuing Protocol 
+AOI - Automated optical inspection 
+AXI - Automated X-ray inspection 
+BOM - Bill of materials 
+BST - Basic systems test 
+CAD - Computer-aided design 
+CFX - Connected Factory Exchange 
+CPH - Components per hour 
+ERP - Enterprise resource planning 
+FCT - Functional test 
+FPT - Flying probe test 
+IC - Integrated circuit 
+ICT - In-circuit test 
+IIoT - Industrial Internet of Things 
+IoT - Internet of Things 
+IT - Information technology 
+JSON - JavaScript Object Notation 
+KPI - Key performance indicator 
+MES - Manufacturing execution systems 
+MSD - Moisture-sensitive device 
+OEE - Overall equipment effectiveness 
+PLM - Product lifecycle management 
+RFID - Radio-frequency identification 
+SDK - Software development kit 
+SMEMA -Surface Mount Equipment Manufacturers Association 
+SMT - Surface-mount technology 
+SPI - Solder paste inspection 
+THT - Through-hole technology 

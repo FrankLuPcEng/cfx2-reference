@@ -2,6 +2,7 @@ let P = {}, MSGS = {}, FLOWS = [], SCENARIOS = [];
 let curFlow = null, curMsg = null, msgFilter = 'all', curMode = 'flows', curMachine = null, curScenario = null;
 
 async function init() {
+  initTheme();
   try {
     const [pRes, mRes, fRes, sRes] = await Promise.all([
       fetch('data/participants.json'),
@@ -51,12 +52,41 @@ function setupListeners() {
     if (g) selectMsg(g.dataset.msg);
   });
 
-  // Event delegation for detail panel close button
+  // Event delegation for detail panel close button + copy button
   document.getElementById('detail-panel').addEventListener('click', e => {
     if (e.target.closest('.xbtn')) {
       if (curMsg) selectMsg(curMsg);
     }
+    const copyBtn = e.target.closest('.copy-btn');
+    if (copyBtn) {
+      const text = copyBtn.closest('.cb-wrap')?.querySelector('.cb')?.textContent ?? '';
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.textContent = '已複製！';
+        copyBtn.classList.add('copied');
+        setTimeout(() => {
+          copyBtn.textContent = '複製';
+          copyBtn.classList.remove('copied');
+        }, 1500);
+      }).catch(() => {});
+    }
   });
+
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+}
+
+function initTheme() {
+  const saved = localStorage.getItem('cfx-theme');
+  const prefersDark = !saved && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const dark = saved === 'dark' || prefersDark;
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  document.getElementById('theme-toggle').textContent = dark ? '☾' : '☀';
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  document.documentElement.dataset.theme = isDark ? 'light' : 'dark';
+  localStorage.setItem('cfx-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-toggle').textContent = isDark ? '☀' : '☾';
 }
 
 function setMode(mode, btn) {
@@ -80,6 +110,7 @@ function setMode(mode, btn) {
     search.placeholder = '搜尋訊息…';
     main.classList.add('msg-mode');
     dp.classList.remove('hidden');
+    document.title = '訊息瀏覽器 — CFX 2.0 Reference';
     document.getElementById('ftitle').textContent = '訊息瀏覽器';
     document.getElementById('fdesc').textContent  = '← 從左側選擇 CFX 訊息查看規格與 JSON 範例';
     document.getElementById('fbadge').style.display = 'none';
@@ -92,6 +123,7 @@ function setMode(mode, btn) {
     curMachine = null;
     sw.style.display = 'none';
     fbar.style.display = 'none';
+    document.title = '機台視角 — CFX 2.0 Reference';
     document.getElementById('fbadge').style.display = 'none';
     document.getElementById('ftitle').textContent = '機台視角';
     document.getElementById('fdesc').textContent  = '← 選擇機台類型查看 CFX 2.0 實作清單';
@@ -104,6 +136,7 @@ function setMode(mode, btn) {
     curScenario = null;
     sw.style.display = 'none';
     fbar.style.display = 'none';
+    document.title = '情境視角 — CFX 2.0 Reference';
     document.getElementById('fbadge').style.display = 'none';
     document.getElementById('ftitle').textContent = '情境視角';
     document.getElementById('fdesc').textContent  = '← 選擇製程情境查看跨流程的 CFX 訊息全貌';
@@ -117,6 +150,7 @@ function setMode(mode, btn) {
     search.value = '';
     search.placeholder = '搜尋流程…';
     if (curFlow) {
+      document.title = `${curFlow.label} — CFX 2.0 Reference`;
       document.getElementById('ftitle').textContent = curFlow.label;
       document.getElementById('fdesc').textContent  = curFlow.desc;
       const b = document.getElementById('fbadge');
@@ -128,6 +162,7 @@ function setMode(mode, btn) {
       fbar.style.display = 'flex';
       renderSeq(curFlow);
     } else {
+      document.title = 'CFX 2.0 Message Reference';
       document.getElementById('ftitle').textContent = '選擇左側流程';
       document.getElementById('fdesc').textContent  = '← 選擇 SMT 流程以查看 CFX 2.0 訊息循序圖';
       fbar.style.display = 'none';
@@ -429,6 +464,7 @@ function renderSidebar(term = '') {
 function selectFlow(flow) {
   curFlow = flow;
   curMsg = null;
+  document.title = `${flow.label} — CFX 2.0 Reference`;
   document.getElementById('detail-panel').classList.add('hidden');
   document.querySelectorAll('.flow-item').forEach(e => e.classList.remove('active'));
   document.querySelectorAll('.flow-item').forEach(e => {
@@ -566,6 +602,7 @@ function selectMsg(msgName) {
   if (!m) return;
   if (curMsg === msgName) {
     curMsg = null;
+    document.title = 'CFX 2.0 Message Reference';
     if (curMode === 'messages') {
       showMsgPlaceholder();
       renderMsgList(document.getElementById('search').value);
@@ -576,6 +613,7 @@ function selectMsg(msgName) {
     return;
   }
   curMsg = msgName;
+  document.title = `${msgName} — CFX 2.0 Reference`;
   if (curMode === 'flows' && curFlow) renderSeq(curFlow);
   if (curMode === 'messages') renderMsgList(document.getElementById('search').value);
 
@@ -585,7 +623,7 @@ function selectMsg(msgName) {
   if (m.fields?.length) {
     fh = `<div class="sl">欄位規格</div><table class="ft"><thead><tr><th>欄位名稱</th><th>型別</th><th>必填</th><th>說明</th></tr></thead><tbody>`;
     m.fields.forEach(f => {
-      fh += `<tr><td class="fn">${f.name}</td><td class="ftype">${f.type}</td><td><span class="rb ${f.req ? 'req' : 'opt'}">${f.req ? 'Required' : 'Optional'}</span></td><td style="color:#454f6b;font-size:11px">${f.desc}</td></tr>`;
+      fh += `<tr><td class="fn">${f.name}</td><td class="ftype">${f.type}</td><td><span class="rb ${f.req ? 'req' : 'opt'}">${f.req ? 'Required' : 'Optional'}</span></td><td style="color:var(--text2);font-size:11px">${f.desc}</td></tr>`;
     });
     fh += `</tbody></table>`;
   }
@@ -595,9 +633,12 @@ function selectMsg(msgName) {
         <span class="badge" style="color:${dc};border-color:${dc}44;background:${dc}15">${dl}</span></div>
       <button class="xbtn">✕</button>
     </div>
-    <p style="font-size:12px;color:#454f6b;line-height:1.75">${m.desc}</p>
+    <p style="font-size:12px;color:var(--text2);line-height:1.75">${m.desc}</p>
     <div class="sl">JSON 範例</div>
-    <div class="cb">${esc(m.schema)}</div>
+    <div class="cb-wrap">
+      <div class="cb">${esc(m.schema)}</div>
+      <button class="copy-btn">複製</button>
+    </div>
     ${fh}
     ${m.notes ? `<div class="nb">⚠ ${m.notes}</div>` : ''}`;
   document.getElementById('detail-panel').classList.remove('hidden');
