@@ -118,7 +118,6 @@
         "badgeText": "WIP",
         "badgeColor": "#1565c0",
         "participants": [
-          "UPSTREAM",
           "PROCESS",
           "TRACEABILITY",
           "DOWNSTREAM"
