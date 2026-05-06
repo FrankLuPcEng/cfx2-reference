@@ -49,7 +49,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 .modal-body section li{font-size:12px;line-height:1.6;color:var(--text2);}
 .modal-body a{color:var(--accent);text-decoration:none;}
 .modal-body a:hover{text-decoration:underline;}
-.grp-hdr{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:10px 14px 3px;}
+.grp-hdr{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:10px 14px 3px;cursor:pointer;display:flex;align-items:center;gap:5px;user-select:none;}
+.grp-hdr:hover{color:var(--text2);}
+.grp-chevron{font-size:9px;transition:transform 0.2s ease;flex-shrink:0;}
+.grp-block.collapsed .grp-chevron{transform:rotate(-90deg);}
+.grp-items{max-height:2000px;overflow:hidden;transition:max-height 0.25s ease;}
+.grp-block.collapsed .grp-items{max-height:0;}
 .flow-item{display:flex;align-items:center;gap:7px;padding:6px 14px;cursor:pointer;border-left:3px solid transparent;font-size:12px;color:var(--text2);transition:all 0.1s;}
 .flow-item:hover{background:var(--bg3);color:var(--text);}
 .flow-item.active{background:var(--bg4);border-left-color:var(--accent);color:var(--accent2);font-weight:600;}

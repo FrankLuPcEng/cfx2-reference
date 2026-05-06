@@ -671,7 +671,10 @@ function renderMsgList(term = '') {
 
   sortedMods.forEach(mod => {
     const grp = document.createElement('div');
-    grp.innerHTML = `<div class="grp-hdr">${MOD_LABELS[mod] || mod}</div>`;
+    grp.className = 'grp-block';
+    grp.dataset.grp = mod;
+    grp.innerHTML = `<div class="grp-hdr" role="button" tabindex="0" aria-expanded="true"><span class="grp-chevron" aria-hidden="true">▾</span>${MOD_LABELS[mod] || mod}</div><div class="grp-items"></div>`;
+    const itemsEl = grp.querySelector('.grp-items');
     groups[mod].forEach(msg => {
       const shortName = msg.key.split('.').pop();
       const dc = msg.dir === 'response' ? '#555e70' : msg.dir === 'event' ? '#1a7a40' : '#1565c0';
@@ -680,9 +683,32 @@ function renderMsgList(term = '') {
       d.className = 'msg-item' + (curMsg === msg.key ? ' active' : '');
       d.innerHTML = `<span class="msg-dir" style="color:${dc};border-color:${dc}44;background:${dc}15">${dl}</span><span class="msg-name" title="${msg.key}">${shortName}</span>`;
       d.addEventListener('click', () => selectMsg(msg.key));
-      grp.appendChild(d);
+      itemsEl.appendChild(d);
     });
     el.appendChild(grp);
+    if (!t) {
+      const key = `cfx-acc-msgs-${mod}`;
+      initAccordion(grp, key);
+      if (grp.querySelector('.msg-item.active')) {
+        grp.classList.remove('collapsed');
+        grp.querySelector('.grp-hdr').setAttribute('aria-expanded', 'true');
+        localStorage.setItem(key, '0');
+      }
+    }
+  });
+}
+
+function initAccordion(grpBlock, storageKey) {
+  const hdr = grpBlock.querySelector('.grp-hdr');
+  const apply = (collapsed) => {
+    grpBlock.classList.toggle('collapsed', collapsed);
+    hdr.setAttribute('aria-expanded', String(!collapsed));
+    localStorage.setItem(storageKey, collapsed ? '1' : '0');
+  };
+  apply(localStorage.getItem(storageKey) === '1');
+  hdr.addEventListener('click', () => apply(!grpBlock.classList.contains('collapsed')));
+  hdr.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hdr.click(); }
   });
 }
 
@@ -699,15 +725,27 @@ function renderSidebar(term = '') {
     );
     if (!items.length) return;
     const grp = document.createElement('div');
-    grp.innerHTML = `<div class="grp-hdr">${g.group}</div>`;
+    grp.className = 'grp-block';
+    grp.dataset.grp = g.group;
+    grp.innerHTML = `<div class="grp-hdr" role="button" tabindex="0" aria-expanded="true"><span class="grp-chevron" aria-hidden="true">▾</span>${g.group}</div><div class="grp-items"></div>`;
+    const itemsEl = grp.querySelector('.grp-items');
     items.forEach(flow => {
       const d = document.createElement('div');
       d.className = 'flow-item' + (curFlow?.id === flow.id ? ' active' : '');
       d.innerHTML = `<span class="dot" style="background:${g.color}"></span>${flow.label}`;
       d.onclick = () => selectFlow(flow);
-      grp.appendChild(d);
+      itemsEl.appendChild(d);
     });
     el.appendChild(grp);
+    if (!t) {
+      const key = `cfx-acc-flows-${g.group}`;
+      initAccordion(grp, key);
+      if (grp.querySelector('.flow-item.active')) {
+        grp.classList.remove('collapsed');
+        grp.querySelector('.grp-hdr').setAttribute('aria-expanded', 'true');
+        localStorage.setItem(key, '0');
+      }
+    }
   });
 }
 
@@ -736,6 +774,15 @@ function selectFlow(flow) {
   updateBreadcrumb(flow);
   showViewBar('diagram');
   renderSeq(flow);
+  const activeFlowItem = document.querySelector('.flow-item.active');
+  if (activeFlowItem) {
+    const grpBlock = activeFlowItem.closest('.grp-block');
+    if (grpBlock) {
+      grpBlock.classList.remove('collapsed');
+      grpBlock.querySelector('.grp-hdr').setAttribute('aria-expanded', 'true');
+      localStorage.setItem(`cfx-acc-flows-${grpBlock.dataset.grp}`, '0');
+    }
+  }
   updateHash();
 }
 
