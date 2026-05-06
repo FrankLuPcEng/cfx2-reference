@@ -12,7 +12,10 @@
         "desc": "The handle of the endpoint to which the request is directed"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_AreYouThereRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_AreYouThereRequest.htm",
+    "examplePayload": {
+      "Topic": "CFX.Production.*"
+    }
   },
   "CFX.AreYouThereResponse": {
     "dir": "response",
@@ -45,7 +48,12 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_AreYouThereResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_AreYouThereResponse.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTLine1.Printer1",
+      "RequestedTopic": "CFX.Production.*",
+      "IsPresent": true
+    }
   },
   "CFX.EndpointConnected": {
     "dir": "event",
@@ -72,7 +80,17 @@
         "desc": "The AMQP 1.0 target address to be used for requests to this endpoint"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_EndpointConnected.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_EndpointConnected.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTLine1.Printer1",
+      "CFXVersion": "2.0",
+      "FirmwareVersion": "3.1.5",
+      "OperatorLanguage": "zh-TW",
+      "SupportedTopics": [
+        "CFX.Production.*",
+        "CFX.ResourcePerformance.*"
+      ]
+    }
   },
   "CFX.EndpointShuttingDown": {
     "dir": "event",
@@ -87,7 +105,10 @@
         "desc": "The handle of the endpoint that is shutting down"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_EndpointShuttingDown.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_EndpointShuttingDown.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTLine1.Printer1"
+    }
   },
   "CFX.GetEndpointInformationRequest": {
     "dir": "request",
@@ -102,7 +123,8 @@
         "desc": "The handle of the endpoint about which the sender wishes to obtain information."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_GetEndpointInformationRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_GetEndpointInformationRequest.htm",
+    "examplePayload": {}
   },
   "CFX.GetEndpointInformationResponse": {
     "dir": "response",
@@ -123,7 +145,18 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_GetEndpointInformationResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_GetEndpointInformationResponse.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTLine1.Printer1",
+      "MachineModuleId": "PRINTER_M",
+      "CFXVersion": "2.0",
+      "FirmwareVersion": "3.1.5",
+      "OperatorLanguage": "zh-TW",
+      "VendorData": {
+        "Vendor": "ACME",
+        "Model": "XP-500"
+      }
+    }
   },
   "CFX.Heartbeat": {
     "dir": "event",
@@ -192,7 +225,10 @@
         "desc": "An optional list of CFX topics. Only machines supporting any or all of these CFX topics will respond to this broadcast."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_WhoIsThereRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_WhoIsThereRequest.htm",
+    "examplePayload": {
+      "Topic": "CFX.Production.*"
+    }
   },
   "CFX.WhoIsThereResponse": {
     "dir": "response",
@@ -225,7 +261,15 @@
         "desc": "Result of the request."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_WhoIsThereResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_WhoIsThereResponse.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTLine1.Printer1",
+      "RequestedTopic": "CFX.Production.*",
+      "SupportedTopics": [
+        "CFX.Production.*",
+        "CFX.ResourcePerformance.*"
+      ]
+    }
   },
   "CFX.InformationSystem.DataTransfer.FileTransferRequest": {
     "dir": "request",
@@ -1329,7 +1373,17 @@
         "desc": "The setup requirements to be validated"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_ValidateStationSetupRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_ValidateStationSetupRequest.htm",
+    "examplePayload": {
+      "SetupRequirements": [
+        {
+          "Lane": 1,
+          "SlotIdentifier": "Feeder-01",
+          "PartNumber": "C0402-10K",
+          "PartRevision": "1.0"
+        }
+      ]
+    }
   },
   "CFX.Materials.Storage.ValidateStationSetupResponse": {
     "dir": "response",
@@ -1344,7 +1398,13 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_ValidateStationSetupResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Materials_Storage_ValidateStationSetupResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success"
+      },
+      "Invalid": []
+    }
   },
   "CFX.Materials.Transport.CheckpointReached": {
     "dir": "event",
@@ -1785,7 +1845,12 @@
         "desc": "The optional name or number of the stage where the recipe should be activated"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ActivateRecipeRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ActivateRecipeRequest.htm",
+    "examplePayload": {
+      "RecipeName": "RECIPE_MB_V2",
+      "Revision": "2.0",
+      "Lane": 1
+    }
   },
   "CFX.Production.ActivateRecipeResponse": {
     "dir": "response",
@@ -1800,7 +1865,13 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ActivateRecipeResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ActivateRecipeResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success"
+      },
+      "RecipeName": "RECIPE_MB_V2"
+    }
   },
   "CFX.Production.ActivitiesExecuted": {
     "dir": "event",
@@ -1827,7 +1898,17 @@
         "desc": "Related Transaction ID previously established by a WorkStarted Message"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ActivitiesExecuted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_ActivitiesExecuted.htm",
+    "examplePayload": {
+      "TransactionID": "TXN-20240501-001",
+      "Activities": [
+        {
+          "ActivityName": "StencilClean",
+          "Result": "Passed",
+          "ExecutionTime": "00:00:45"
+        }
+      ]
+    }
   },
   "CFX.Production.BlockMaterialLocationsRequest": {
     "dir": "request",
@@ -1890,7 +1971,10 @@
         "desc": "The optional structure identifying the specific Stage"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetActiveRecipeRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetActiveRecipeRequest.htm",
+    "examplePayload": {
+      "Lane": 1
+    }
   },
   "CFX.Production.GetActiveRecipeResponse": {
     "dir": "response",
@@ -1917,7 +2001,15 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetActiveRecipeResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetActiveRecipeResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success"
+      },
+      "RecipeName": "RECIPE_MB_V2",
+      "Revision": "2.0",
+      "MimeType": "application/json"
+    }
   },
   "CFX.Production.GetAvailableRecipesRequest": {
     "dir": "request",
@@ -1992,7 +2084,11 @@
         "desc": "Version number, e.g. “2.0” (Optional)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetRecipeRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetRecipeRequest.htm",
+    "examplePayload": {
+      "RecipeName": "RECIPE_MB_V2",
+      "Revision": "2.0"
+    }
   },
   "CFX.Production.GetRecipeResponse": {
     "dir": "response",
@@ -2013,7 +2109,16 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetRecipeResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_GetRecipeResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success"
+      },
+      "RecipeName": "RECIPE_MB_V2",
+      "Revision": "2.0",
+      "MimeType": "application/json",
+      "RecipeData": "eyJwYXJhbWV0ZXJzIjp7InNwZWVkIjoyNX19"
+    }
   },
   "CFX.Production.GetRequiredSetupRequest": {
     "dir": "request",
@@ -2358,7 +2463,12 @@
         "desc": "** NOTE: ADDED in CFX 1.3 ** Identifies the Work Order (or Batch) that will be executed by the newly activated recipe."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_RecipeActivated.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_RecipeActivated.htm",
+    "examplePayload": {
+      "RecipeName": "RECIPE_MB_V2",
+      "Revision": "2.0",
+      "Lane": 1
+    }
   },
   "CFX.Production.RecipeDeactivated": {
     "dir": "event",
@@ -2622,7 +2732,23 @@
         "desc": "An optional list of structures that identify each specific instance of production unit that arrived (if known). Could be individual units, or within a carrier, panel, etc."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnitsArrived.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnitsArrived.htm",
+    "examplePayload": {
+      "PrimaryIdentifier": "BOARD-20240501-001",
+      "HermesIdentifier": {
+        "BoardId": "H-0042",
+        "FailedBoard": false
+      },
+      "Lane": 1,
+      "UnitCount": 1,
+      "Units": [
+        {
+          "UnitIdentifier": "BOARD-20240501-001",
+          "UnitPositionIdentifier": 1,
+          "PositionNumber": 1
+        }
+      ]
+    }
   },
   "CFX.Production.UnitsDeparted": {
     "dir": "event",
@@ -2661,7 +2787,22 @@
         "desc": "An optional list of structures that identify each specific instance of production unit that arrived (if known). Could be individual units, or within a carrier, panel, etc."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnitsDeparted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnitsDeparted.htm",
+    "examplePayload": {
+      "PrimaryIdentifier": "BOARD-20240501-001",
+      "HermesIdentifier": {
+        "BoardId": "H-0042",
+        "FailedBoard": false
+      },
+      "Lane": 1,
+      "UnitCount": 1,
+      "Units": [
+        {
+          "UnitIdentifier": "BOARD-20240501-001",
+          "PositionNumber": 1
+        }
+      ]
+    }
   },
   "CFX.Production.UnitsDisqualified": {
     "dir": "event",
@@ -2751,7 +2892,18 @@
         "desc": "The Work Order (and Batch, if applicable) to which these new production units are associated."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnitsInitialized.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UnitsInitialized.htm",
+    "examplePayload": {
+      "PrimaryIdentifier": "BOARD-20240501-001",
+      "UnitCount": 1,
+      "Units": [
+        {
+          "UnitIdentifier": "BOARD-20240501-001",
+          "PartNumber": "PN-MB-001",
+          "SerialNumber": "SN-001"
+        }
+      ]
+    }
   },
   "CFX.Production.UnlockStationRequest": {
     "dir": "request",
@@ -2820,7 +2972,13 @@
         "desc": "The new Recipe to be sent to the Endpoint."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UpdateRecipeRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UpdateRecipeRequest.htm",
+    "examplePayload": {
+      "RecipeName": "RECIPE_MB_V2",
+      "Revision": "2.1",
+      "MimeType": "application/json",
+      "RecipeData": "eyJwYXJhbWV0ZXJzIjp7InNwZWVkIjozMH19"
+    }
   },
   "CFX.Production.UpdateRecipeResponse": {
     "dir": "response",
@@ -2835,7 +2993,14 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UpdateRecipeResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_UpdateRecipeResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success"
+      },
+      "RecipeName": "RECIPE_MB_V2",
+      "Revision": "2.1"
+    }
   },
   "CFX.Production.WorkCompleted": {
     "dir": "event",
@@ -2886,7 +3051,19 @@
         "desc": "OPTIONAL. Only required if the actual identifiers were not available at the time that the trasnaction was started (at the time the WorkStarted message was transmitted). Data that identifies each specific instance of production unit with a carrier or panel."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkCompleted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkCompleted.htm",
+    "examplePayload": {
+      "TransactionID": "TXN-20240501-001",
+      "PrimaryIdentifier": "BOARD-20240501-001",
+      "Result": "Passed",
+      "Units": [
+        {
+          "UnitIdentifier": "BOARD-20240501-001",
+          "Result": "Passed",
+          "UnitIdentifierSource": "Barcode"
+        }
+      ]
+    }
   },
   "CFX.Production.WorkOrderActionExecuted": {
     "dir": "event",
@@ -2988,7 +3165,16 @@
         "desc": "Related Transaction ID specified previously by WorkStarted Message"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkStageCompleted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkStageCompleted.htm",
+    "examplePayload": {
+      "TransactionID": "TXN-20240501-001",
+      "Stage": {
+        "StageSequence": 1,
+        "StageName": "PrintStage",
+        "StageType": "Work"
+      },
+      "Result": "Passed"
+    }
   },
   "CFX.Production.WorkStagePaused": {
     "dir": "event",
@@ -3015,7 +3201,16 @@
         "desc": "Related Transaction ID specified previously by WorkStarted Message"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkStagePaused.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkStagePaused.htm",
+    "examplePayload": {
+      "TransactionID": "TXN-20240501-001",
+      "Stage": {
+        "StageSequence": 1,
+        "StageName": "PrintStage",
+        "StageType": "Work"
+      },
+      "Reason": "MaterialShortage"
+    }
   },
   "CFX.Production.WorkStageResumed": {
     "dir": "event",
@@ -3036,7 +3231,15 @@
         "desc": "Related Transaction ID specified previously by WorkStarted Message"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkStageResumed.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkStageResumed.htm",
+    "examplePayload": {
+      "TransactionID": "TXN-20240501-001",
+      "Stage": {
+        "StageSequence": 1,
+        "StageName": "PrintStage",
+        "StageType": "Work"
+      }
+    }
   },
   "CFX.Production.WorkStageStarted": {
     "dir": "event",
@@ -3057,12 +3260,20 @@
         "desc": "Related Transaction ID specified previously by WorkStarted Message"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkStageStarted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkStageStarted.htm",
+    "examplePayload": {
+      "TransactionID": "TXN-20240501-001",
+      "Stage": {
+        "StageSequence": 1,
+        "StageName": "PrintStage",
+        "StageType": "Work"
+      }
+    }
   },
   "CFX.Production.WorkStarted": {
     "dir": "event",
     "module": "CFX.Production",
-    "desc": "",
+    "desc": "機台開始處理一個或一組生產單元時廣播。包含 TransactionID（後續事件關聯用）、單元識別碼、RecipeName、WorkOrder 等上下文資訊。",
     "schema": "",
     "fields": [
       {
@@ -3126,7 +3337,23 @@
         "desc": "** NOTE: ADDED in CFX 2.1 ** Identifies the Work Order (or Batch) that will be executed by the newly activated recipe."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkStarted.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_WorkStarted.htm",
+    "examplePayload": {
+      "TransactionID": "TXN-20240501-001",
+      "PrimaryIdentifier": "BOARD-20240501-001",
+      "RecipeName": "RECIPE_MB_V2",
+      "UnitCount": 1,
+      "Units": [
+        {
+          "UnitIdentifier": "BOARD-20240501-001",
+          "PositionNumber": 1
+        }
+      ],
+      "WorkOrderIdentifier": {
+        "WorkOrderId": "WO-20240501-001",
+        "Batch": 1
+      }
+    }
   },
   "CFX.Production.Application.MaterialsApplied": {
     "dir": "event",
@@ -3173,7 +3400,7 @@
   "CFX.Production.Application.Solder.PCBSelectiveSoldered": {
     "dir": "event",
     "module": "CFX.Production.Application.Solder",
-    "desc": "",
+    "desc": "選擇性焊錫機完成一片 PCB 的局部焊錫作業後廣播，包含製程參數摘要與各焊點結果。",
     "schema": "",
     "fields": [
       {
@@ -3216,7 +3443,18 @@
         "desc": "The id of the work transaction with which this installation is associated."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_MaterialsInstalled.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Assembly_MaterialsInstalled.htm",
+    "examplePayload": {
+      "TransactionID": "TXN-20240501-001",
+      "InstalledMaterials": [
+        {
+          "MaterialPackageId": "REEL-C0402-10K-001",
+          "PartNumber": "C0402-10K",
+          "Quantity": 500,
+          "FeederLane": 1
+        }
+      ]
+    }
   },
   "CFX.Production.Assembly.MaterialsUninstalled": {
     "dir": "event",
@@ -3588,7 +3826,21 @@
         "desc": "A list of structures containing the processing data for each production units processed by this transaction."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Processing_UnitsProcessed.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_Processing_UnitsProcessed.htm",
+    "examplePayload": {
+      "TransactionID": "TXN-20240501-001",
+      "CommonProcessData": {
+        "ProcessTime": "00:02:30",
+        "OverallResult": "Passed"
+      },
+      "Units": [
+        {
+          "UnitIdentifier": "BOARD-20240501-001",
+          "PositionNumber": 1,
+          "UnitResult": "Passed"
+        }
+      ]
+    }
   },
   "CFX.Production.ReworkAndRepair.UnitsRepaired": {
     "dir": "event",
@@ -3714,7 +3966,19 @@
         "desc": "The id of the work transaction with which this inspection session is associated."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_TestAndInspection_UnitsInspected.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_TestAndInspection_UnitsInspected.htm",
+    "examplePayload": {
+      "TransactionID": "TXN-20240501-001",
+      "InspectionMethod": "AOI",
+      "InspectedUnits": [
+        {
+          "UnitIdentifier": "BOARD-20240501-001",
+          "PositionNumber": 1,
+          "OverallResult": "Passed",
+          "Defects": []
+        }
+      ]
+    }
   },
   "CFX.Production.TestAndInspection.UnitsTested": {
     "dir": "event",
@@ -3765,7 +4029,25 @@
         "desc": "The id of the work transaction with which this testing session is associated."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_TestAndInspection_UnitsTested.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Production_TestAndInspection_UnitsTested.htm",
+    "examplePayload": {
+      "TransactionID": "TXN-20240501-001",
+      "TestMethod": "ICT",
+      "TestedUnits": [
+        {
+          "UnitIdentifier": "BOARD-20240501-001",
+          "PositionNumber": 1,
+          "OverallResult": "Passed",
+          "Tests": [
+            {
+              "UniqueIdentifier": "TestPoint1",
+              "TestName": "PowerOn",
+              "Result": "Passed"
+            }
+          ]
+        }
+      ]
+    }
   },
   "CFX.ResourcePerformance.CalibrationPerformed": {
     "dir": "event",
@@ -3857,7 +4139,7 @@
   "CFX.ResourcePerformance.ConsumptionDetail": {
     "dir": "event",
     "module": "CFX.ResourcePerformance",
-    "desc": "",
+    "desc": "詳細的資源消耗事件，報告端點（或其子系統）在特定時段的能源、耗材或氣體消耗量。",
     "schema": "",
     "fields": [
       {
@@ -4094,7 +4376,8 @@
     "desc": "** NOTE: ADDED in CFX 1.3 ** This request allows an external source to inquire data regarding energy consumption of the endpoint message that it sends back to the requester.",
     "schema": "",
     "fields": [],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_EnergyConsumptionRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_EnergyConsumptionRequest.htm",
+    "examplePayload": {}
   },
   "CFX.ResourcePerformance.EnergyConsumptionResponse": {
     "dir": "response",
@@ -4334,7 +4617,12 @@
         "desc": "The operator or entity who has acknowledged the fault (if known, otherwise null) (optional)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_FaultAcknowledged.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_FaultAcknowledged.htm",
+    "examplePayload": {
+      "UniqueIdentifier": "FAULT-001",
+      "AcknowledgedBy": "OP001",
+      "AcknowledgedAt": "2024-05-01T10:31:00Z"
+    }
   },
   "CFX.ResourcePerformance.FaultCleared": {
     "dir": "event",
@@ -4355,7 +4643,11 @@
         "desc": "The operator or entity who has cleared the fault (if known, otherwise null) (optional)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_FaultCleared.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_FaultCleared.htm",
+    "examplePayload": {
+      "UniqueIdentifier": "FAULT-001",
+      "ClearedAt": "2024-05-01T10:35:00Z"
+    }
   },
   "CFX.ResourcePerformance.FaultOccurred": {
     "dir": "event",
@@ -4370,7 +4662,17 @@
         "desc": "Dynamic structure providing detailed information about the fault that has occurred."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_FaultOccurred.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_FaultOccurred.htm",
+    "examplePayload": {
+      "Fault": {
+        "UniqueIdentifier": "FAULT-001",
+        "Cause": "MaterialJam",
+        "Severity": "Error",
+        "Description": "Material jam detected at feeder lane 3",
+        "FaultCode": "E-401",
+        "OccurredAt": "2024-05-01T10:30:00Z"
+      }
+    }
   },
   "CFX.ResourcePerformance.GetActiveFaultsRequest": {
     "dir": "request",
@@ -4378,7 +4680,8 @@
     "desc": "This request allows an external source to query the equipment for a list of active faults. message that it sends back to the requester.",
     "schema": "{}",
     "fields": [],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_GetActiveFaultsRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_GetActiveFaultsRequest.htm",
+    "examplePayload": {}
   },
   "CFX.ResourcePerformance.GetActiveFaultsResponse": {
     "dir": "response",
@@ -4420,7 +4723,15 @@
         "desc": "Gets or sets a value indicating whether the fault should be handled remotely or not. If handled remotely, the red light should be off on the equipment (at least for this fault)"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_HandleFaultRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_HandleFaultRequest.htm",
+    "examplePayload": {
+      "UniqueIdentifier": "FAULT-001",
+      "Action": "Acknowledge",
+      "Operator": {
+        "OperatorIdentifier": "OP001",
+        "ActorType": "Operator"
+      }
+    }
   },
   "CFX.ResourcePerformance.HandleFaultResponse": {
     "dir": "response",
@@ -4435,7 +4746,13 @@
         "desc": "The result of the request"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_HandleFaultResponse.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_HandleFaultResponse.htm",
+    "examplePayload": {
+      "Result": {
+        "Result": "Success"
+      },
+      "UniqueIdentifier": "FAULT-001"
+    }
   },
   "CFX.ResourcePerformance.LogEntryRecorded": {
     "dir": "event",
@@ -4668,7 +4985,8 @@
     "desc": "Sent by a process endpoint when it is about to transition to a state where it is not possible for further communication, for example when the endpoint is powered down, reset, put into maintenance mode, or simply set off-line.",
     "schema": "{}",
     "fields": [],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_StationOffline.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_StationOffline.htm",
+    "examplePayload": {}
   },
   "CFX.ResourcePerformance.StationOnline": {
     "dir": "event",
@@ -4683,7 +5001,15 @@
         "desc": "The total amount of time the endpoint was offline prior to this notification. Note: There may be certain circumstances where it is impossible to provide this duration (as in the case of an unexpected power faillure or other extreme events). In this case it is acceptable to report a duration of \"null\", which will be interpreted as \"unknown\" by the receiver of this event."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_StationOnline.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_StationOnline.htm",
+    "examplePayload": {
+      "CFXHandle": "SMTLine1.Printer1",
+      "Lane": null,
+      "SupportedTopics": [
+        "CFX.Production.*",
+        "CFX.ResourcePerformance.*"
+      ]
+    }
   },
   "CFX.ResourcePerformance.StationParametersModified": {
     "dir": "event",
@@ -4743,7 +5069,17 @@
         "desc": "In the case of a stoppage, information about the Fault which caused the stoppage. Otherwise null."
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_StationStateChanged.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_StationStateChanged.htm",
+    "examplePayload": {
+      "OldState": {
+        "StationState": "Production",
+        "SubState": null
+      },
+      "NewState": {
+        "StationState": "Maintenance",
+        "SubState": null
+      }
+    }
   },
   "CFX.ResourcePerformance.ToolChanged": {
     "dir": "event",
@@ -4992,7 +5328,14 @@
         "desc": "Indicates the length of time that has ellapsed since the last time the stencil was cleaned"
       }
     ],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_StencilCleaned.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_ResourcePerformance_SolderPastePrinting_StencilCleaned.htm",
+    "examplePayload": {
+      "StencilCleaner": "DryWipe",
+      "RecipeName": "RECIPE_MB_V2",
+      "OverallResult": "Passed",
+      "UnderStencilWipe": true,
+      "VacuumMode": false
+    }
   },
   "CFX.ResourcePerformance.THTInsertion.ComponentsInserted": {
     "dir": "event",
@@ -5075,7 +5418,8 @@
     "desc": "Sent by a process endpoint to a unit identification device (such as a barcode scanner or RFID reader) to request the most recently scanned unit identifiers.",
     "schema": "{}",
     "fields": [],
-    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Sensor_Identification_IdentifyUnitsRequest.htm"
+    "notes": "https://www.connectedfactoryexchange.com/CFXDemo/sdk/html/T_CFX_Sensor_Identification_IdentifyUnitsRequest.htm",
+    "examplePayload": {}
   },
   "CFX.Sensor.Identification.IdentifyUnitsResponse": {
     "dir": "response",

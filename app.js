@@ -926,6 +926,21 @@ function renderSeq(flow) {
   makeSeqKeyboard();
 }
 
+function renderExampleSection(m) {
+  if (m.examplePayload !== undefined) {
+    const keys = Object.keys(m.examplePayload);
+    if (keys.length === 0) {
+      return `<div class="sl">範例 Payload</div><div style="font-size:11px;color:var(--text3);padding:6px 0 10px">（此訊息無 Body 欄位）</div>`;
+    }
+    const json = JSON.stringify(m.examplePayload, null, 2);
+    return `<div class="sl">範例 Payload</div><div class="cb-wrap"><div class="cb">${esc(json)}</div><button class="copy-btn">複製</button></div>`;
+  }
+  if (m.schema && m.schema.trim() && m.schema !== '{}') {
+    return `<div class="sl">JSON Schema</div><div class="cb-wrap"><div class="cb">${esc(m.schema)}</div><button class="copy-btn">複製</button></div>`;
+  }
+  return '';
+}
+
 function selectMsg(msgName) {
   const m = MSGS[msgName];
   if (!m) return;
@@ -972,11 +987,7 @@ function selectMsg(msgName) {
     <div id="amqp-topic-row"></div>
     <p style="font-size:12px;color:var(--text2);line-height:1.75">${m.desc}</p>
     <div id="flow-backlinks-row"></div>
-    <div class="sl">JSON 範例</div>
-    <div class="cb-wrap">
-      <div class="cb">${esc(m.schema)}</div>
-      <button class="copy-btn">複製</button>
-    </div>
+    ${renderExampleSection(m)}
     ${fh}
     ${m.notes ? `<div class="nb">⚠ ${m.notes}</div>` : ''}`;
   appendAmqpTopic(msgName, m);
