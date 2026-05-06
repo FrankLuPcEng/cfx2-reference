@@ -1,0 +1,62 @@
+[
+  {
+    "id": "startup",
+    "label": "正常生產啟動",
+    "icon": "🟢",
+    "color": "#1a7a40",
+    "desc": "機台上線、取得配方、開始生產",
+    "narrative": "設備開機後 Endpoint 連線到 AMQP Broker 並廣播 EndpointConnected，MES 查詢設備資訊後下發對應 Recipe。設備確認配方後開始接收 WIP 工作命令並回報生產狀態。",
+    "flowIds": ["conn", "recipe", "wip"],
+    "machineIds": ["PRINTER_M","SPI_M","MOUNTER_M","AOI_M","REFLOW_M","SOLDER_M","TESTER_M"]
+  },
+  {
+    "id": "changeover",
+    "label": "換線作業",
+    "icon": "🔄",
+    "color": "#b45d00",
+    "desc": "更換料號，推送新配方，重啟生產",
+    "narrative": "生產料號切換時，MES 先推送新的 Recipe 到各設備。若需清空在製品資訊，MES 通知設備暫停再下線重新上線以清除狀態，確認新配方後重啟 WIP 流程。",
+    "flowIds": ["recipe", "shutdown", "conn", "wip"],
+    "machineIds": ["PRINTER_M","SPI_M","MOUNTER_M","AOI_M","REFLOW_M","SOLDER_M","TESTER_M"]
+  },
+  {
+    "id": "fault-recovery",
+    "label": "異常停機與恢復",
+    "icon": "⚠️",
+    "color": "#c0392b",
+    "desc": "機台故障回報、排除後恢復生產",
+    "narrative": "設備發生故障時 Endpoint 廣播 FaultOccurred 讓 MES 及產線人員立即得知。排除故障後設備回報 FaultCleared，MES 確認狀態正常後恢復 WIP 流程繼續追蹤在製品。",
+    "flowIds": ["fault", "wip"],
+    "machineIds": ["PRINTER_M","SPI_M","MOUNTER_M","AOI_M","REFLOW_M","SOLDER_M","TESTER_M","LABELER_M","COATING_M"]
+  },
+  {
+    "id": "full-smt-line",
+    "label": "完整 SMT 產線生產",
+    "icon": "🏭",
+    "color": "#4f6db8",
+    "desc": "PCB 從印刷到測試完整通過 SMT 產線",
+    "narrative": "一片 PCB 在 SMT 產線上依序經過鋼板印刷→錫膏檢測→SMT 貼片→AOI 光學檢測→迴焊爐→最終測試。每個站點透過 CFX WIP 訊息追蹤板卡，並上報各站點的製程資料與品質資訊到 MES。",
+    "flowIds": ["printer", "spi", "pp", "aoi", "reflow", "test"],
+    "machineIds": ["PRINTER_M","SPI_M","MOUNTER_M","AOI_M","REFLOW_M","TESTER_M"]
+  },
+  {
+    "id": "remote-recipe",
+    "label": "遠端配方切換",
+    "icon": "📋",
+    "color": "#2d4f9e",
+    "desc": "MES 推送新配方，機台確認後切換",
+    "narrative": "MES 在不停機的情況下推送新的 Recipe 到指定設備。設備收到 SetRecipeRequest 後執行切換，回傳 SetRecipeResponse 確認成功。適用於小批量多樣化生產的快速換型需求。",
+    "flowIds": ["recipe"],
+    "machineIds": ["PRINTER_M","SPI_M","MOUNTER_M","AOI_M","REFLOW_M","SOLDER_M","TESTER_M","LABELER_M","COATING_M"]
+  },
+  {
+    "id": "maintenance-restart",
+    "label": "維護後重啟",
+    "icon": "🔧",
+    "color": "#5e35b1",
+    "desc": "維護完成，機台重新上線並同步狀態",
+    "narrative": "設備進行預防性維護或修復後重新連線到產線系統。Endpoint 先廣播 EndpointDisconnected（或由 Broker 偵測離線），維護完成後重新連線、宣告能力、取得最新 Recipe，再恢復生產。",
+    "flowIds": ["shutdown", "conn", "recipe", "wip"],
+    "machineIds": ["PRINTER_M","SPI_M","MOUNTER_M","AOI_M","REFLOW_M","SOLDER_M","TESTER_M","LABELER_M","COATING_M"]
+  }
+]
