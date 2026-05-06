@@ -83,3 +83,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 .flow-card-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid;white-space:nowrap;flex-shrink:0;align-self:center;}
 .mach-summary{padding:14px 24px;font-size:11px;color:var(--text3);border-top:1px solid var(--border);margin-top:4px;}
 .no-specific{padding:10px 24px;font-size:12px;color:var(--text3);font-style:italic;}
+/* ── Scenario perspective ──────────────────────── */
+.scenario-item{display:flex;align-items:center;gap:7px;padding:6px 14px;cursor:pointer;border-left:3px solid transparent;font-size:12px;color:var(--text2);transition:all 0.1s;}
+.scenario-item:hover{background:var(--bg3);color:var(--text);}
+.scenario-item.active{background:#eef2fc;border-left-color:var(--accent);color:var(--accent2);font-weight:600;}
+.scenario-item-icon{font-size:14px;line-height:1;flex-shrink:0;}
+.scenario-item-body{min-width:0;}
+.scenario-item-label{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.scenario-item-desc{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.scenario-detail{padding:8px 0 24px;}
+.scenario-narrative{padding:12px 24px 16px;font-size:12px;color:var(--text2);line-height:1.7;font-style:italic;border-bottom:1px solid var(--border);}
+.scenario-step-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.machine-chip{display:inline-block;font-size:9px;padding:1px 6px;border-radius:10px;border:1px solid var(--border);color:var(--text3);margin:2px 2px 0 0;}
+.scenario-chips{padding:4px 24px 2px 57px;display:flex;flex-wrap:wrap;gap:2px;}
