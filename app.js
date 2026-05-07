@@ -27,6 +27,8 @@ async function init() {
     showError(err.message);
     return;
   }
+  // Domain model — loaded in parallel, non-fatal if missing
+  fetch('data/domain-model.json').then(r => r.ok ? r.json() : null).then(d => { if (d) state.DOMAIN = d; }).catch(() => {});
   setupListeners();
   renderSidebar();
   window.addEventListener('popstate', restoreFromHash);

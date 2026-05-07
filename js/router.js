@@ -4,6 +4,7 @@ import { renderMsgList, showMsgPlaceholder, selectMsg } from './messages.js';
 import { renderMachineList } from './machines.js';
 import { renderScenarioList } from './scenarios.js';
 import { renderGuideSidebar, renderGuide } from './guide.js';
+import { renderDomainList } from './domain.js';
 import { updateBreadcrumb, showViewBar } from './utils.js';
 
 export function updateHash() {
@@ -115,6 +116,23 @@ export function setMode(mode, btn) {
     document.getElementById('fdesc').textContent  = '了解 CFX 架構、AMQP 路由與 Endpoint 開發方式';
     renderGuideSidebar();
     renderGuide();
+
+  } else if (mode === 'domain') {
+    state.curMsg = null;
+    state.curEntity = null;
+    sw.style.display = 'none';
+    fbar.style.display = 'none';
+    document.getElementById('view-bar').style.display = 'none';
+    document.getElementById('breadcrumb').style.display = 'none';
+    document.getElementById('list-panel').style.display = 'none';
+    document.getElementById('seq-panel').style.display = '';
+    document.getElementById('empty-state').style.display = 'flex';
+    document.getElementById('fbadge').style.display = 'none';
+    document.title = '資料模型 — CFX 2.0 Reference';
+    document.getElementById('ftitle').textContent = '資料模型';
+    document.getElementById('fdesc').textContent  = '← 選擇 Domain Entity 查看屬性定義與 CFX 訊息對應';
+    document.getElementById('seqc').innerHTML = '';
+    renderDomainList();
 
   } else {
     // flows
