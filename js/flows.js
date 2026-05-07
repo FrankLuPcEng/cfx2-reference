@@ -106,7 +106,7 @@ export function renderListView(flow) {
       ${step.note ? `<div class="list-step-note">${step.note}</div>` : ''}
     </div>`;
   });
-  el.innerHTML = html || `<p style="color:var(--text3);font-size:12px;padding:24px 0;text-align:center">沒有符合篩選條件的訊息</p>`;
+  el.innerHTML = html || `<p class="empty-msg">沒有符合篩選條件的訊息</p>`;
 }
 
 export function makeSeqKeyboard() {
@@ -248,7 +248,7 @@ export function renderSeq(flow) {
 
   document.getElementById('seqc').innerHTML = `
     <div style="margin-bottom:16px">
-      <div style="font-size:11px;color:var(--text2);margin-bottom:6px">${flow.desc}</div>
+      <div class="flow-desc">${flow.desc}</div>
       <div class="part-chips">${partChips}</div>
     </div>
     <div style="overflow-x:auto">${s}</div>`;

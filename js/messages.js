@@ -31,7 +31,7 @@ export function renderMsgList(term = '') {
   });
 
   if (!sortedMods.length) {
-    el.innerHTML = '<div style="padding:24px 14px;color:var(--text3);font-size:11px;text-align:center">無符合的訊息</div>';
+    el.innerHTML = '<div class="empty-msg">無符合的訊息</div>';
     return;
   }
 
@@ -112,12 +112,12 @@ export function selectMsg(msgName) {
   if (m.fields?.length) {
     fh = `<div class="sl">欄位規格</div><table class="ft"><thead><tr><th>欄位名稱</th><th>型別</th><th>必填</th><th>說明</th></tr></thead><tbody>`;
     m.fields.forEach(f => {
-      fh += `<tr><td class="fn">${f.name}</td><td class="ftype">${f.type}</td><td><span class="rb ${f.req ? 'req' : 'opt'}">${f.req ? 'Required' : 'Optional'}</span></td><td style="color:var(--text2);font-size:11px">${f.desc}</td></tr>`;
+      fh += `<tr><td class="fn">${f.name}</td><td class="ftype">${f.type}</td><td><span class="rb ${f.req ? 'req' : 'opt'}">${f.req ? 'Required' : 'Optional'}</span></td><td class="detail-fields-row">${f.desc}</td></tr>`;
     });
     fh += `</tbody></table>`;
   }
   document.getElementById('di').innerHTML = `
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+    <div class="dp-header">
       <div><div class="dt">${msgName}</div><div class="ds">${m.module}</div>
         <span class="badge" style="color:${dc};border-color:${dc}44;background:${dc}15">${dl}</span></div>
       <button class="xbtn" aria-label="關閉詳細面板">✕</button>
