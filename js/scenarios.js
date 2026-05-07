@@ -14,7 +14,10 @@ export function renderScenarioList() {
         <div class="scenario-item-label">${sc.label}</div>
         <div class="scenario-item-desc">${sc.desc}</div>
       </span>`;
+    d.tabIndex = 0;
+    d.setAttribute('role', 'button');
     d.addEventListener('click', () => selectScenario(sc.id));
+    d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectScenario(sc.id); } });
     el.appendChild(d);
   });
 }
@@ -56,10 +59,14 @@ export function renderScenarioDetail(scenarioId) {
     </div>`;
 
   document.getElementById('seqc').querySelectorAll('.flow-card[data-flow-id]').forEach(card => {
-    card.addEventListener('click', () => {
+    const handler = () => {
       const flow = allFlows.find(f => f.id === card.dataset.flowId);
       if (flow) goToFlow(flow);
-    });
+    };
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.addEventListener('click', handler);
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); } });
   });
 }
 

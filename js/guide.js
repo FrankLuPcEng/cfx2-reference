@@ -9,15 +9,17 @@ const GUIDE_SECTIONS = [
 export function renderGuideSidebar() {
   const el = document.getElementById('flow-list');
   el.innerHTML = GUIDE_SECTIONS.map(s =>
-    `<div class="guide-toc-item" data-sec="${s.id}">
-       <span class="guide-toc-icon">${s.icon}</span>${s.label}
+    `<div class="guide-toc-item" data-sec="${s.id}" tabindex="0" role="button">
+       <span class="guide-toc-icon" aria-hidden="true">${s.icon}</span>${s.label}
      </div>`
   ).join('');
   el.querySelectorAll('.guide-toc-item').forEach(item => {
-    item.addEventListener('click', () => {
+    const scroll = () => {
       const target = document.getElementById('guide-' + item.dataset.sec);
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    };
+    item.addEventListener('click', scroll);
+    item.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scroll(); } });
   });
 }
 

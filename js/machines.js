@@ -38,7 +38,10 @@ export function renderMachineList() {
     const d = document.createElement('div');
     d.className = 'machine-item' + (state.curMachine === m.id ? ' active' : '');
     d.innerHTML = `<span class="dot" style="background:${m.color}"></span>${m.label}`;
+    d.tabIndex = 0;
+    d.setAttribute('role', 'button');
     d.addEventListener('click', () => selectMachine(m.id));
+    d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectMachine(m.id); } });
     el.appendChild(d);
   });
 }
@@ -76,10 +79,14 @@ export function renderMachineDetail(machineId) {
     </div>`;
 
   document.getElementById('seqc').querySelectorAll('.flow-card[data-flow-id]').forEach(card => {
-    card.addEventListener('click', () => {
+    const handler = () => {
       const flow = state.FLOWS.flatMap(g => g.items).find(f => f.id === card.dataset.flowId);
       if (flow) goToFlow(flow);
-    });
+    };
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.addEventListener('click', handler);
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); } });
   });
 }
 

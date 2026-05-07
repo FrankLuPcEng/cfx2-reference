@@ -125,8 +125,7 @@ export function updateBreadcrumb(flow) {
   const g = findFlowGroup(flow.id);
   if (!g) { bc.style.display = 'none'; return; }
   bc.style.display = 'flex';
-  bc.innerHTML = `<a href="#" class="bc-home">流程</a><span class="bc-sep">/</span><span class="bc-dot" style="background:${g.color}"></span>${g.group}<span class="bc-sep">/</span><span class="bc-cur">${flow.label}</span>`;
-  bc.querySelector('.bc-home').addEventListener('click', e => e.preventDefault());
+  bc.innerHTML = `<button class="bc-home" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:10px;padding:0" aria-label="流程列表">流程</button><span class="bc-sep">/</span><span class="bc-dot" style="background:${g.color}"></span>${g.group}<span class="bc-sep">/</span><span class="bc-cur">${flow.label}</span>`;
 }
 
 export function showViewBar(activeView) {
