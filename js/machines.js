@@ -30,7 +30,8 @@ export function countMachineMessages(flows) {
   flows.forEach(f => f.steps.forEach(s => { if (s.msg && !s.raw) seen.add(s.msg); }));
   return seen.size;
 }
-
+
+export function renderMachineList() {
   const el = document.getElementById('nav-sub-machines');
   el.innerHTML = '';
   MACHINE_DEFS.forEach(m => {
