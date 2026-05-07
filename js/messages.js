@@ -48,7 +48,10 @@ export function renderMsgList(term = '') {
       const d = document.createElement('div');
       d.className = 'msg-item' + (state.curMsg === msg.key ? ' active' : '');
       d.innerHTML = `<span class="msg-dir" style="color:${dc};border-color:${dc}44;background:${dc}15">${dl}</span><span class="msg-name" title="${msg.key}">${shortName}</span>`;
+      d.tabIndex = 0;
+      d.setAttribute('role', 'button');
       d.addEventListener('click', () => selectMsg(msg.key));
+      d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectMsg(msg.key); } });
       itemsEl.appendChild(d);
     });
     el.appendChild(grp);

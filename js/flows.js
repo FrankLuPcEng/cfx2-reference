@@ -31,7 +31,10 @@ export function renderSidebar(term = '') {
       const d = document.createElement('div');
       d.className = 'flow-item' + (state.curFlow?.id === flow.id ? ' active' : '');
       d.innerHTML = `<span class="dot" style="background:${g.color}"></span>${flow.label}`;
+      d.tabIndex = 0;
+      d.setAttribute('role', 'button');
       d.onclick = () => selectFlow(flow);
+      d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectFlow(flow); } });
       itemsEl.appendChild(d);
     });
     el.appendChild(grp);

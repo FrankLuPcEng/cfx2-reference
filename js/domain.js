@@ -34,7 +34,10 @@ export function renderDomainList() {
         <span class="entity-phase">P${p}</span>
         <span class="entity-item-label">${entity.id}</span>
         <span class="entity-item-zh">${entity.labelZh}</span>`;
+      d.tabIndex = 0;
+      d.setAttribute('role', 'button');
       d.addEventListener('click', () => selectEntity(entity.id));
+      d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectEntity(entity.id); } });
       el.appendChild(d);
     });
   });
