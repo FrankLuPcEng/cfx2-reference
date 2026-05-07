@@ -31,8 +31,7 @@ export function countMachineMessages(flows) {
   return seen.size;
 }
 
-export function renderMachineList() {
-  const el = document.getElementById('flow-list');
+  const el = document.getElementById('nav-sub-machines');
   el.innerHTML = '';
   MACHINE_DEFS.forEach(m => {
     const d = document.createElement('div');

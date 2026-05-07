@@ -7,7 +7,7 @@ const GUIDE_SECTIONS = [
 ];
 
 export function renderGuideSidebar() {
-  const el = document.getElementById('flow-list');
+  const el = document.getElementById('nav-sub-guide');
   el.innerHTML = GUIDE_SECTIONS.map(s =>
     `<div class="guide-toc-item" data-sec="${s.id}" tabindex="0" role="button">
        <span class="guide-toc-icon" aria-hidden="true">${s.icon}</span>${s.label}

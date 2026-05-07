@@ -20,16 +20,38 @@
     </div>
   </header>
   <nav id="mode-nav" aria-label="視角選擇">
-    <button class="nav-item active" data-mode="flows"><span class="nav-item-icon" aria-hidden="true">⬡</span>流程</button>
-    <button class="nav-item" data-mode="messages"><span class="nav-item-icon" aria-hidden="true">≡</span>訊息</button>
-    <button class="nav-item" data-mode="machines"><span class="nav-item-icon" aria-hidden="true">⚙</span>機台</button>
-    <button class="nav-item" data-mode="scenarios"><span class="nav-item-icon" aria-hidden="true">▶</span>情境</button>
+    <div class="nav-section">
+      <button class="nav-item active" data-mode="flows"><span class="nav-item-icon" aria-hidden="true">⬡</span>流程</button>
+      <div class="nav-sub" id="nav-sub-flows">
+        <div id="search-wrap"><input id="search" placeholder="搜尋流程…" aria-label="搜尋" autocomplete="off" name="search"></div>
+        <div id="flow-list"></div>
+      </div>
+    </div>
+    <div class="nav-section">
+      <button class="nav-item" data-mode="messages"><span class="nav-item-icon" aria-hidden="true">≡</span>訊息</button>
+      <div class="nav-sub" id="nav-sub-messages" style="display:none">
+        <div id="msg-search-wrap"><input id="msg-search" placeholder="搜尋訊息…" aria-label="搜尋訊息" autocomplete="off"></div>
+        <div id="msg-list-inner"></div>
+      </div>
+    </div>
+    <div class="nav-section">
+      <button class="nav-item" data-mode="machines"><span class="nav-item-icon" aria-hidden="true">⚙</span>機台</button>
+      <div class="nav-sub" id="nav-sub-machines" style="display:none"></div>
+    </div>
+    <div class="nav-section">
+      <button class="nav-item" data-mode="scenarios"><span class="nav-item-icon" aria-hidden="true">▶</span>情境</button>
+      <div class="nav-sub" id="nav-sub-scenarios" style="display:none"></div>
+    </div>
     <div class="nav-sep"></div>
-    <button class="nav-item" data-mode="guide"><span class="nav-item-icon" aria-hidden="true">🛠</span>開發指南</button>
-    <button class="nav-item" data-mode="domain"><span class="nav-item-icon" aria-hidden="true">◈</span>資料模型</button>
+    <div class="nav-section">
+      <button class="nav-item" data-mode="guide"><span class="nav-item-icon" aria-hidden="true">🛠</span>開發指南</button>
+      <div class="nav-sub" id="nav-sub-guide" style="display:none"></div>
+    </div>
+    <div class="nav-section">
+      <button class="nav-item" data-mode="domain"><span class="nav-item-icon" aria-hidden="true">◈</span>資料模型</button>
+      <div class="nav-sub" id="nav-sub-domain" style="display:none"></div>
+    </div>
   </nav>
-  <div id="search-wrap"><input id="search" placeholder="搜尋流程…" aria-label="搜尋" autocomplete="off" name="search"></div>
-  <div id="flow-list"></div>
   <footer id="sb-footer">
     <button id="about-btn" title="資料來源與免責聲明">ℹ 關於此工具</button>
     <div id="version-info" class="version-info">—</div>

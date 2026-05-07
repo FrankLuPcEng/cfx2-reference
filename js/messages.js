@@ -8,7 +8,7 @@ export function showMsgPlaceholder() {
 }
 
 export function renderMsgList(term = '') {
-  const el = document.getElementById('flow-list');
+  const el = document.getElementById('msg-list-inner');
   el.innerHTML = '';
   const t = term.toLowerCase();
 

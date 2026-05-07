@@ -47,7 +47,10 @@ async function init() {
 function setupListeners() {
   document.getElementById('search').addEventListener('input', e => {
     if (state.curMode === 'flows') renderSidebar(e.target.value);
-    else renderMsgList(e.target.value);
+  });
+
+  document.getElementById('msg-search').addEventListener('input', e => {
+    renderMsgList(e.target.value);
   });
 
   document.querySelectorAll('#mode-nav .nav-item').forEach(btn => {

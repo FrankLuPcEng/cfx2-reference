@@ -43,19 +43,23 @@ export function restoreFromHash() {
   }
 }
 
+function switchNavSub(mode) {
+  document.querySelectorAll('.nav-sub').forEach(sub => { sub.style.display = 'none'; });
+  const el = document.getElementById('nav-sub-' + mode);
+  if (el) el.style.display = '';
+}
+
 export function setMode(mode, btn) {
   state.curMode = mode;
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const search = document.getElementById('search');
+  switchNavSub(mode);
   const main   = document.getElementById('main');
   const dp     = document.getElementById('detail-panel');
   const fbar   = document.getElementById('fbar');
-  const sw     = document.getElementById('search-wrap');
 
   main.classList.remove('msg-mode');
   dp.classList.add('hidden');
-  sw.style.display = '';
   document.getElementById('view-bar').style.display = 'none';
   document.getElementById('breadcrumb').style.display = 'none';
   document.getElementById('list-panel').style.display = 'none';
@@ -63,8 +67,8 @@ export function setMode(mode, btn) {
 
   if (mode === 'messages') {
     state.curMsg = null;
-    search.value = '';
-    search.placeholder = '搜尋訊息…';
+    const ms = document.getElementById('msg-search');
+    if (ms) ms.value = '';
     main.classList.add('msg-mode');
     dp.classList.remove('hidden');
     document.title = '訊息瀏覽器 — CFX 2.0 Reference';
@@ -78,7 +82,6 @@ export function setMode(mode, btn) {
   } else if (mode === 'machines') {
     state.curMsg = null;
     state.curMachine = null;
-    sw.style.display = 'none';
     fbar.style.display = 'none';
     document.title = '機台視角 — CFX 2.0 Reference';
     document.getElementById('fbadge').style.display = 'none';
@@ -91,7 +94,6 @@ export function setMode(mode, btn) {
   } else if (mode === 'scenarios') {
     state.curMsg = null;
     state.curScenario = null;
-    sw.style.display = 'none';
     fbar.style.display = 'none';
     document.title = '情境視角 — CFX 2.0 Reference';
     document.getElementById('fbadge').style.display = 'none';
@@ -103,7 +105,6 @@ export function setMode(mode, btn) {
 
   } else if (mode === 'guide') {
     state.curMsg = null;
-    sw.style.display = 'none';
     fbar.style.display = 'none';
     document.getElementById('view-bar').style.display = 'none';
     document.getElementById('breadcrumb').style.display = 'none';
@@ -120,7 +121,6 @@ export function setMode(mode, btn) {
   } else if (mode === 'domain') {
     state.curMsg = null;
     state.curEntity = null;
-    sw.style.display = 'none';
     fbar.style.display = 'none';
     document.getElementById('view-bar').style.display = 'none';
     document.getElementById('breadcrumb').style.display = 'none';
@@ -138,6 +138,7 @@ export function setMode(mode, btn) {
     // flows
     state.curMsg = null;
     state.curView = 'diagram';
+    const search = document.getElementById('search');
     search.value = '';
     search.placeholder = '搜尋流程…';
     document.getElementById('list-panel').style.display = 'none';

@@ -9,7 +9,7 @@ const PHASE_LABELS = {
 };
 
 export function renderDomainList() {
-  const el = document.getElementById('flow-list');
+  const el = document.getElementById('nav-sub-domain');
   el.innerHTML = '';
   if (!state.DOMAIN?.entities?.length) {
     el.innerHTML = '<div class="empty-msg">資料模型尚未載入</div>';

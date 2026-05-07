@@ -3,7 +3,7 @@ import { goToFlow } from './utils.js';
 import { MACHINE_DEFS } from './machines.js';
 
 export function renderScenarioList() {
-  const el = document.getElementById('flow-list');
+  const el = document.getElementById('nav-sub-scenarios');
   el.innerHTML = '';
   state.SCENARIOS.forEach(sc => {
     const d = document.createElement('div');
