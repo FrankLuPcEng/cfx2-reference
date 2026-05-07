@@ -90,7 +90,7 @@ export function selectMsg(msgName) {
     document.title = 'CFX 2.0 Message Reference';
     if (state.curMode === 'messages') {
       showMsgPlaceholder();
-      renderMsgList(document.getElementById('search').value);
+      renderMsgList(document.getElementById('msg-search').value);
     } else {
       document.getElementById('detail-panel').classList.add('hidden');
       if (state.curFlow) {
@@ -107,7 +107,7 @@ export function selectMsg(msgName) {
     if (state.curView === 'diagram') renderSeq(state.curFlow);
     else renderListView(state.curFlow);
   }
-  if (state.curMode === 'messages') renderMsgList(document.getElementById('search').value);
+  if (state.curMode === 'messages') renderMsgList(document.getElementById('msg-search').value);
 
   const dc = m.dir === 'response' ? '#555e70' : m.dir === 'event' ? '#1a7a40' : '#1565c0';
   const dl = m.dir === 'response' ? 'RESPONSE' : m.dir === 'event' ? 'EVENT' : 'REQUEST';

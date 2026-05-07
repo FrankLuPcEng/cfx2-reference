@@ -95,7 +95,7 @@ export function initDpResize() {
       dp.classList.remove('resizing');
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
-      localStorage.setItem('cfx-dp-width', dp.offsetWidth);
+      if (state.curMode !== 'messages') localStorage.setItem('cfx-dp-width', dp.offsetWidth);
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
     };
