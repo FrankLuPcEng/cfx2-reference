@@ -1,0 +1,508 @@
+{
+  "version": "1.0.0",
+  "description": "CFX 2.0 Domain Entity & Relationship Model — 定義 12 個核心 Domain Entity 與 15 條資料關係，說明 CFX 訊息如何建立業務資料物件",
+  "mvpPhases": {
+    "1": "基本 WIP 追蹤（Machine, WorkOrder, Unit, WorkSession, InspectionResult, FaultEvent）",
+    "2": "物料追溯（+ MaterialCarrier, MaterialConsumption, Batch）",
+    "3": "OEE 計算（+ StationStateEvent, ProcessActivity）",
+    "4": "配方管理（+ Recipe）"
+  },
+  "entities": [
+    {
+      "id": "WorkOrder",
+      "labelZh": "工單",
+      "mvpPhase": 1,
+      "pk": ["workOrderId"],
+      "fk": [],
+      "attributes": [
+        { "name": "workOrderId",    "type": "string",   "required": true,  "desc": "工單唯一識別碼，如 WO-2024-001" },
+        { "name": "partNumber",     "type": "string",   "required": true,  "desc": "生產料號" },
+        { "name": "partRevision",   "type": "string",   "required": false, "desc": "版本號" },
+        { "name": "quantity",       "type": "integer",  "required": true,  "desc": "計劃生產數量" },
+        { "name": "status",         "type": "enum",     "required": true,  "values": ["Queued","Active","Paused","Completed","Cancelled"], "desc": "工單狀態" },
+        { "name": "scheduledStart", "type": "datetime", "required": false, "desc": "預計開始時間（ISO 8601）" },
+        { "name": "scheduledEnd",   "type": "datetime", "required": false, "desc": "預計完成時間（ISO 8601）" }
+      ],
+      "createdBy": [
+        "CFX.InformationSystem.WorkOrderManagement.WorkOrdersCreated"
+      ],
+      "updatedBy": [
+        "CFX.InformationSystem.WorkOrderManagement.WorkOrderStatusUpdated",
+        "CFX.InformationSystem.WorkOrderManagement.WorkOrderQuantityUpdated",
+        "CFX.InformationSystem.WorkOrderManagement.WorkOrdersUpdated"
+      ],
+      "deletedBy": [
+        "CFX.InformationSystem.WorkOrderManagement.WorkOrdersDeleted"
+      ],
+      "notes": "所有生產活動的根錨點。WorkSession、Unit 均以 workOrderId 關聯回工單。"
+    },
+    {
+      "id": "Batch",
+      "labelZh": "批次",
+      "mvpPhase": 2,
+      "pk": ["batchIdentifier"],
+      "fk": [
+        { "field": "workOrderId", "ref": "WorkOrder.workOrderId" }
+      ],
+      "attributes": [
+        { "name": "batchIdentifier",  "type": "string",   "required": true,  "desc": "批次識別碼，對應物料廠商批號，如 LOT-2024-110A" },
+        { "name": "workOrderId",      "type": "string",   "required": true,  "desc": "所屬工單" },
+        { "name": "manufacturerLot",  "type": "string",   "required": false, "desc": "廠商原始批號" },
+        { "name": "quantity",         "type": "integer",  "required": false, "desc": "批次數量" }
+      ],
+      "createdBy": [],
+      "updatedBy": [],
+      "deletedBy": [],
+      "notes": "由 WorkStarted.Units[].BatchIdentifier 隱含建立，無專屬 CFX Create 訊息。Phase 1 可作為 Unit.batchIdentifier 屬性儲存，Phase 2 升格為獨立 Entity。"
+    },
+    {
+      "id": "Unit",
+      "labelZh": "在製品",
+      "mvpPhase": 1,
+      "pk": ["uniqueIdentifier"],
+      "fk": [
+        { "field": "workOrderId",    "ref": "WorkOrder.workOrderId" },
+        { "field": "batchIdentifier","ref": "Batch.batchIdentifier" }
+      ],
+      "attributes": [
+        { "name": "uniqueIdentifier", "type": "string", "required": true,  "desc": "板卡序號，如 SN-PCB-001" },
+        { "name": "workOrderId",      "type": "string", "required": true,  "desc": "所屬工單" },
+        { "name": "batchIdentifier",  "type": "string", "required": false, "desc": "所屬批次" },
+        { "name": "partNumber",       "type": "string", "required": false, "desc": "料號" },
+        { "name": "processStatus",    "type": "enum",   "required": true,  "values": ["InProcess","Complete","Failed","Scrapped","Rework"], "desc": "目前製程狀態" },
+        { "name": "currentStation",   "type": "string", "required": false, "desc": "目前所在工站 CFXHandle" }
+      ],
+      "createdBy": [
+        "CFX.Production.WorkStarted"
+      ],
+      "updatedBy": [
+        "CFX.Production.WorkCompleted",
+        "CFX.Production.TestAndInspection.UnitsInspected",
+        "CFX.Production.Assembly.MaterialsInstalled",
+        "CFX.ResourcePerformance.SMTPlacement.ComponentsPlaced"
+      ],
+      "deletedBy": [
+        "CFX.Production.UnitsDisqualified"
+      ],
+      "notes": "產線上實際流動的最小 WIP 單元（PCB/拼板）。貫串所有工站的製程記錄，以 uniqueIdentifier 唯一識別。"
+    },
+    {
+      "id": "Machine",
+      "labelZh": "機台",
+      "mvpPhase": 1,
+      "pk": ["cfxHandle"],
+      "fk": [],
+      "attributes": [
+        { "name": "cfxHandle",       "type": "string", "required": true,  "desc": "CFX 端點唯一識別，格式：{Vendor}.{Model}.{SerialNo}" },
+        { "name": "vendorModel",     "type": "string", "required": false, "desc": "廠商型號" },
+        { "name": "serialNumber",    "type": "string", "required": false, "desc": "設備序號" },
+        { "name": "currentRecipe",   "type": "string", "required": false, "desc": "目前載入的配方名稱" },
+        { "name": "stateCategory",   "type": "enum",   "required": false, "values": ["Running","Idle","Blocked","Starved","Faulted","Offline"], "desc": "目前機台狀態" },
+        { "name": "supportedTopics", "type": "string", "required": false, "desc": "支援的 CFX Topic 清單（來自 GetEndpointInformationResponse）" }
+      ],
+      "createdBy": [
+        "CFX.EndpointConnected"
+      ],
+      "updatedBy": [
+        "CFX.Heartbeat",
+        "CFX.ResourcePerformance.StageStateChanged",
+        "CFX.Production.RecipeActivated"
+      ],
+      "deletedBy": [
+        "CFX.ResourcePerformance.StationOffline"
+      ],
+      "notes": "CFX 網路節點，所有設備事件的發布來源，以 CFXHandle 唯一識別。"
+    },
+    {
+      "id": "WorkSession",
+      "labelZh": "工作階段",
+      "mvpPhase": 1,
+      "pk": ["transactionId"],
+      "fk": [
+        { "field": "cfxHandle",   "ref": "Machine.cfxHandle" },
+        { "field": "workOrderId", "ref": "WorkOrder.workOrderId" },
+        { "field": "recipeName",  "ref": "Recipe.recipeName" }
+      ],
+      "attributes": [
+        { "name": "transactionId",  "type": "uuid",     "required": true,  "desc": "工作階段唯一 ID，對應 WorkStarted/WorkCompleted 的 TransactionId" },
+        { "name": "cfxHandle",      "type": "string",   "required": true,  "desc": "執行機台" },
+        { "name": "workOrderId",    "type": "string",   "required": true,  "desc": "對應工單" },
+        { "name": "recipeName",     "type": "string",   "required": false, "desc": "使用配方名稱" },
+        { "name": "recipeVersion",  "type": "string",   "required": false, "desc": "使用配方版本" },
+        { "name": "startTime",      "type": "datetime", "required": true,  "desc": "WorkStarted 時間" },
+        { "name": "endTime",        "type": "datetime", "required": false, "desc": "WorkCompleted 時間；null 表示仍開放" },
+        { "name": "cycleTime",      "type": "float",    "required": false, "desc": "加工時間（秒）= endTime - startTime" },
+        { "name": "result",         "type": "enum",     "required": false, "values": ["Pass","Failed","Aborted"], "desc": "整體結果" },
+        { "name": "isOpen",         "type": "boolean",  "required": true,  "desc": "true = 尚未收到 WorkCompleted" }
+      ],
+      "createdBy": [
+        "CFX.Production.WorkStarted"
+      ],
+      "updatedBy": [],
+      "deletedBy": [
+        "CFX.Production.WorkCompleted"
+      ],
+      "notes": "Machine + WorkOrder + Unit 的時間容器。是 OEE/CycleTime 計算與 Material 消耗的錨定單元。若 FaultOccurred 後無對應 WorkCompleted，由 MES 超時異常關閉（CFX 標準無定義）。"
+    },
+    {
+      "id": "ProcessActivity",
+      "labelZh": "製程活動",
+      "mvpPhase": 3,
+      "pk": ["transactionId"],
+      "fk": [
+        { "field": "workSessionId",     "ref": "WorkSession.transactionId" },
+        { "field": "uniqueIdentifier",  "ref": "Unit.uniqueIdentifier" }
+      ],
+      "attributes": [
+        { "name": "transactionId",     "type": "uuid",   "required": true,  "desc": "製程活動唯一 ID" },
+        { "name": "workSessionId",     "type": "uuid",   "required": true,  "desc": "所屬工作階段" },
+        { "name": "uniqueIdentifier",  "type": "string", "required": false, "desc": "關聯板卡（可為多筆）" },
+        { "name": "activityType",      "type": "enum",   "required": true,  "values": ["SMTPlacement","PressInsertion","SelectiveSoldering","THTInsertion","ProcessData"], "desc": "製程類型" },
+        { "name": "measurementData",   "type": "string", "required": false, "desc": "製程量測數據（JSON 字串）" },
+        { "name": "timestamp",         "type": "datetime","required": true, "desc": "活動時間" }
+      ],
+      "createdBy": [
+        "CFX.ResourcePerformance.SMTPlacement.ComponentsPlaced",
+        "CFX.ResourcePerformance.PressInsertion.ComponentsPressed",
+        "CFX.ResourcePerformance.THTInsertion.ComponentsInserted",
+        "CFX.Production.Application.Solder.PCBSelectiveSoldered",
+        "CFX.ResourcePerformance.ProcessDataRecorded"
+      ],
+      "updatedBy": [],
+      "deletedBy": [],
+      "notes": "不可變事件記錄。一個 WorkSession 可有多筆 ProcessActivity（如每片板卡的貼片精度記錄）。"
+    },
+    {
+      "id": "InspectionResult",
+      "labelZh": "檢測結果",
+      "mvpPhase": 1,
+      "pk": ["inspectionId"],
+      "fk": [
+        { "field": "uniqueIdentifier", "ref": "Unit.uniqueIdentifier" },
+        { "field": "cfxHandle",        "ref": "Machine.cfxHandle" }
+      ],
+      "attributes": [
+        { "name": "inspectionId",      "type": "uuid",     "required": true,  "desc": "複合鍵 (uniqueIdentifier, cfxHandle, timestamp) 或自訂 UUID" },
+        { "name": "uniqueIdentifier",  "type": "string",   "required": true,  "desc": "被檢測板卡" },
+        { "name": "cfxHandle",         "type": "string",   "required": true,  "desc": "執行檢測的機台" },
+        { "name": "timestamp",         "type": "datetime", "required": true,  "desc": "檢測時間" },
+        { "name": "overallResult",     "type": "enum",     "required": true,  "values": ["Pass","Failed","Marginal"], "desc": "判定結果" },
+        { "name": "failedTests",       "type": "string",   "required": false, "desc": "失敗測試項目（JSON 陣列）" },
+        { "name": "isOverridden",      "type": "boolean",  "required": false, "desc": "true = 人工判定覆蓋" }
+      ],
+      "createdBy": [
+        "CFX.Production.TestAndInspection.UnitsInspected"
+      ],
+      "updatedBy": [
+        "CFX.Production.WorkOrderActionExecuted"
+      ],
+      "deletedBy": [],
+      "notes": "一個 Unit 可有多筆 InspectionResult（每個 SPI/AOI/ICT 站各一筆）。WorkOrderActionExecuted 用於人工 ACCEPT/REJECT 覆蓋。"
+    },
+    {
+      "id": "MaterialCarrier",
+      "labelZh": "物料載體",
+      "mvpPhase": 2,
+      "pk": ["materialIdentifier"],
+      "fk": [],
+      "attributes": [
+        { "name": "materialIdentifier", "type": "string", "required": true,  "desc": "料卷/托盤唯一識別碼，如 MAT-REEL-001" },
+        { "name": "partNumber",         "type": "string", "required": true,  "desc": "物料料號" },
+        { "name": "partRevision",       "type": "string", "required": false, "desc": "物料版本" },
+        { "name": "manufacturerLot",    "type": "string", "required": false, "desc": "廠商批號" },
+        { "name": "quantityRemaining",  "type": "float",  "required": true,  "desc": "剩餘數量" },
+        { "name": "status",             "type": "enum",   "required": true,  "values": ["Available","InUse","Empty","Blocked","Quarantine","Retired"], "desc": "物料狀態" },
+        { "name": "locationIdentifier", "type": "string", "required": false, "desc": "目前所在位置（料架槽號等）" }
+      ],
+      "createdBy": [
+        "CFX.Materials.Management.MaterialsInitialized",
+        "CFX.Materials.Storage.MaterialsLoaded"
+      ],
+      "updatedBy": [
+        "CFX.Materials.Management.MaterialsConsumed",
+        "CFX.Materials.Management.MaterialsModified",
+        "CFX.Materials.Storage.MaterialsUnloaded"
+      ],
+      "deletedBy": [
+        "CFX.Materials.Management.MaterialsRetired",
+        "CFX.Materials.Storage.MaterialsEmpty"
+      ],
+      "notes": "承載電子元件的實體容器（SMD 料卷、晶粒托盤等），追蹤從入庫到退料的完整生命週期。"
+    },
+    {
+      "id": "MaterialConsumption",
+      "labelZh": "物料消耗記錄",
+      "mvpPhase": 2,
+      "pk": ["consumptionId"],
+      "fk": [
+        { "field": "materialIdentifier", "ref": "MaterialCarrier.materialIdentifier" },
+        { "field": "uniqueIdentifier",   "ref": "Unit.uniqueIdentifier" },
+        { "field": "transactionId",      "ref": "WorkSession.transactionId" }
+      ],
+      "attributes": [
+        { "name": "consumptionId",       "type": "uuid",   "required": true,  "desc": "消耗記錄唯一 ID" },
+        { "name": "materialIdentifier",  "type": "string", "required": true,  "desc": "消耗的物料載體" },
+        { "name": "uniqueIdentifier",    "type": "string", "required": false, "desc": "關聯板卡（可為 null：批量消耗無法追到單板）" },
+        { "name": "transactionId",       "type": "uuid",   "required": true,  "desc": "關聯 WorkSession" },
+        { "name": "referenceDesignator", "type": "string", "required": false, "desc": "安裝位置，如 R101" },
+        { "name": "quantity",            "type": "float",  "required": true,  "desc": "消耗數量" },
+        { "name": "timestamp",           "type": "datetime","required": true, "desc": "消耗時間" }
+      ],
+      "createdBy": [
+        "CFX.Materials.Management.MaterialsConsumed",
+        "CFX.Production.Assembly.MaterialsInstalled",
+        "CFX.ResourcePerformance.SMTPlacement.ComponentsPlaced"
+      ],
+      "updatedBy": [],
+      "deletedBy": [],
+      "notes": "物料追溯鏈核心。追溯路徑：Unit → MaterialConsumption → MaterialCarrier → PartNumber / ManufacturerLot"
+    },
+    {
+      "id": "Recipe",
+      "labelZh": "配方",
+      "mvpPhase": 4,
+      "pk": ["recipeName", "version"],
+      "fk": [
+        { "field": "cfxHandle", "ref": "Machine.cfxHandle" }
+      ],
+      "attributes": [
+        { "name": "recipeName",    "type": "string", "required": true,  "desc": "配方名稱，如 RECIPE-SMT-A001" },
+        { "name": "version",       "type": "string", "required": true,  "desc": "配方版本，如 2.1" },
+        { "name": "cfxHandle",     "type": "string", "required": false, "desc": "最後載入此配方的機台" },
+        { "name": "partNumber",    "type": "string", "required": false, "desc": "對應料號" },
+        { "name": "parameters",    "type": "string", "required": false, "desc": "配方參數（JSON 字串）" },
+        { "name": "activatedAt",   "type": "datetime","required": false,"desc": "最後啟用時間" },
+        { "name": "deactivatedAt", "type": "datetime","required": false,"desc": "停用時間（null = 仍有效）" }
+      ],
+      "createdBy": [
+        "CFX.Production.RecipeActivated"
+      ],
+      "updatedBy": [
+        "CFX.Production.RecipeModified",
+        "CFX.Production.LocalRecipeChanged"
+      ],
+      "deletedBy": [
+        "CFX.Production.RecipeDeactivated"
+      ],
+      "notes": "Phase 1-3 可以 WorkSession.recipeName 字串儲存，Phase 4 升格為含版本歷程的完整 Entity。"
+    },
+    {
+      "id": "StationStateEvent",
+      "labelZh": "站點狀態事件",
+      "mvpPhase": 3,
+      "pk": ["eventId"],
+      "fk": [
+        { "field": "cfxHandle", "ref": "Machine.cfxHandle" }
+      ],
+      "attributes": [
+        { "name": "eventId",       "type": "uuid",     "required": true,  "desc": "狀態事件唯一 ID" },
+        { "name": "cfxHandle",     "type": "string",   "required": true,  "desc": "發生狀態切換的機台" },
+        { "name": "timestamp",     "type": "datetime", "required": true,  "desc": "狀態切換時間" },
+        { "name": "newState",      "type": "enum",     "required": true,  "values": ["Running","Idle","Blocked","Starved","Faulted","Sleeping","Offline"], "desc": "切換後狀態" },
+        { "name": "previousState", "type": "enum",     "required": false, "values": ["Running","Idle","Blocked","Starved","Faulted","Sleeping","Offline"], "desc": "切換前狀態" },
+        { "name": "stageName",     "type": "string",   "required": false, "desc": "子站名稱（如 FrontConveyor）" },
+        { "name": "duration",      "type": "float",    "required": false, "desc": "此狀態持續時間（秒），由下一個事件計算" }
+      ],
+      "createdBy": [
+        "CFX.ResourcePerformance.StageStateChanged",
+        "CFX.ResourcePerformance.SleepStateChanged"
+      ],
+      "updatedBy": [],
+      "deletedBy": [],
+      "notes": "不可變事件記錄。OEE 可用率 = Running 時間 / (Running + Idle + Blocked + Faulted) 時間。"
+    },
+    {
+      "id": "FaultEvent",
+      "labelZh": "故障事件",
+      "mvpPhase": 1,
+      "pk": ["faultId"],
+      "fk": [
+        { "field": "cfxHandle", "ref": "Machine.cfxHandle" }
+      ],
+      "attributes": [
+        { "name": "faultId",          "type": "uuid",     "required": true,  "desc": "故障事件唯一 ID" },
+        { "name": "cfxHandle",        "type": "string",   "required": true,  "desc": "發生故障的機台" },
+        { "name": "faultCode",        "type": "string",   "required": true,  "desc": "故障代碼，如 E001" },
+        { "name": "faultDescription", "type": "string",   "required": false, "desc": "故障描述" },
+        { "name": "severity",         "type": "enum",     "required": true,  "values": ["Information","Warning","Error","Fatal"], "desc": "嚴重程度" },
+        { "name": "startTime",        "type": "datetime", "required": true,  "desc": "FaultOccurred 時間" },
+        { "name": "endTime",          "type": "datetime", "required": false, "desc": "FaultCleared 時間；null = 仍發生中" },
+        { "name": "duration",         "type": "float",    "required": false, "desc": "故障持續時間（秒）= endTime - startTime" }
+      ],
+      "createdBy": [
+        "CFX.ResourcePerformance.FaultOccurred"
+      ],
+      "updatedBy": [
+        "CFX.Heartbeat"
+      ],
+      "deletedBy": [
+        "CFX.ResourcePerformance.FaultCleared"
+      ],
+      "notes": "MTBF = 兩次 FaultEvent.startTime 平均間隔；MTTR = FaultEvent.duration 平均值。Heartbeat.ActiveFaults 可同步仍開放的故障。"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "R01",
+      "from": "WorkOrder",
+      "to": "Batch",
+      "cardinality": "1:N",
+      "via": "WorkStarted.Units[].BatchIdentifier → Batch.workOrderId",
+      "mvpPhase": 2,
+      "desc": "一個工單可包含多個物料批次"
+    },
+    {
+      "id": "R02",
+      "from": "WorkOrder",
+      "to": "Unit",
+      "cardinality": "1:N",
+      "via": "WorkStarted.WorkOrderId → Unit.workOrderId",
+      "mvpPhase": 1,
+      "desc": "一個工單包含多個在製品板卡"
+    },
+    {
+      "id": "R03",
+      "from": "WorkOrder",
+      "to": "WorkSession",
+      "cardinality": "1:N",
+      "via": "WorkStarted.WorkOrderId → WorkSession.workOrderId",
+      "mvpPhase": 1,
+      "desc": "一個工單在多台機台上各有一個或多個 WorkSession"
+    },
+    {
+      "id": "R04",
+      "from": "Batch",
+      "to": "Unit",
+      "cardinality": "1:N",
+      "via": "Unit.batchIdentifier → Batch.batchIdentifier",
+      "mvpPhase": 2,
+      "desc": "一個批次包含多個板卡（相同物料批號）"
+    },
+    {
+      "id": "R05",
+      "from": "Machine",
+      "to": "WorkSession",
+      "cardinality": "1:N",
+      "via": "WorkStarted.CFXHandle → WorkSession.cfxHandle",
+      "mvpPhase": 1,
+      "desc": "一台機台可有多個 WorkSession（不同工單或不同批次）"
+    },
+    {
+      "id": "R06",
+      "from": "Machine",
+      "to": "StationStateEvent",
+      "cardinality": "1:N",
+      "via": "StageStateChanged.CFXHandle → StationStateEvent.cfxHandle",
+      "mvpPhase": 3,
+      "desc": "一台機台產生多個狀態切換事件"
+    },
+    {
+      "id": "R07",
+      "from": "Machine",
+      "to": "FaultEvent",
+      "cardinality": "1:N",
+      "via": "FaultOccurred.CFXHandle → FaultEvent.cfxHandle",
+      "mvpPhase": 1,
+      "desc": "一台機台可有多個故障事件"
+    },
+    {
+      "id": "R08",
+      "from": "Recipe",
+      "to": "WorkSession",
+      "cardinality": "1:N",
+      "via": "WorkStarted.RecipeName → WorkSession.recipeName",
+      "mvpPhase": 4,
+      "desc": "一個配方版本可被多個 WorkSession 使用"
+    },
+    {
+      "id": "R09",
+      "from": "WorkSession",
+      "to": "Unit",
+      "cardinality": "N:M",
+      "via": "WorkStarted.Units[] 陣列",
+      "mvpPhase": 1,
+      "desc": "一個 WorkSession 可處理多個 Unit；一個 Unit 在每個工站各有一個 WorkSession"
+    },
+    {
+      "id": "R10",
+      "from": "WorkSession",
+      "to": "ProcessActivity",
+      "cardinality": "1:N",
+      "via": "ProcessActivity.transactionId → WorkSession.transactionId（同一加工期間）",
+      "mvpPhase": 3,
+      "desc": "一個 WorkSession 可產生多個製程活動記錄"
+    },
+    {
+      "id": "R11",
+      "from": "WorkSession",
+      "to": "MaterialConsumption",
+      "cardinality": "1:N",
+      "via": "MaterialConsumption.transactionId → WorkSession.transactionId",
+      "mvpPhase": 2,
+      "desc": "一個 WorkSession 期間可有多筆物料消耗記錄"
+    },
+    {
+      "id": "R12",
+      "from": "Unit",
+      "to": "InspectionResult",
+      "cardinality": "1:N",
+      "via": "UnitsInspected.Units[].UniqueIdentifier → InspectionResult.uniqueIdentifier",
+      "mvpPhase": 1,
+      "desc": "一個板卡在每個檢測站各有一筆檢測結果"
+    },
+    {
+      "id": "R13",
+      "from": "Unit",
+      "to": "MaterialConsumption",
+      "cardinality": "1:N",
+      "via": "MaterialsInstalled.Units[].UniqueIdentifier → MaterialConsumption.uniqueIdentifier",
+      "mvpPhase": 2,
+      "desc": "一個板卡可有多筆物料消耗記錄（每個組裝位置各一筆）"
+    },
+    {
+      "id": "R14",
+      "from": "Unit",
+      "to": "ProcessActivity",
+      "cardinality": "1:N",
+      "via": "ProcessActivity.uniqueIdentifier → Unit.uniqueIdentifier",
+      "mvpPhase": 3,
+      "desc": "一個板卡在各工站各有製程活動記錄"
+    },
+    {
+      "id": "R15",
+      "from": "MaterialCarrier",
+      "to": "MaterialConsumption",
+      "cardinality": "1:N",
+      "via": "MaterialsConsumed.MaterialIdentifier → MaterialConsumption.materialIdentifier",
+      "mvpPhase": 2,
+      "desc": "一個料卷的元件可消耗至多個板卡（多筆 MaterialConsumption）"
+    }
+  ],
+  "linkageRules": [
+    {
+      "id": "LR01",
+      "title": "WorkSession 生命週期",
+      "desc": "WorkStarted 建立 WorkSession（transactionId = PK）。WorkCompleted（同 transactionId）關閉 WorkSession，記錄 endTime 與 cycleTime。若 FaultOccurred 後無 WorkCompleted，WorkSession 保持 isOpen=true，由 MES 超時機制處理。StationOffline 觸發所有 isOpen WorkSession 異常關閉。"
+    },
+    {
+      "id": "LR02",
+      "title": "物料追溯鏈",
+      "desc": "ComponentsPlaced / MaterialsInstalled 訊息中同時含 Units[].UniqueIdentifier 與 InstalledMaterials[].MaterialIdentifier，建立 MaterialConsumption 記錄。追溯路徑：Unit → MaterialConsumption → MaterialCarrier → PartNumber / ManufacturerLot"
+    },
+    {
+      "id": "LR03",
+      "title": "InspectionResult 多站累積",
+      "desc": "一個 Unit 在 SPI → AOI → ICT 各站各產生一筆 InspectionResult。可透過 Unit.uniqueIdentifier 彙整所有站點的判定記錄，計算最終良率。WorkOrderActionExecuted 用於人工 ACCEPT/REJECT 覆蓋，需設 isOverridden=true。"
+    },
+    {
+      "id": "LR04",
+      "title": "OEE 計算基礎",
+      "desc": "可用率 = Σ(StationStateEvent where newState=Running).duration / 總觀察時間。效率率 = 標準 CycleTime / WorkSession.cycleTime 平均值。品質率 = Pass 的 InspectionResult 數 / 總 Unit 數。時間重疊：FaultEvent.{startTime,endTime} ∩ WorkSession.{startTime,endTime} = 故障導致的生產中斷時間。"
+    },
+    {
+      "id": "LR05",
+      "title": "Recipe 與 WorkSession 串聯",
+      "desc": "RecipeActivated 更新 Machine.currentRecipe。WorkStarted.RecipeName 直接記錄到 WorkSession.recipeName（Phase 1-3 作字串儲存）。Phase 4 升格後，WorkSession.recipeName + recipeVersion 作為 FK 指向 Recipe Entity。"
+    }
+  ]
+}
